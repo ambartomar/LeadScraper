@@ -389,7 +389,7 @@
 </style>
 </head>
 <body>
-    <div id="auth-view" class="auth-view">
+    <div id="auth-view" class="auth-view" style="display:none">
         <h2>Welcome</h2>
         <input id="authEmail" type="email" placeholder="Email" autocomplete="username">
         <input id="authPass" type="password" placeholder="Password" autocomplete="current-password">
@@ -451,7 +451,7 @@
                     <button class="btn btn-primary" id="btnSearch">Search</button>
                     <button class="btn" id="btnClear">Clear</button>
                 </div>
-                <input id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA" style="flex-grow: 1"/>
+                <input id="apiKey" type="text" placeholder="Enter your YouTube API Key" value="" style="flex-grow: 1"/>
             </div>
 
             <div class="panel results-container">
@@ -536,7 +536,7 @@
     
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-functions.js";
         
@@ -579,7 +579,8 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         const functions = getFunctions(app);
-        const logSearchCallable = httpsCallable(functions, 'logSearch');
+        // Functions will not be available in this environment, but we can keep the code.
+        const logSearchCallable = (data) => Promise.resolve(console.log('Log search called:', data));
 
         /* ========================= AUTHENTICATION ========================= */
         onAuthStateChanged(auth, async (user) => {
@@ -587,7 +588,7 @@
                 currentUser = user;
                 $('app-view').style.display = 'grid';
                 $('auth-view').style.display = 'none';
-                $('userEmail').innerText = `${user.email}`;
+                $('userEmail').innerText = `${user.email || 'Anonymous'}`;
 
                 const userRef = doc(db, 'users', user.uid);
                 await setDoc(userRef, {
@@ -600,6 +601,23 @@
                 $('auth-view').style.display = 'flex';
             }
         });
+
+        // Use the initial auth token provided by the environment
+        if (initialAuthToken) {
+            signInWithCustomToken(auth, initialAuthToken).catch(error => {
+                console.error("Custom token sign-in failed:", error);
+                signInAnonymously(auth).catch(anonError => {
+                    console.error("Anonymous sign-in failed:", anonError);
+                    showMessage('Authentication Error', 'Failed to sign in. Please try again.');
+                });
+            });
+        } else {
+             // Fallback to anonymous sign-in if no token is provided
+            signInAnonymously(auth).catch(error => {
+                console.error("Anonymous sign-in failed:", error);
+                 showMessage('Authentication Error', 'Failed to sign in anonymously. Please try again.');
+            });
+        }
 
         $('btnSignIn').addEventListener('click', async () => {
             const email = $('authEmail').value;
@@ -636,11 +654,14 @@
             const queries = queryRaw.split(/[,\\n]/).map(q=>q.trim()).filter(Boolean);
             const perPage = clamp(Number($('perPage').value||25), 1, 50);
             const pages = clamp(Number($('pages').value||2), 1, 10);
+            const apiKey = $('apiKey').value.trim();
 
             if(!queries.length){ showMessage('Search Error', 'Please enter at least one query'); return; }
+            if(!apiKey){ showMessage('Search Error', 'Please enter a YouTube API Key.'); return; }
             if(!currentUser){ showMessage('Authentication Required', 'Please sign in first.'); return; }
 
             try {
+              // Using a placeholder since functions are not supported
               await logSearchCallable({ query: queryRaw });
             } catch (error) {
               console.error('Failed to log search:', error);
@@ -650,7 +671,6 @@
             lastSearch = { queryRaw, queries, perPage, pages };
             
             setStatus('Searching for channels...');
-            const apiKey = $('apiKey').value.trim();
             const order = $('order').value;
             const duration = $('duration').value;
             const upload = $('upload').value;
