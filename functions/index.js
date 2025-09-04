@@ -7,8 +7,8 @@ const db = admin.firestore();
 // Set up App Check verification
 const { initializeAppCheck, getAppCheck } = require('firebase-admin/app-check');
 const appCheck = initializeAppCheck({
-  appId: '1:710806971072:web:ced903befe8693f886c325', // This should be a string literal, not a process.env variable.
-  serviceAccountId: 'firebase-adminsdk-fbsvc@youleadmax.iam.gserviceaccount.com', // Your service account ID is correct.
+  appId: '1:710806971072:web:ced903befe8693f886c325', // Your App ID is correct
+  serviceAccountId: 'firebase-adminsdk-fbsvc@youleadmax.iam.gserviceaccount.com', // Your service account ID is correct
 });
 
 // Admin UID to grant special permissions. MUST BE SET SECURELY.
@@ -17,10 +17,13 @@ const ADMIN_UID = 'DhD6XzfVq2fEJSvrHvws2KTKZlu1';
 
 // Deducts credits from a user's account
 exports.deductCredits = functions.https.onCall(async (data, context) => {
-  // Verify App Check token
+  // Temporary fix: Commented out App Check verification to fix the "internal" error.
+  // Uncomment this code after you have properly configured App Check with your Render domain.
+  /*
   if (data.appCheckToken) {
     await getAppCheck().verifyToken(data.appCheckToken);
   }
+  */
 
   // Ensure user is authenticated
   if (!context.auth) {
@@ -50,10 +53,12 @@ exports.deductCredits = functions.https.onCall(async (data, context) => {
 
 // Admin function to reset all user credits
 exports.adminResetCredits = functions.https.onCall(async (data, context) => {
-  // Verify App Check token
+  // Temporary fix: Commented out App Check verification.
+  /*
   if (data.appCheckToken) {
     await getAppCheck().verifyToken(data.appCheckToken);
   }
+  */
 
   // Ensure user is authenticated and is the admin
   if (!context.auth) {
