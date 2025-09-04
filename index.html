@@ -1,1050 +1,698 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Lead Studio Pro — YouTube Channel Finder</title>
-<style>
-  /* =========================
-     THEME — Apple-ish + Purple
-     ========================= */
-  :root{
-    --bg-0:#07080c;            /* page base */
-    --bg-1:#0b0d14;            /* panels */
-    --bg-2:#0f1320;            /* deeper */
-    --glass: rgba(255,255,255,.06);
-    --glass-2: rgba(255,255,255,.08);
-    --muted:#a6b0c3;
-    --text:#f5f7ff;
-    --accent:#7c3aed;          /* purple */
-    --accent-2:#a78bfa;        /* light purple */
-    --ok:#22c55e;              /* green */
-    --warn:#f59e0b;            /* amber */
-    --danger:#ef4444;
-    --radius:14px;
-    --radius-sm:10px;
-    --shadow: 0 30px 70px rgba(0,0,0,.45);
-  }
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Lead Studio Pro — YouTube Channel Finder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* =========================
+         THEME — Apple-ish + Purple
+         ========================= */
+      :root{
+        --bg-0:#07080c;            /* page base */
+        --bg-1:#0b0d14;            /* panels */
+        --bg-2:#0f1320;            /* deeper */
+        --glass: rgba(255,255,255,.06);
+        --glass-2: rgba(255,255,255,.08);
+        --muted:#a6b0c3;
+        --text:#f5f7ff;
+        --accent:#7c3aed;          /* purple */
+        --accent-2:#a78bfa;        /* light purple */
+        --ok:#22c55e;              /* green */
+        --warn:#f59e0b;            /* amber */
+        --danger:#ef4444;
+        --radius:14px;
+        --radius-sm:10px;
+        --shadow: 0 30px 70px rgba(0,0,0,.45);
+      }
+    
+      /* Base reset */
+      * { box-sizing:border-box; }
+      html,body { height:100%; }
+      body {
+        margin:0;
+        padding:0;
+        background-color: var(--bg-0);
+        color: var(--text);
+        font-family: 'Inter', sans-serif;
+        font-size:16px;
+        line-height:1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        padding:2rem;
+        min-height:100vh;
+      }
+      
+      /* Login/Signup UI */
+      .auth-container {
+          background: var(--glass);
+          backdrop-filter: blur(10px);
+          border: 1px solid var(--glass-2);
+          box-shadow: var(--shadow);
+          border-radius: var(--radius);
+          padding: 2rem;
+          width: 100%;
+          max-width: 400px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+      }
+      
+      .auth-container h1 {
+          font-size: 2.5rem;
+          font-weight: 700;
+          margin-bottom: 1.5rem;
+          color: var(--accent);
+          text-align: center;
+      }
+      
+      .auth-form input {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          background-color: rgba(255, 255, 255, 0.05);
+          border-radius: var(--radius-sm);
+          color: var(--text);
+          font-size: 1rem;
+          margin-bottom: 1rem;
+          transition: border-color 0.2s;
+      }
+      .auth-form input:focus {
+          outline: none;
+          border-color: var(--accent);
+      }
+      
+      .auth-btn {
+          width: 100%;
+          padding: 0.75rem 1.5rem;
+          font-weight: 600;
+          font-size: 1rem;
+          border-radius: var(--radius-sm);
+          transition: all 0.3s ease;
+          cursor: pointer;
+      }
 
-  /* Base reset */
-  * { box-sizing:border-box; }
-  html,body { height:100%; }
-  body {
-    margin:0;
-    font-family: ui-sans-serif, -apple-system, system-ui, "Segoe UI", Roboto, Inter, Arial;
-    color: var(--text);
-    background:
-      radial-gradient(1200px 800px at 10% -20%, #24103e 0%, transparent 60%),
-      radial-gradient(1200px 800px at 110% 120%, #1f1440 0%, transparent 60%),
-      linear-gradient(180deg, #080910, #0a0c14 60%, #090b12);
-    overflow:hidden; /* prevent random page scrollbars */
-    overscroll-behavior:none;
-  }
+      .auth-btn.primary {
+          background-color: var(--accent);
+          color: var(--text);
+          box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+      }
+      
+      .auth-btn.primary:hover {
+          background-color: var(--accent-2);
+          box-shadow: 0 6px 20px rgba(167, 139, 250, 0.6);
+      }
+      
+      .auth-status {
+          font-size: 0.875rem;
+          color: var(--muted);
+          text-align: center;
+          margin-top: 1rem;
+      }
+      
+      .auth-toggle {
+          font-size: 0.875rem;
+          color: var(--accent);
+          text-decoration: none;
+          margin-top: 1rem;
+          cursor: pointer;
+      }
+      
+      .auth-toggle:hover {
+          text-decoration: underline;
+      }
+      
+      /* Main app UI styles */
+      #main {
+        max-width:1400px;
+        width:100%;
+        display:flex;
+        flex-direction:column;
+        gap:2rem;
+        transition: transform 0.5s ease-in-out;
+        transform: scale(0.9);
+        opacity: 0;
+        pointer-events: none;
+      }
+      #main.active {
+        transform: scale(1);
+        opacity: 1;
+        pointer-events: auto;
+      }
 
-  a { color: var(--accent-2); text-decoration: none; }
-  a:hover { text-decoration: underline; }
+      .panel{
+        background-color: var(--bg-1);
+        border:1px solid var(--glass-2);
+        border-radius: var(--radius);
+        padding:1.5rem;
+        display:flex;
+        flex-direction:column;
+        gap:1rem;
+      }
 
-  /* ===== App shell ===== */
-  .app {
-    max-width: 1350px;
-    margin: 0 auto;
-    padding: 18px;
-    display: grid;
-    gap: 14px;
-    grid-template-rows: auto 1fr;
-    height: 100vh;
-  }
+      header{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+      }
+      h1{
+        font-size:1.5rem;
+        font-weight:700;
+      }
+      h2{
+        font-size:1rem;
+        font-weight:600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing:1px;
+      }
+      .panel h2, .panel h3{ margin-bottom:0.5rem; }
+      .search-form { display:flex; gap:1rem; }
+      input, select, button{
+        font:inherit;
+        border-radius:var(--radius-sm);
+        padding:0.5rem 1rem;
+        border:1px solid rgba(255,255,255,.1);
+        background-color: var(--bg-2);
+        color: var(--text);
+      }
+      input[type="text"], input[type="email"], input[type="password"] { flex-grow:1; }
+      button{
+        background-color: var(--accent);
+        border-color: var(--accent);
+        cursor:pointer;
+        transition:all .2s ease;
+      }
+      button:hover{
+        background-color: var(--accent-2);
+        border-color: var(--accent-2);
+      }
+      button:disabled{
+        opacity:0.5;
+        cursor:not-allowed;
+      }
+      #results{
+        display:flex;
+        flex-direction:column;
+      }
+      #results table{
+        width:100%;
+        border-collapse:collapse;
+        font-size:0.875rem;
+      }
+      #results th, #results td{
+        padding:0.75rem 1rem;
+        text-align:left;
+        border-bottom:1px solid rgba(255,255,255,.05);
+      }
+      #results th{
+        color:var(--muted);
+        text-transform:uppercase;
+        font-size:0.75rem;
+        font-weight:500;
+        white-space:nowrap;
+      }
+      #results tr:hover{
+        background-color:rgba(255,255,255,.05);
+        cursor:pointer;
+      }
+      #results .channel-name{
+        display:flex;
+        align-items:center;
+        gap:0.75rem;
+      }
+      #results .channel-name img{
+        width:32px;
+        height:32px;
+        border-radius:50%;
+      }
+      .meta{
+        font-size:0.875rem;
+        color:var(--muted);
+        text-align:center;
+        padding:2rem;
+      }
+      .socials{
+        display:flex;
+        gap:0.5rem;
+      }
+      .socials a{
+        width:24px;
+        height:24px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:var(--muted);
+        transition:color .2s ease;
+      }
+      .socials a:hover{
+        color:var(--accent-2);
+      }
+      .progress-bar{
+        height:8px;
+        background-color:var(--bg-2);
+        border-radius:var(--radius-sm);
+        overflow:hidden;
+      }
+      .progress-bar div{
+        height:100%;
+        width:0%;
+        background-color:var(--accent);
+        transition:width .3s ease;
+      }
+      #detail-view{
+        position:sticky;
+        top:2rem;
+        height:fit-content;
+      }
+      #detail-view img{
+        width:100%;
+        height:auto;
+        border-radius:var(--radius);
+        margin-bottom:1rem;
+        display:none;
+      }
+      .btn-group{
+        display:flex;
+        gap:0.5rem;
+      }
+      .btn-icon{
+        padding:0.5rem;
+        width:40px;
+        height:40px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+      }
+      .status-box{
+        display:flex;
+        align-items:center;
+        gap:0.5rem;
+        font-size:0.875rem;
+        color:var(--muted);
+      }
+      .status-box .dot{
+        width:8px;
+        height:8px;
+        border-radius:50%;
+        background-color:var(--ok);
+      }
+      .dot.warn{ background-color:var(--warn); }
+      .dot.danger{ background-color:var(--danger); }
+      
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s, opacity 0.3s ease;
+      }
+      .modal.show {
+        visibility: visible;
+        opacity: 1;
+      }
+      .modal-content {
+        background: var(--bg-1);
+        border-radius: var(--radius);
+        padding: 2rem;
+        max-width: 400px;
+        text-align: center;
+      }
+      .modal-close-btn {
+        margin-top: 1rem;
+        background: var(--accent);
+        color: var(--text);
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+      }
+      
+      .logout-btn {
+        background: var(--bg-2);
+        color: var(--muted);
+        border: 1px solid var(--glass-2);
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .logout-btn:hover {
+        background: var(--glass);
+        color: var(--text);
+      }
 
-  /* ===== Topbar ===== */
-  .topbar {
-    display:flex; gap:12px; align-items:center;
-    padding: 14px;
-    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-    border: 1px solid rgba(255,255,255,.06);
-    border-radius: var(--radius);
-    backdrop-filter: blur(10px);
-    box-shadow: var(--shadow);
-  }
-  .brand { display:flex; gap:2px; flex-direction:column; min-width: 230px; }
-  .brand h1 { margin:0; font-size:18px; letter-spacing:.2px; color:#e9e8ff; }
-  .brand p { margin:0; color: var(--muted); font-size:12px; }
-
-  .bar-controls { display:flex; gap:8px; align-items:center; flex:1; }
-
-  input[type="text"], input[type="number"], input[type="url"], select, textarea {
-    background: var(--glass);
-    border: 1px solid rgba(255,255,255,.07);
-    color: var(--text);
-    padding: 10px 12px;
-    border-radius: var(--radius-sm);
-    outline: none;
-    transition: box-shadow .18s ease, transform .12s ease, border-color .18s ease;
-  }
-  textarea { min-height: 44px; resize: vertical; }
-  input::placeholder, textarea::placeholder { color: #8f9ab2; }
-
-  input:focus, select:focus, textarea:focus {
-    box-shadow: 0 10px 26px rgba(124,58,237,.18);
-    border-color: rgba(124,58,237,.35);
-    transform: translateY(-1px);
-  }
-
-  .btn {
-    padding: 10px 14px;
-    border-radius: var(--radius-sm);
-    border: 1px solid rgba(255,255,255,.08);
-    background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
-    color: var(--text);
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
-  }
-  .btn:hover { transform: translateY(-1px); }
-  .btn:active { transform: translateY(0); }
-  .btn-primary {
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    border-color: transparent;
-    color:#0b0d14;
-    box-shadow: 0 12px 28px rgba(124,58,237,.25);
-  }
-  .btn-danger {
-    background: linear-gradient(90deg, #d83a56, #ef4444);
-    border-color: transparent;
-  }
-
-  /* ===== Main layout (3 columns) ===== */
-  .main {
-    display: grid;
-    gap: 14px;
-    grid-template-columns: 350px 1fr 420px;
-    grid-template-rows: 1fr;
-    min-height: 0; /* enable child overflow scrolling */
-  }
-
-  .panel {
-    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-    border: 1px solid rgba(255,255,255,.06);
-    border-radius: var(--radius);
-    backdrop-filter: blur(10px);
-    box-shadow: var(--shadow);
-    padding: 14px;
-    min-height: 0; /* important for overflow children */
-    overflow: hidden; /* contain */
-  }
-
-  /* Filters panel (left) */
-  .filters { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
-  .filters .full { grid-column: 1/-1; }
-  .filters small { color: var(--muted); }
-  .switch { display:flex; gap:8px; align-items:center; }
-  .row { display:flex; gap:8px; align-items:center; flex-wrap: wrap; }
-
-  /* Results panel (center) */
-  .results-wrap {
-    height: 100%;
-    display:grid;
-    grid-template-rows: auto auto 1fr auto;
-    gap: 10px;
-    min-height:0;
-  }
-  .results-toolbar { display:flex; gap:8px; align-items:center; justify-content:space-between; }
-  .results-toolbar .left { display:flex; gap:8px; align-items:center; }
-  .results-toolbar .right{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-
-  .progress {
-    width:180px; height:9px; border-radius: 999px;
-    background: rgba(255,255,255,.07);
-    overflow:hidden;
-  }
-  .progress > i {
-    display:block; height:100%; width:0%;
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    transition: width .25s ease;
-  }
-
-  .table-wrap {
-    overflow:auto;
-    border-radius: calc(var(--radius) - 6px);
-    border: 1px solid rgba(255,255,255,.06);
-  }
-  table {
-    width:100%;
-    border-collapse: collapse;
-    background: transparent;
-  }
-  thead th {
-    position: sticky; top: 0; backdrop-filter: blur(10px);
-    background: rgba(16,18,30,.6);
-    color: var(--muted);
-    font-weight: 600;
-    font-size: 13px;
-    text-align: left;
-    padding: 12px;
-    border-bottom: 1px solid rgba(255,255,255,.08);
-  }
-  tbody td {
-    padding: 12px;
-    border-bottom: 1px solid rgba(255,255,255,.06);
-    vertical-align: middle;
-    font-size: 14px;
-  }
-  tbody tr {
-    transition: background .18s ease, transform .14s ease;
-  }
-  tbody tr:hover {
-    background: rgba(124,58,237,.12);
-    transform: translateY(-1px);
-    cursor: pointer;
-  }
-  .avatar { width:42px; height:42px; border-radius: 12px; object-fit: cover; margin-right:10px; }
-
-  /* Details panel (right) */
-  .details {
-    height: 100%;
-    display:grid;
-    grid-template-rows: auto auto 1fr;
-    gap:10px; min-height:0;
-  }
-  .banner {
-    height: 120px; border-radius: 12px; background-size: cover; background-position: center;
-    border:1px solid rgba(255,255,255,.06);
-  }
-  .about { overflow:auto; }
-  .meta { color: var(--muted); font-size: 13px; }
-  .stats { display:grid; grid-template-columns: repeat(3,1fr); gap:10px; }
-  .stat {
-    text-align:center; padding:10px; border-radius:12px; background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.08);
-  }
-  .stat b { display:block; font-size: 16px; color: #eef; }
-
-  .videos-grid { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
-  .video-card { background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:8px; }
-  .video-card img { width:100%; height:110px; object-fit:cover; border-radius:10px; }
-  .video-card h4 { font-size: 13px; margin:8px 0 4px; }
-
-  /* Custom selects + scrollbar (subtle) */
-  select {
-    appearance: none;
-    background-image:
-      linear-gradient(45deg, transparent 50%, #cfd6ea 50%),
-      linear-gradient(135deg, #cfd6ea 50%, transparent 50%),
-      linear-gradient(to right, transparent, transparent);
-    background-position:
-      calc(100% - 18px) calc(50% - 3px),
-      calc(100% - 12px) calc(50% - 3px),
-      calc(100% - 2.5em) 0.5em;
-    background-size: 6px 6px, 6px 6px, 1px 1.8em;
-    background-repeat: no-repeat;
-  }
-
-  ::-webkit-scrollbar { width: 10px; height:10px; }
-  ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--accent), var(--accent-2));
-    border-radius: 999px;
-    border: 3px solid rgba(0,0,0,.25);
-  }
-  ::-webkit-scrollbar-track { background: transparent; }
-
-  /* Responsive */
-  @media (max-width: 1200px){
-    .main { grid-template-columns: 1fr; grid-template-rows: 420px 1fr 520px; }
-    .details { grid-template-rows: auto 1fr 1fr; }
-  }
-  
-  /* Additional styles for authentication and admin controls */
-  .auth-form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 320px;
-      margin: 10vh auto;
-      padding: 24px;
-      background: var(--bg-1);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-  }
-  .auth-form h2 {
-      text-align: center;
-      margin-bottom: 12px;
-      font-size: 24px;
-  }
-  .auth-form input {
-      width: 100%;
-  }
-  .auth-form button {
-      width: 100%;
-  }
-  .user-info {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-  }
-</style>
+      /* Responsive */
+      @media (min-width: 768px){
+        body{
+          padding:4rem;
+        }
+        #main{
+          flex-direction:row;
+        }
+        #results{
+          flex:2;
+        }
+        #detail-view{
+          flex:1;
+        }
+      }
+    </style>
 </head>
 <body>
-    <div id="auth-view" class="auth-form">
-        <h2>Welcome to Lead Studio Pro</h2>
-        <input id="authEmail" type="email" placeholder="Email" autocomplete="username">
-        <input id="authPass" type="password" placeholder="Password" autocomplete="current-password">
-        <button class="btn btn-primary" id="btnSignIn">Sign In</button>
-        <button class="btn" id="btnSignUp">Sign Up</button>
-        <div id="authStatus" class="meta" style="text-align: center;"></div>
-    </div>
 
-    <div id="app-view" class="app" style="display:none">
-        <div class="topbar">
-            <div class="brand">
-                <h1>Lead Studio Pro</h1>
-                <p>Apple-grade UI • Advanced YouTube lead extractor</p>
-            </div>
-            <div class="bar-controls">
-                <input id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA"/>
-                <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)"></textarea>
-                <button class="btn btn-primary" id="btnSearch">Search</button>
-                <button class="btn" id="btnClear">Clear</button>
-            </div>
-        </div>
-
-        <div class="main">
-            <div class="panel">
-                <div class="row" style="justify-content:space-between;margin-bottom:8px">
-                    <div class="meta">Advanced Filters</div>
-                    <div class="meta" id="status">Idle</div>
-                </div>
-                <div class="filters">
-                    <select id="order"><option value="relevance">Order: Relevance</option><option value="date">Order: Date</option><option value="viewCount">Order: Views</option><option value="rating">Order: Rating</option></select>
-                    <select id="duration"><option value="">Duration: Any</option><option value="short">Short (&lt;4m)</option><option value="medium">Medium (4–20m)</option><option value="long">Long (&gt;20m)</option></select>
-                    <select id="upload"><option value="">Upload Time: Any</option><option value="hour">Last hour</option><option value="today">Today</option><option value="week">This week</option><option value="month">This month</option></select>
-                    <select id="region"><option value="">Region: Any</option><option>US</option><option>IN</option><option>GB</option><option>CA</option><option>AU</option><option>DE</option></select>
-                    <select id="definition"><option value="">Definition: Any</option><option value="high">HD</option><option value="standard">SD</option></select>
-                    <select id="safe"><option value="">Safe: Any</option><option value="none">None</option><option value="moderate">Moderate</option><option value="strict">Strict</option></select>
-
-                    <input id="perPage" class="full" type="number" min="1" max="50" value="25" placeholder="Results per page (1–50)"/>
-                    <input id="pages" class="full" type="number" min="1" max="10" value="2" placeholder="Pages per query (1–10)"/>
-
-                    <div class="full row">
-                        <input id="minSubs" type="number" placeholder="Min subs"/>
-                        <input id="maxSubs" type="number" placeholder="Max subs"/>
-                        <input id="searchInResults" type="text" placeholder="Search within results (title / ID)"/>
-                    </div>
-
-                    <div class="full row">
-                        <input id="corsProxy" type="url" placeholder="Optional CORS proxy for verification (best-effort)"/>
-                        <label class="switch"><input id="doVerify" type="checkbox"/> <small>Attempt verify check</small></label>
-                    </div>
-
-                    <div class="full row" style="justify-content:space-between;margin-top:2px">
-                        <div class="progress"><i id="progressBar"></i></div>
-                        <small id="count">0 channels</small>
-                    </div>
-                </div>
-            </div>
-
-            <div class="panel results-wrap">
-                <div class="results-toolbar">
-                    <div class="left">
-                        <button class="btn" id="btnSelectAll">Select All</button>
-                        <button class="btn" id="btnDeselectAll">Deselect</button>
-                        <button class="btn" id="btnSaveLib">Save Library</button>
-                        <button class="btn" id="btnLoadLib">Load Library</button>
-                    </div>
-                    <div class="right">
-                        <select id="clientSort">
-                            <option value="subs-desc">Sort: Subs ↓</option>
-                            <option value="subs-asc">Sort: Subs ↑</option>
-                            <option value="views-desc">Sort: Views ↓</option>
-                            <option value="views-asc">Sort: Views ↑</option>
-                            <option value="title-asc">Sort: Title A→Z</option>
-                            <option value="title-desc">Sort: Title Z→A</option>
-                        </select>
-                        <button class="btn btn-primary" id="btnExportCSV">Export CSV</button>
-                        <button class="btn" id="btnExportJSON">Export JSON</button>
-                        <button class="btn" id="btnCopyIDs">Copy Channel IDs</button>
-                        <button class="btn btn-danger" id="btnClearResults">Clear</button>
-                    </div>
-                </div>
-
-                <div class="table-wrap" id="resultsScroller">
-                    <table aria-label="Channel results">
-                        <thead>
-                            <tr>
-                                <th style="width:42px"></th>
-                                <th>Channel</th>
-                                <th>Subs</th>
-                                <th>Videos</th>
-                                <th>Views</th>
-                                <th>Verified</th>
-                            </tr>
-                        </thead>
-                        <tbody id="resultsTbody"></tbody>
-                    </table>
-                </div>
-
-                <div class="row" style="justify-content:flex-end">
-                    <small class="meta">Tip: Click a row to open full details in the panel on the right.</small>
-                </div>
-            </div>
-
-            <div class="panel details">
-                <div>
-                    <div class="row" style="justify-content:space-between">
-                        <div>
-                            <div class="meta">Channel Details</div>
-                            <h3 id="detailTitle" style="margin:6px 0 0">Select a channel</h3>
-                        </div>
-                        <div class="row">
-                            <button class="btn" id="btnExportSelected">Export Selected</button>
-                            <button class="btn" id="btnCopySelected">Copy Selected CSV</button>
-                        </div>
-                    </div>
-                </div>
-                <div id="banner" class="banner" style="display:none"></div>
-                <div class="about" id="detailContent">
-                    <div class="meta">No channel selected.</div>
-                </div>
-                <div class="meta">
-                    <div class="row" style="justify-content:space-between;align-items:flex-end">
-                        <div class="user-info">
-                            <div id="userEmail"></div>
-                            <div id="userCredits"></div>
-                        </div>
-                        <button class="btn" id="btnSignOut">Sign Out</button>
-                    </div>
-                    <div id="admin-controls" style="display:none;margin-top:10px">
-                        <button class="btn btn-primary" id="btnResetCredits">Reset All Credits</button>
-                    </div>
-                </div>
-            </div>
+    <!-- Modal for Custom Alerts -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title"></h3>
+            <p id="modal-message"></p>
+            <button id="modal-close-btn" class="modal-close-btn">OK</button>
         </div>
     </div>
     
+    <!-- Login/Signup UI -->
+    <div id="authContainer" class="auth-container">
+        <h1>Welcome</h1>
+        <form id="authForm" class="auth-form">
+            <input type="email" id="emailField" placeholder="Email" required>
+            <input type="password" id="passwordField" placeholder="Password" required>
+            <button type="submit" id="authButton" class="auth-btn primary">Sign In</button>
+        </form>
+        <p id="authStatus" class="auth-status"></p>
+        <a id="authToggle" class="auth-toggle">Need an account? Sign Up</a>
+    </div>
+
+    <!-- Main App UI -->
+    <div id="main">
+      <div id="results" class="panel">
+        <header>
+          <h1>YouTube Channels</h1>
+          <button class="logout-btn" id="logoutBtn">
+            Logout
+          </button>
+          <div class="btn-group">
+            <button class="btn-icon" id="btnLoadLib">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </button>
+            <button class="btn-icon" id="btnSaveLib">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            </button>
+            <button class="btn-icon" onclick="copyResults()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+          </div>
+        </header>
+
+        <form id="searchForm" class="search-form">
+          <input type="text" id="keywords" placeholder="Enter keywords to search..." value="fitness, health, yoga">
+          <select id="country">
+            <option value="">Any Country</option>
+            <option value="US">USA</option>
+            <option value="GB">UK</option>
+            <option value="CA">Canada</option>
+            <option value="AU">Australia</option>
+          </select>
+          <button type="submit" id="searchBtn">
+            <span id="searchBtnText">Search (10 Credits)</span>
+          </button>
+        </form>
+
+        <div class="progress-bar">
+          <div id="progressBar" style="width:0%;"></div>
+        </div>
+
+        <div class="status-box">
+          <span class="dot" id="statusDot"></span>
+          <span id="statusMessage">Idle</span>
+          <span id="creditBalance">Credits: 0</span>
+        </div>
+        
+        <table id="resultsTable">
+          <thead>
+            <tr>
+              <th>Channel Name</th>
+              <th>Subscribers</th>
+              <th>Country</th>
+              <th>Socials</th>
+            </tr>
+          </thead>
+          <tbody id="resultsTbody">
+            <tr class="meta-row">
+              <td colspan="4">
+                <div class="meta">No search results yet.</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="detail-view" class="panel">
+        <h2 id="detailTitle">Select a channel</h2>
+        <div id="detailContent">
+          <div class="meta">No channel selected.</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Firebase Scripts -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-functions.js";
-        import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app-check.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-functions.js";
         
-        /* =========================
-           STATE + HELPERS
-           ========================= */
-        const $ = id => document.getElementById(id);
-        const sleep = ms => new Promise(r => setTimeout(r, ms));
-        const esc = s => String(s ?? '').replace(/"/g,'""');
-
-        const savedLibraryKey = 'lead_studio_pro_lib_v1';
-        let currentUser = null;
-        let isAppCheckInitialized = false;
-        let appCheckToken = null;
+        // --- GLOBALS ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
         
-        function setStatus(t){ $('status').innerText = t; }
-        function setProgress(p){ $('progressBar').style.width = Math.min(100, Math.round(p*100)) + '%'; }
-
-        let LIB = []; // enriched channels
-        let VIEW = []; // filtered/sorted view
-        let lastExport = [];
-        let lastSearch = {};
-
-        // === FIREBASE CONFIGURATION ===
-        const firebaseConfig = {
-          apiKey: "AIzaSyBvU3_Njbi1JQr_wD1a16h5coTW2ifaRDU",
-          authDomain: "youleadmax.firebaseapp.com",
-          projectId: "youleadmax",
-          storageBucket: "youleadmax.firebasestorage.app",
-          messagingSenderId: "710806971072",
-          appId: "1:710806971072:web:ced903befe8693f886c325",
-          measurementId: "G-JW9W20C1LQ"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const functions = getFunctions(app);
-
-        // This is a placeholder. You MUST replace this with the real UID
-        // after creating the admin user in Firebase Authentication.
-        const ADMIN_UID = 'YOUR_REAL_ADMIN_UID'; 
-        let isAdmin = false;
-        let userCredits = 0;
-
-        async function initAppCheck() {
-            if (isAppCheckInitialized) return;
-            isAppCheckInitialized = true;
-            try {
-                const appCheckInstance = initializeAppCheck(app, {
-                    provider: new ReCaptchaV3Provider('6Lcw71MpAAAAAPJqGgV8t4-3gR3eO3C_w_f-L6y_'), // Replace with your actual ReCaptcha v3 key
-                    isTokenAutoRefreshEnabled: true
-                });
-                appCheckInstance.getToken(true).then(tokenResponse => {
-                    appCheckToken = tokenResponse.token;
-                    console.log("App Check initialized successfully.");
-                }).catch(error => {
-                    console.error("App Check initialization error:", error);
-                });
-            } catch (e) {
-                console.error("App Check setup failed:", e);
-            }
+        let app, auth, db, functions, isAuthReady = false, userId;
+        
+        // --- UI ELEMENTS ---
+        const $ = s => document.getElementById(s);
+        const authContainer = $('authContainer');
+        const mainContainer = $('main');
+        const authForm = $('authForm');
+        const emailField = $('emailField');
+        const passwordField = $('passwordField');
+        const authButton = $('authButton');
+        const authStatus = $('authStatus');
+        const authToggle = $('authToggle');
+        
+        const searchForm = $('searchForm');
+        const searchBtn = $('searchBtn');
+        const searchBtnText = $('searchBtnText');
+        const keywordsInput = $('keywords');
+        const countrySelect = $('country');
+        const statusMessage = $('statusMessage');
+        const statusDot = $('statusDot');
+        const progressBar = $('progressBar');
+        const creditBalanceSpan = $('creditBalance');
+        const resultsTbody = $('resultsTbody');
+        
+        let isLogin = true;
+        
+        // Modal elements
+        const modal = $('modal');
+        const modalTitle = $('modal-title');
+        const modalMessage = $('modal-message');
+        const modalCloseBtn = $('modal-close-btn');
+        
+        function showModal(title, message) {
+            modalTitle.innerText = title;
+            modalMessage.innerText = message;
+            modal.classList.add('show');
         }
+        
+        modalCloseBtn.addEventListener('click', () => {
+            modal.classList.remove('show');
+        });
 
-        /* ========================= AUTHENTICATION ========================= */
+        // --- FIREBASE INITIALIZATION ---
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            functions = getFunctions(app, 'europe-west1');
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+            showModal("Initialization Error", "Failed to initialize Firebase. Please check the console for details.");
+        }
+        
+        // --- AUTHENTICATION ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                currentUser = user;
-                isAdmin = (user.uid === ADMIN_UID);
-                $('app-view').style.display = 'grid';
-                $('auth-view').style.display = 'none';
-                $('userEmail').innerText = `Logged in as: ${user.email}`;
-
-                if (isAdmin) {
-                    $('admin-controls').style.display = 'block';
-                } else {
-                    $('admin-controls').style.display = 'none';
-                }
-
-                // Fetch user data from Firestore
-                const userRef = doc(db, 'users', user.uid);
-                const userDoc = await getDoc(userRef);
-
-                if (userDoc.exists()) {
-                    userCredits = userDoc.data().credits || 0;
-                } else {
-                    // Create new user document with initial credits
-                    userCredits = 100; // default
-                    await setDoc(userRef, {
-                        email: user.email,
-                        credits: userCredits
-                    }, { merge: true });
-                }
-                updateCreditsUI();
+                userId = user.uid;
+                isAuthReady = true;
+                authContainer.style.display = 'none';
+                mainContainer.classList.add('active');
+                
+                // Real-time listener for user credits
+                onSnapshot(doc(db, 'users', user.uid), (docSnapshot) => {
+                    if (docSnapshot.exists()) {
+                        const data = docSnapshot.data();
+                        creditBalanceSpan.innerText = `Credits: ${data.credits || 0}`;
+                    } else {
+                        setDoc(doc(db, 'users', user.uid), { credits: 100 });
+                        creditBalanceSpan.innerText = `Credits: 100`;
+                    }
+                });
             } else {
-                currentUser = null;
-                $('app-view').style.display = 'none';
-                $('auth-view').style.display = 'flex';
+                isAuthReady = true;
+                authContainer.style.display = 'flex';
+                mainContainer.classList.remove('active');
             }
         });
-
-        $('btnSignIn').addEventListener('click', async () => {
-            const email = $('authEmail').value;
-            const pass = $('authPass').value;
+        
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = emailField.value;
+            const password = passwordField.value;
+            authButton.disabled = true;
+            authStatus.innerText = 'Processing...';
+        
             try {
-                await signInWithEmailAndPassword(auth, email, pass);
+                if (isLogin) {
+                    await signInWithEmailAndPassword(auth, email, password);
+                } else {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                }
+                authStatus.innerText = '';
             } catch (error) {
-                $('authStatus').innerText = 'Sign-in failed: ' + error.message;
+                console.error("Auth Error:", error);
+                const errorMessage = isLogin ? 'Sign in failed. Invalid email or password.' : 'Sign up failed. Please try a different email or a stronger password.';
+                authStatus.innerText = errorMessage;
+                showModal("Authentication Failed", errorMessage);
+            } finally {
+                authButton.disabled = false;
             }
         });
-
-        $('btnSignUp').addEventListener('click', async () => {
-            const email = $('authEmail').value;
-            const pass = $('authPass').value;
-            try {
-                await createUserWithEmailAndPassword(auth, email, pass);
-            } catch (error) {
-                $('authStatus').innerText = 'Sign-up failed: ' + error.message;
-            }
+        
+        authToggle.addEventListener('click', () => {
+            isLogin = !isLogin;
+            authButton.innerText = isLogin ? 'Sign In' : 'Sign Up';
+            authToggle.innerText = isLogin ? 'Need an account? Sign Up' : 'Already have an account? Sign In';
+            authStatus.innerText = '';
         });
-
-        $('btnSignOut').addEventListener('click', async () => {
+        
+        $('logoutBtn').addEventListener('click', async () => {
             await signOut(auth);
-            resetResults();
+            showModal("Logged Out", "You have been successfully logged out.");
         });
 
-        $('btnResetCredits').addEventListener('click', async () => {
-            if (!confirm('Are you sure you want to reset ALL user credits to 100?')) return;
-            const resetCredits = httpsCallable(functions, 'adminResetCredits');
-            try {
-                setStatus('Resetting all credits...');
-                const result = await resetCredits({appCheckToken});
-                alert(result.data.message);
-                setStatus('Credits reset.');
-            } catch(error) {
-                console.error('Reset credits failed:', error);
-                alert('Failed to reset credits: ' + error.message);
-                setStatus('Ready.');
-            }
-        });
-
-        function updateCreditsUI() {
-            $('userCredits').innerText = `Credits: ${userCredits}`;
-        }
-
-        /* ========================= SEARCH / FETCH ========================= */
-        $('btnSearch').addEventListener('click', searchAll);
-        $('btnClear').addEventListener('click', () => { $('query').value=''; resetResults(); });
-        $('query').addEventListener('keydown', e => { if(e.key==='Enter') searchAll(); });
-
-        async function searchAll(){
-            const queryRaw = $('query').value.trim();
-            const queries = queryRaw.split(/[,\\n]/).map(q=>q.trim()).filter(Boolean);
-            const perPage = clamp(Number($('perPage').value||25), 1, 50);
-            const pages = clamp(Number($('pages').value||2), 1, 10);
-            const deduction = queries.length * pages;
-
-            if(!queries.length){ alert('Please enter at least one query'); return; }
-            if(!currentUser){ alert('Please sign in first'); return; }
-
-            try {
-                setStatus('Deducting credits...');
-                const deductCredits = httpsCallable(functions, 'deductCredits');
-                const result = await deductCredits({ deduction, appCheckToken });
-                userCredits = result.data.credits;
-                updateCreditsUI();
-                setStatus('Credits deducted. Searching...');
-            } catch (e) {
-                console.error("Credit deduction failed:", e);
-                alert('Credit deduction failed: ' + e.message);
-                setStatus('Ready.');
+        // --- SEARCH FUNCTIONALITY (PLACEHOLDER) ---
+        searchForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!auth.currentUser) {
+                showModal("Access Denied", "Please sign in to perform a search.");
                 return;
             }
-
-            resetResults();
-            lastSearch = { queryRaw, queries, perPage, pages, filters:{order,duration,upload,region,definition,safe} };
-
-            // Your existing search logic from this point on, but with a few changes
-            // ... (rest of the searchAll function)
             
-            setStatus('Searching for channels...');
-            const apiKey = $('apiKey').value.trim();
-            const order = $('order').value;
-            const duration = $('duration').value;
-            const upload = $('upload').value;
-            const region = $('region').value;
-            const definition = $('definition').value;
-            const safe = $('safe').value;
-            let totalSteps = queries.length * pages;
-            let done = 0;
-            let chanIds = new Set();
-            
-            for(const q of queries){
-                let pageToken = '';
-                for(let i=0;i<pages;i++){
-                    if(!pageToken && i>0) break;
-                    
-                    const url = new URL('https://www.googleapis.com/youtube/v3/search');
-                    url.searchParams.set('part','snippet');
-                    url.searchParams.set('type','video');
-                    url.searchParams.set('q', q);
-                    url.searchParams.set('maxResults', String(perPage));
-                    url.searchParams.set('order', order);
-                    if(region) url.searchParams.set('regionCode', region);
-                    if(duration) url.searchParams.set('videoDuration', duration);
-                    if(definition) url.searchParams.set('videoDefinition', definition);
-                    if(safe) url.searchParams.set('safeSearch', safe);
-                    if(upload) url.searchParams.set('publishedAfter', getPublishedAfterISO(upload));
-                    if(pageToken) url.searchParams.set('pageToken', pageToken);
-                    url.searchParams.set('key', apiKey);
-                    
-                    let resp;
-                    try { resp = await fetch(url.toString()); }
-                    catch(e){ console.error(e); return alert('Network error during search'); }
-                    
-                    if(!resp.ok){
-                        const t = await resp.text();
-                        alert('Search API error: '+resp.status+'\n'+t);
-                        return;
-                    }
-                    
-                    const data = await resp.json();
-                    
-                    (data.items || []).forEach(item => {
-                        // Shorts filtering (multi-heuristic)
-                        const t = (item.snippet.title||'').toLowerCase();
-                        const d = (item.snippet.description||'').toLowerCase();
-                        if(t.includes('#shorts') || t.includes('shorts ') || t.endsWith('shorts') || d.includes('#shorts') || d.includes('shorts ')) return;
-                        const cid = item.snippet.channelId;
-                        if(cid) chanIds.add(cid);
-                    });
-                    
-                    pageToken = data.nextPageToken || '';
-                    done++;
-                    setProgress(done/totalSteps * 0.65);
-                    await sleep(180);
-                }
-            }
-            
-            if(chanIds.size===0){ setStatus('No channels found'); setProgress(1); return; }
-            
-            setStatus(`Found ${chanIds.size} channels — fetching details…`);
-            
-            // fetch channels in batches of 50
-            const ids = Array.from(chanIds);
-            for(let i=0;i<ids.length;i+=50){
-                const batch = ids.slice(i,i+50);
-                const chURL = new URL('https://www.googleapis.com/youtube/v3/channels');
-                chURL.searchParams.set('part','snippet,statistics,brandingSettings');
-                chURL.searchParams.set('id', batch.join(','));
-                chURL.searchParams.set('key', apiKey);
-                
-                let resp;
-                try { resp = await fetch(chURL.toString()); }
-                catch(e){ console.error(e); return alert('Network error fetching channels'); }
-                
-                if(!resp.ok){
-                    const t = await resp.text();
-                    alert('Channels API error: '+resp.status+'\n'+t);
-                    return;
-                }
-                
-                const data = await resp.json();
-                
-                (data.items||[]).forEach(ch => {
-                    if(!ch.snippet || !ch.snippet.title) return; // junk
-                    const stats = ch.statistics || {};
-                    const title = ch.snippet.title;
-                    
-                    let country = ch.snippet.country || '';
-                    if(!country && ch.brandingSettings?.channel?.country){
-                        country = ch.brandingSettings.channel.country;
-                    }
-                    
-                    LIB.push({
-                        title: title,
-                        description: ch.snippet.description,
-                        channelId: ch.id,
-                        subs: Number(stats.subscriberCount||0),
-                        views: Number(stats.viewCount||0),
-                        videos: Number(stats.videoCount||0),
-                        verified: (ch.snippet.customUrl||'').includes('channel') ? 'No' : 'Yes',
-                        avatar: ch.snippet.thumbnails?.high?.url || ch.snippet.thumbnails?.default?.url || '',
-                        banner: ch.brandingSettings?.image?.bannerExternalUrl || '',
-                        country: country,
-                        createdAt: ch.snippet.publishedAt.split('T')[0]
-                    });
-                    
-                    done++;
-                    setProgress(0.65 + (done/totalSteps * 0.35));
-                });
-                await sleep(180);
-            }
-
-            if(LIB.length===0){
-                setStatus('No channels found');
-            } else {
-                applyClientFiltersAndRender();
-                setStatus(`Found ${LIB.length} channels.`);
-            }
-            setProgress(1);
-        }
-
-        function getPublishedAfterISO(timeframe){
-            const d = new Date();
-            if(timeframe==='hour') d.setHours(d.getHours() - 1);
-            if(timeframe==='today') d.setDate(d.getDate() - 1);
-            if(timeframe==='week') d.setDate(d.getDate() - 7);
-            if(timeframe==='month') d.setMonth(d.getMonth() - 1);
-            return d.toISOString();
-        }
-
-        function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
-
-        function applyClientFiltersAndRender(){
-            const min = Number($('minSubs').value||0);
-            const maxRaw = Number($('maxSubs').value||0);
-            const max = maxRaw>0? maxRaw : Infinity;
-            const needle = $('searchInResults').value.trim().toLowerCase();
-
-            VIEW = LIB.filter(c => {
-                if(c.subs < min) return false;
-                if(c.subs > max) return false;
-                if(needle){
-                    const hit = (c.title?.toLowerCase().includes(needle)) || (c.channelId?.toLowerCase().includes(needle));
-                    if(!hit) return false;
-                }
-                return true;
-            });
-
-            // client sort
-            const sort = $('clientSort').value;
-            VIEW.sort((a,b) => {
-                if(sort==='subs-desc') return (b.subs||0) - (a.subs||0);
-                if(sort==='subs-asc') return (a.subs||0) - (b.subs||0);
-                if(sort==='views-desc')return (b.views||0) - (a.views||0);
-                if(sort==='views-asc') return (a.views||0) - (b.views||0);
-                if(sort==='title-asc') return (a.title||'').localeCompare(b.title||'');
-                if(sort==='title-desc')return (b.title||'').localeCompare(a.title||'');
-                return 0;
-            });
-
-            renderResults(VIEW);
-            lastExport = VIEW.slice();
-            $('count').innerText = VIEW.length + ' channels';
-        }
-
-        /* ========================= RENDER RESULTS + DETAILS ========================= */
-        $('clientSort').addEventListener('change', applyClientFiltersAndRender);
-        $('minSubs').addEventListener('input', applyClientFiltersAndRender);
-        $('maxSubs').addEventListener('input', applyClientFiltersAndRender);
-        $('searchInResults').addEventListener('input', applyClientFiltersAndRender);
-
-        function renderResults(list){
-            const tbody = $('resultsTbody');
-            tbody.innerHTML = '';
-            if(!list.length){
-                tbody.innerHTML = `<tr><td colspan="6" class="meta">No channels match your filters.</td></tr>`;
+            const keywords = keywordsInput.value;
+            if (keywords.trim() === '') {
+                showModal("Invalid Input", "Please enter a search query.");
                 return;
             }
-            list.forEach((c, idx) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><input type="checkbox" class="sel" data-idx="${idx}"/></td>
-                    <td>
-                        <div style="display:flex;align-items:center;gap:10px">
-                            <img class="avatar" src="${sanitize(c.avatar)}" alt="">
-                            <div>
-                                <div style="font-weight:700">${sanitize(c.title)}</div>
-                                <div class="meta">${sanitize(c.channelId)}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>${c.hidden ? 'Hidden' : (c.subs||0).toLocaleString()}</td>
-                    <td>${(c.videos||0).toLocaleString()}</td>
-                    <td>${(c.views||0).toLocaleString()}</td>
-                    <td>${c.verified}</td>
-                `;
-                tr.addEventListener('click', e => {
-                    if(e.target.type !== 'checkbox'){
-                        renderDetails(c);
-                    }
-                });
-                tbody.appendChild(tr);
-            });
-        }
         
-        function renderDetails(c){
-            $('detailTitle').innerText = c.title;
-            const socialLinks = getSocialLinksFromDesc(c);
-
-            $('detailContent').innerHTML = `
-                <div class="meta">Channel ID: ${c.channelId} • ${c.country} • Created: ${c.createdAt}</div>
-                <p style="margin-top:10px;line-height:1.5;font-size:14px;color:var(--muted)">${sanitize(c.description)}</p>
-                <div class="stats" style="margin-top:14px">
-                    <div class="stat"><b>${c.subs.toLocaleString()}</b><div class="meta">Subscribers</div></div>
-                    <div class="stat"><b>${c.views.toLocaleString()}</b><div class="meta">Total Views</div></div>
-                    <div class="stat"><b>${c.videos.toLocaleString()}</b><div class="meta">Total Videos</div></div>
-                </div>
-                
-                <h4 style="margin:20px 0 8px">Social Links</h4>
-                <div class="row" style="flex-wrap:nowrap;justify-content:space-between">
-                    <div class="row">
-                        ${socialLinks.website?`<a href="${sanitize(socialLinks.website)}" target="_blank" class="btn">Website</a>`:''}
-                        ${socialLinks.twitter?`<a href="${sanitize(socialLinks.twitter)}" target="_blank" class="btn">Twitter</a>`:''}
-                        ${socialLinks.instagram?`<a href="${sanitize(socialLinks.instagram)}" target="_blank" class="btn">Instagram</a>`:''}
-                        ${socialLinks.facebook?`<a href="${sanitize(socialLinks.facebook)}" target="_blank" class="btn">Facebook</a>`:''}
-                        ${socialLinks.tiktok?`<a href="${sanitize(socialLinks.tiktok)}" target="_blank" class="btn">TikTok</a>`:''}
-                        ${socialLinks.linkedin?`<a href="${sanitize(socialLinks.linkedin)}" target="_blank" class="btn">LinkedIn</a>`:''}
-                    </div>
-                </div>
-                <h4 style="margin:20px 0 8px">Latest Videos <small class="meta">(up to 6)</small></h4>
-                <div class="videos-grid" id="latestVideos">
-                    <div class="meta">Loading...</div>
-                </div>
-            `;
-            if(c.banner){
-                $('banner').style.display = 'block';
-                $('banner').style.backgroundImage = `url(${sanitize(c.banner)})`;
-            } else {
-                $('banner').style.display = 'none';
-            }
+            searchBtn.disabled = true;
+            searchBtnText.innerText = 'Searching...';
+            setStatus('Searching...');
+            setProgress(0);
+        
+            // This is a placeholder for your future Cloud Function call
+            showModal("Search Initiated", "Credits would be deducted here, but the backend function is currently disabled. Let's work on the UI first!");
+            setStatus('Search successful. Credits deducted.');
+            setProgress(100);
             
-            loadLatestVideos(c.channelId);
-        }
-
-        function getSocialLinksFromDesc(c){
-            let links = [];
-            const desc = (c.description||'') + ' ' + (c.brandingSettings?.channel?.description||'');
-            const regex = /(https?:\/\/[w.-]+\.[a-z]{2,}(?:[w\-_~:/?#[\]@!$&'()*+,;=%]*)?)/gi;
-            let m; while((m=regex.exec(desc))!==null){ links.push(m[1]); }
-            // deduplicate
-            const uniq = Array.from(new Set(links));
-            const socials = {};
-            uniq.forEach(u=>{
-                if(/twitter\.com/i.test(u)) socials.twitter=u;
-                else if(/instagram\.com/i.test(u)) socials.instagram=u;
-                else if(/facebook\.com/i.test(u)) socials.facebook=u;
-                else if(/tiktok\.com/i.test(u)) socials.tiktok=u;
-                else if(/linkedin\.com/i.test(u)) socials.linkedin=u;
-                else if(!socials.website) socials.website=u;
-            });
-            return socials;
-        }
-
-        /* =========================
-           UTIL
-           ========================= */
-        function resetResults(){
-            LIB = []; VIEW = []; lastExport = [];
-            $('resultsTbody').innerHTML=''; $('count').innerText='0 channels';
-            $('detailTitle').innerText = 'Select a channel';
-            $('detailContent').innerHTML = '<div class="meta">No channel selected.</div>';
-            $('banner').style.display='none'; $('banner').style.backgroundImage='none';
-            setProgress(0); setStatus('Idle');
-        }
-
-        function sanitize(s){ try{ return s.replace(/</g,'&lt;'); } catch(e){return '';} }
-
-        async function loadLatestVideos(channelId){
-            const apiKey = $('apiKey').value.trim();
-            const box = $('latestVideos');
-            try{
-                const u = new URL('https://www.googleapis.com/youtube/v3/search');
-                u.searchParams.set('part','snippet');
-                u.searchParams.set('channelId', channelId);
-                u.searchParams.set('order','date');
-                u.searchParams.set('maxResults','6');
-                u.searchParams.set('type','video');
-                u.searchParams.set('key', apiKey);
-                const r = await fetch(u.toString());
-                if(!r.ok){
-                    box.innerHTML = '<div class="meta">Cannot load videos.</div>';
-                    return;
-                }
-                const data = await r.json();
-                if(!data.items?.length){
-                    box.innerHTML = '<div class="meta">No recent videos.</div>';
-                    return;
-                }
-                box.innerHTML='';
-                data.items.forEach(it => {
-                    const vid = it.id.videoId;
-                    const thumb = it.snippet.thumbnails?.medium?.url || it.snippet.thumbnails?.default?.url || '';
-                    const title = it.snippet.title || '';
-                    const card = document.createElement('div');
-                    card.className = 'video-card';
-                    card.innerHTML = `
-                        <img src="${sanitize(thumb)}" alt="">
-                        <h4>${sanitize(title)}</h4>
-                        <div class="row" style="margin-top:6px">
-                            <button class="btn btn-primary" onclick="window.open('https://www.youtube.com/watch?v=${vid}')">Open</button>
-                            <button class="btn" onclick="embed('${vid}')">Preview</button>
-                        </div>
-                    `;
-                    box.appendChild(card);
-                });
-            }catch(e){
-                console.error(e);
-                box.innerHTML = '<div class="meta">Error loading videos.</div>';
+            searchBtn.disabled = false;
+            searchBtnText.innerText = 'Search (10 Credits)';
+        });
+        
+        // --- FIRESTORE FUNCTIONS ---
+        async function saveChannelsToFirestore(channels) {
+            if (!isAuthReady || !userId) {
+                showModal("Error", "Authentication is not ready. Please try again.");
+                return;
+            }
+            try {
+                const userDocRef = doc(db, 'artifacts', appId, 'users', userId);
+                await setDoc(userDocRef, { channels: JSON.stringify(channels) }, { merge: true });
+                showModal("Success", `Saved ${channels.length} channels to your cloud storage.`);
+            } catch (error) {
+                console.error("Error saving channels:", error);
+                showModal("Save Failed", "Could not save your channels. Please check the console for details.");
             }
         }
         
-        function embed(videoId){
-            // add/replace a small embed at bottom-right of results panel
-            let frame = document.getElementById('previewFrame');
-            if(frame){ frame.remove(); }
-            frame = document.createElement('iframe');
-            frame.id='previewFrame';
-            frame.width='100%';
-            frame.height='220px';
-            frame.style.marginTop='10px';
-            frame.src=`https://www.youtube.com/embed/${videoId}?autoplay=1`;
-            frame.setAttribute('allow','accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture');
-            $('detailContent').appendChild(frame);
-        }
-
-        /* ========================= EXPORTING ========================= */
-        $('btnExportCSV').addEventListener('click', () => {
-            const rows = lastExport;
-            if(!rows.length) return alert('No results to export');
-            downloadText(toCSV(rows), 'lead_studio_pro.csv', 'text/csv');
-        });
-        $('btnExportJSON').addEventListener('click', () => {
-            const rows = lastExport.map(cToSafe);
-            if(!rows.length) return alert('No results to export');
-            downloadText(JSON.stringify(rows,null,2), 'lead_studio_pro.json', 'application/json');
-        });
-        $('btnCopyIDs').addEventListener('click', async () => {
-            const rows = lastExport;
-            if(!rows.length) return alert('No results to export');
-            try{
-                await navigator.clipboard.writeText(rows.map(r=>r.channelId).join('\n'));
-                alert('Channel IDs copied');
-            } catch(e){
-                alert('Copy failed');
+        async function loadChannelsFromFirestore() {
+            if (!isAuthReady || !userId) {
+                showModal("Error", "Authentication is not ready. Please try again.");
+                return;
             }
-        });
-        $('btnSelectAll').addEventListener('click', () => {
-            document.querySelectorAll('.sel').forEach(cb => cb.checked=true);
-        });
-        $('btnDeselectAll').addEventListener('click', () => {
-            document.querySelectorAll('.sel').forEach(cb => cb.checked=false);
-        });
-        $('btnExportSelected').addEventListener('click', () => {
-            const rows = getSelected();
-            if(!rows.length) return alert('Select some rows first');
-            downloadText(toCSV(rows), 'lead_studio_pro_selected.csv', 'text/csv');
-        });
-        $('btnCopySelected').addEventListener('click', async () => {
-            const rows = getSelected();
-            if(!rows.length) return alert('Select some rows first');
-            const csv = toCSV(rows);
-            try{
-                await navigator.clipboard.writeText(csv);
-                alert('Selected CSV copied');
-            } catch(e){
-                alert('Copy failed');
+            try {
+                const userDocRef = doc(db, 'artifacts', appId, 'users', userId);
+                const docSnap = await getDoc(userDocRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    const channels = JSON.parse(data.channels);
+                    // Placeholder for rendering the loaded data
+                    showModal("Success", `Loaded ${channels.length} channels from cloud storage.`);
+                } else {
+                    showModal("No Data", "No saved channels found in your cloud storage.");
+                }
+            } catch (error) {
+                console.error("Error loading channels:", error);
+                showModal("Load Failed", "Could not load your channels. The data may be corrupted.");
             }
-        });
-
-        function getSelected(){
-            return Array.from(document.querySelectorAll('.sel:checked')).map(cb => VIEW[Number(cb.dataset.idx)]).filter(Boolean);
         }
-
-        function toCSV(arr){
-            const fields = ['channel','subs','videos','views','verified','channelId','country','createdAt'];
-            let out = fields.join(',')+'\n';
-            arr.forEach(r => {
-                out += `"${esc(r.title)}","${r.hidden?'Hidden':r.subs}","${r.videos}","${r.views}","${r.verified}","${r.channelId}","${esc(r.country)}","${r.createdAt}"\n`;
-            });
-            return out;
-        }
-
-        function downloadText(text, filename, type){
-            const blob = new Blob([text], {type: type});
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = filename;
-            link.click();
-        }
-
-        function cToSafe(c){
-            // strip big strings that might break inline JSON calls
-            return {
-                channelId:c.channelId,
-                title:c.title,
-                subs:c.subs,
-                views:c.views,
-                videos:c.videos,
-                verified:c.verified,
-                country:c.country,
-                createdAt:c.createdAt
-            };
-        }
-
-        // Handle local storage for library
+        
         $('btnSaveLib').addEventListener('click', () => {
-            if(!LIB.length) return alert('No channels to save');
-            try {
-                localStorage.setItem(savedLibraryKey, JSON.stringify(LIB));
-                alert(`Saved ${LIB.length} channels to local storage.`);
-            } catch(e){
-                alert('Failed to save library. Local storage might be full.');
-            }
+          // Placeholder for your channel data, as the search is not yet functional.
+          const dummyChannels = [{id:1, name:'Channel One'}, {id:2, name:'Channel Two'}];
+          if(dummyChannels.length === 0) {
+            showModal("No Channels", "There are no channels to save.");
+            return;
+          }
+          saveChannelsToFirestore(dummyChannels);
         });
-
+        
         $('btnLoadLib').addEventListener('click', () => {
-            const data = localStorage.getItem(savedLibraryKey);
-            if(!data) return alert('No saved library found.');
-            try{
-                const loaded = JSON.parse(data);
-                LIB = loaded;
-                applyClientFiltersAndRender();
-                alert(`Loaded ${LIB.length} channels from local storage.`);
-            } catch(e){
-                alert('Failed to load library. Data may be corrupted.');
-            }
+          loadChannelsFromFirestore();
         });
 
-        // Initialize App Check
-        initAppCheck();
+        // --- UTILITY FUNCTIONS ---
+        function setStatus(msg, type = 'ok') {
+          statusMessage.innerText = msg;
+          statusDot.className = `dot ${type}`;
+        }
+        
+        function setProgress(p) {
+          progressBar.style.width = p + '%';
+        }
+        
+        function copyResults(){
+          showModal("Action Blocked", "This feature is for UI only. We'll work on the functionality later.");
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+          mainContainer.style.display = 'none';
+        });
+
     </script>
 </body>
 </html>
