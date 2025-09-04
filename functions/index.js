@@ -15,7 +15,7 @@ const appCheck = initializeAppCheck({
 
 // Admin UID to grant special permissions. MUST BE SET SECURELY.
 // You must get this from your Firebase Authentication console after creating the user.
-const ADMIN_UID = 'YOUR_REAL_ADMIN_UID'; 
+const ADMIN_UID = 'DhD6XzfVq2fEJSvrHvws2KTKZlu1'; 
 
 // Deducts credits from a user's account
 exports.deductCredits = functions.https.onCall(async (data, context) => {
