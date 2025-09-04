@@ -6,331 +6,294 @@
 <title>Lead Studio Pro — YouTube Channel Finder</title>
 <style>
   /* =========================
-     DRIPPI UI - BLUE OVERHAUL
+     THEME — Apple-ish + Purple
      ========================= */
-
-  /* Global variables */
-  :root {
-    --bg-0: #0C111E;
-    --bg-1: #181E2C;
-    --bg-2: #212B3E;
-    --bg-3: #2A364A;
-    --border: rgba(255, 255, 255, 0.08);
-    --text-primary: #F0F4FD;
-    --text-secondary: #9FAAC0;
-    --accent-1: #007BFF;
-    --accent-2: #00A3FF;
-    --glass-fill: rgba(255, 255, 255, 0.05);
-    --glass-stroke: rgba(255, 255, 255, 0.15);
-    --glass-shadow: rgba(0, 0, 0, 0.35);
-    --radius: 12px;
-    --shadow-strong: 0 10px 40px rgba(0, 0, 0, 0.4);
-    --shadow-subtle: 0 4px 15px rgba(0, 0, 0, 0.2);
+  :root{
+    --bg-0:#07080c;            /* page base */
+    --bg-1:#0b0d14;            /* panels */
+    --bg-2:#0f1320;            /* deeper */
+    --glass: rgba(255,255,255,.06);
+    --glass-2: rgba(255,255,255,.08);
+    --muted:#a6b0c3;
+    --text:#f5f7ff;
+    --accent:#7c3aed;          /* purple */
+    --accent-2:#a78bfa;        /* light purple */
+    --ok:#22c55e;              /* green */
+    --warn:#f59e0b;            /* amber */
+    --danger:#ef4444;
+    --radius:14px;
+    --radius-sm:10px;
+    --shadow: 0 30px 70px rgba(0,0,0,.45);
   }
 
-  /* Base reset & fonts */
-  * { box-sizing: border-box; }
-  html, body { height: 100%; margin: 0; padding: 0; }
+  /* Base reset */
+  * { box-sizing:border-box; }
+  html,body { height:100%; }
   body {
-    font-family: 'Inter', ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
-    color: var(--text-primary);
-    background: var(--bg-0);
-    overflow: hidden;
-    overscroll-behavior: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin:0;
+    font-family: ui-sans-serif, -apple-system, system-ui, "Segoe UI", Roboto, Inter, Arial;
+    color: var(--text);
+    background:
+      radial-gradient(1200px 800px at 10% -20%, #24103e 0%, transparent 60%),
+      radial-gradient(1200px 800px at 110% 120%, #1f1440 0%, transparent 60%),
+      linear-gradient(180deg, #080910, #0a0c14 60%, #090b12);
+    overflow:hidden; /* prevent random page scrollbars */
+    overscroll-behavior:none;
   }
-  
-  a { color: var(--accent-1); text-decoration: none; }
+
+  a { color: var(--accent-2); text-decoration: none; }
   a:hover { text-decoration: underline; }
 
-  /* Generic styles */
-  .panel, .card {
-    background: var(--bg-1);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
+  /* ===== App shell ===== */
+  .app {
+    max-width: 1350px;
+    margin: 0 auto;
     padding: 18px;
-    backdrop-filter: blur(10px);
-    box-shadow: var(--shadow-subtle);
+    display: grid;
+    gap: 14px;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
   }
 
-  input, select, textarea, button {
-    font-family: inherit;
-    color: var(--text-primary);
-    background: var(--glass-fill);
-    border: 1px solid var(--glass-stroke);
+  /* ===== Topbar ===== */
+  .topbar {
+    display:flex; gap:12px; align-items:center;
+    padding: 14px;
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+    border: 1px solid rgba(255,255,255,.06);
     border-radius: var(--radius);
-    padding: 10px 14px;
-    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+  }
+  .brand { display:flex; gap:2px; flex-direction:column; min-width: 230px; }
+  .brand h1 { margin:0; font-size:18px; letter-spacing:.2px; color:#e9e8ff; }
+  .brand p { margin:0; color: var(--muted); font-size:12px; }
+
+  .bar-controls { display:flex; gap:8px; align-items:center; flex:1; }
+
+  input[type="text"], input[type="number"], input[type="url"], select, textarea {
+    background: var(--glass);
+    border: 1px solid rgba(255,255,255,.07);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: box-shadow .18s ease, transform .12s ease, border-color .18s ease;
+  }
+  textarea { min-height: 44px; resize: vertical; }
+  input::placeholder, textarea::placeholder { color: #8f9ab2; }
+
+  input:focus, select:focus, textarea:focus {
+    box-shadow: 0 10px 26px rgba(124,58,237,.18);
+    border-color: rgba(124,58,237,.35);
+    transform: translateY(-1px);
   }
 
-  input:focus, select:focus, textarea:focus, button:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--accent-1), var(--shadow-strong);
-    border-color: var(--accent-1);
-  }
-  
-  button {
+  .btn {
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255,255,255,.08);
+    background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
+    color: var(--text);
+    font-weight: 700;
     cursor: pointer;
-    background: var(--bg-2);
-    box-shadow: 0 2px 5px var(--glass-shadow);
+    transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
   }
-  
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
   .btn-primary {
-    background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
     border-color: transparent;
-    font-weight: 600;
+    color:#0b0d14;
+    box-shadow: 0 12px 28px rgba(124,58,237,.25);
   }
   .btn-danger {
-    background: #FF5A5A;
+    background: linear-gradient(90deg, #d83a56, #ef4444);
     border-color: transparent;
   }
   
-  button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-  }
-  .btn-primary:hover {
-    box-shadow: 0 5px 20px rgba(0, 123, 255, 0.6);
-  }
-  button:active {
-    transform: translateY(0);
-  }
-  
-  .input-group {
-    display: flex;
-    gap: 10px;
-  }
-  .input-group input { flex-grow: 1; }
-
-  /* App Shell */
-  .app {
-    max-width: 1400px;
-    margin: 20px;
-    height: calc(100vh - 40px);
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 16px;
-  }
-  
-  .left-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .logo {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-  }
-  .logo h1 {
-    font-size: 24px;
-    font-weight: 700;
-    margin: 0;
-    line-height: 1;
-  }
-  .logo p {
-    font-size: 14px;
-    color: var(--text-secondary);
-    margin: 5px 0 0;
-  }
-  
-  .main-content {
-    display: grid;
-    grid-template-rows: auto 1fr;
-    gap: 16px;
-    min-height: 0;
-  }
-  
-  .controls-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .controls-group {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .full-width {
-    width: 100%;
-  }
-  
-  .search-inputs {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .search-bar {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .search-bar input {
-    flex-grow: 1;
-  }
-  
+  /* =========================
+     CUSTOM BUTTON ALIGNMENT
+     ========================= */
   .button-group {
-    display: flex;
-    gap: 8px;
+      display: flex;
+      gap: 8px;
   }
   .button-group .btn {
       flex: 1;
       text-align: center;
   }
 
-  /* Results Table */
-  .results-container {
-    padding: 0;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  
-  .table-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .table-wrap {
-    overflow: auto;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  thead th {
-    background: var(--bg-2);
-    padding: 14px;
-    text-align: left;
-    font-weight: 600;
-    color: var(--text-secondary);
-    position: sticky;
-    top: 0;
-  }
-  
-  tbody td {
-    padding: 12px 14px;
-    border-top: 1px solid var(--border);
-    vertical-align: middle;
-  }
-  
-  tbody tr:hover {
-    background: var(--glass-fill);
-  }
-  
-  .avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    object-fit: cover;
-  }
-  
-  .channel-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .channel-info .title {
-    font-weight: 600;
-  }
-  .channel-info .id {
-    font-size: 12px;
-    color: var(--text-secondary);
+  /* ===== Main layout (3 columns) ===== */
+  .main {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: 350px 1fr 420px;
+    grid-template-rows: 1fr;
+    min-height: 0; /* enable child overflow scrolling */
   }
 
-  /* Progress bar */
-  .progress-bar {
-    height: 6px;
-    border-radius: 999px;
-    background: var(--border);
-    overflow: hidden;
+  .panel {
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: var(--radius);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+    padding: 14px;
+    min-height: 0; /* important for overflow children */
+    overflow: hidden; /* contain */
   }
-  .progress-bar i {
-    display: block;
+
+  /* Filters panel (left) */
+  .filters { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
+  .filters .full { grid-column: 1/-1; }
+  .filters small { color: var(--muted); }
+  .switch { display:flex; gap:8px; align-items:center; }
+  .row { display:flex; gap:8px; align-items:center; flex-wrap: wrap; }
+
+  /* Results panel (center) */
+  .results-wrap {
     height: 100%;
-    background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
-    width: 0%;
-    transition: width 0.3s ease;
+    display:grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 10px;
+    min-height:0;
+  }
+  .results-toolbar { display:flex; gap:8px; align-items:center; justify-content:space-between; }
+  .results-toolbar .left { display:flex; gap:8px; align-items:center; }
+  .results-toolbar .right{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+
+  .progress {
+    width:180px; height:9px; border-radius: 999px;
+    background: rgba(255,255,255,.07);
+    overflow:hidden;
+  }
+  .progress > i {
+    display:block; height:100%; width:0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width .25s ease;
   }
 
-  /* Details Panel */
-  .details-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  .table-wrap {
+    overflow:auto;
+    border-radius: calc(var(--radius) - 6px);
+    border: 1px solid rgba(255,255,255,.06);
   }
-  .details-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  table {
+    width:100%;
+    border-collapse: collapse;
+    background: transparent;
   }
-  .detail-title h3 {
-    margin: 0;
-  }
-  .detail-title .meta {
-    font-size: 13px;
-    color: var(--text-secondary);
-  }
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-  .stat-card {
-    padding: 14px;
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    text-align: center;
-  }
-  .stat-card b {
-    display: block;
-    font-size: 18px;
+  thead th {
+    position: sticky; top: 0; backdrop-filter: blur(10px);
+    background: rgba(16,18,30,.6);
+    color: var(--muted);
     font-weight: 600;
+    font-size: 13px;
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
   }
-  .stat-card .meta {
-    font-size: 12px;
-    color: var(--text-secondary);
+  tbody td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    vertical-align: middle;
+    font-size: 14px;
+  }
+  tbody tr {
+    transition: background .18s ease, transform .14s ease;
+  }
+  tbody tr:hover {
+    background: rgba(124,58,237,.12);
+    transform: translateY(-1px);
+    cursor: pointer;
+  }
+  .avatar { width:42px; height:42px; border-radius: 12px; object-fit: cover; margin-right:10px; }
+
+  /* Details panel (right) */
+  .details {
+    height: 100%;
+    display:grid;
+    grid-template-rows: auto auto 1fr;
+    gap:10px; min-height:0;
+  }
+  .banner {
+    height: 120px; border-radius: 12px; background-size: cover; background-position: center;
+    border:1px solid rgba(255,255,255,.06);
+  }
+  .about { overflow:auto; }
+  .meta { color: var(--muted); font-size: 13px; }
+  .stats { display:grid; grid-template-columns: repeat(3,1fr); gap:10px; }
+  .stat {
+    text-align:center; padding:10px; border-radius:12px; background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.08);
+  }
+  .stat b { display:block; font-size: 16px; color: #eef; }
+
+  .videos-grid { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+  .video-card { background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:8px; }
+  .video-card img { width:100%; height:110px; object-fit:cover; border-radius:10px; }
+  .video-card h4 { font-size: 13px; margin:8px 0 4px; }
+
+  /* Custom selects + scrollbar (subtle) */
+  select {
+    appearance: none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, #cfd6ea 50%),
+      linear-gradient(135deg, #cfd6ea 50%, transparent 50%),
+      linear-gradient(to right, transparent, transparent);
+    background-position:
+      calc(100% - 18px) calc(50% - 3px),
+      calc(100% - 12px) calc(50% - 3px),
+      calc(100% - 2.5em) 0.5em;
+    background-size: 6px 6px, 6px 6px, 1px 1.8em;
+    background-repeat: no-repeat;
   }
 
-  .video-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 12px;
+  ::-webkit-scrollbar { width: 10px; height:10px; }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--accent), var(--accent-2));
+    border-radius: 999px;
+    border: 3px solid rgba(0,0,0,.25);
   }
-  .video-card {
-    border-radius: 8px;
-    overflow: hidden;
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-  }
-  .video-card img {
-    width: 100%;
-    height: 100px;
-    object-fit: cover;
-  }
-  .video-card-body {
-    padding: 10px;
-  }
-  .video-card-body h4 {
-    margin: 0 0 8px;
-    font-size: 14px;
-    line-height: 1.3;
-    font-weight: 500;
+  ::-webkit-scrollbar-track { background: transparent; }
+
+  /* Responsive */
+  @media (max-width: 1200px){
+    .main { grid-template-columns: 1fr; grid-template-rows: 420px 1fr 520px; }
+    .details { grid-template-rows: auto 1fr 1fr; }
   }
   
-  /* Custom Message Box Styling */
+  /* Additional styles for authentication and admin controls */
+  .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 320px;
+      margin: 10vh auto;
+      padding: 24px;
+      background: var(--bg-1);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+  }
+  .auth-form h2 {
+      text-align: center;
+      margin-bottom: 12px;
+      font-size: 24px;
+  }
+  .auth-form input {
+      width: 100%;
+  }
+  .auth-form button {
+      width: 100%;
+  }
+  .user-info {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+  }
+  
+  /* Message Box Styling */
   .message-box-overlay {
       position: fixed;
       top: 0;
@@ -347,156 +310,86 @@
       background: var(--bg-1);
       padding: 24px;
       border-radius: var(--radius);
-      box-shadow: var(--shadow-strong);
+      box-shadow: var(--shadow);
       max-width: 400px;
       text-align: center;
       display: flex;
       flex-direction: column;
       gap: 16px;
-      border: 1px solid var(--border);
   }
-
-  /* Login screen styles */
-  .auth-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    width: 100%;
-  }
-
-  .auth-card {
-    width: 100%;
-    max-width: 380px;
-    padding: 40px;
-    background: var(--bg-2);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-strong);
-    border: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    text-align: center;
-  }
-  
-  .auth-card h2 {
-    font-size: 28px;
-    font-weight: 700;
-    margin: 0;
-    line-height: 1.2;
-  }
-  
-  .auth-card p {
-    color: var(--text-secondary);
-    margin-top: -10px;
-  }
-
-  .auth-card .input-group {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .auth-card button {
-    width: 100%;
-  }
-
-  .auth-card .meta {
-    color: var(--text-secondary);
-    font-size: 14px;
-    margin-top: -10px;
-  }
-
-  @media (max-width: 1200px) {
-    .app {
-      grid-template-columns: 1fr;
-      height: auto;
-      min-height: 100vh;
-    }
-  }
-
 </style>
 </head>
 <body>
-    <div id="auth-view" class="auth-container">
-        <div class="auth-card">
-            <h2>Welcome Back</h2>
-            <p>Sign in to your account to continue.</p>
-            <div class="input-group">
-                <input id="email" type="email" placeholder="Email"/>
-                <input id="password" type="password" placeholder="Password"/>
-            </div>
-            <button id="btnSignIn" class="btn btn-primary">Sign In</button>
-            <p class="meta">or</p>
-            <div class="input-group">
-              <button id="btnSignUp" class="btn">Sign Up</button>
-              <button id="btnGuest" class="btn">Continue as Guest</button>
-            </div>
-        </div>
+    <div id="auth-view" class="auth-form">
+        <h2>Welcome to Lead Studio Pro</h2>
+        <input id="authEmail" type="email" placeholder="Email" autocomplete="username">
+        <input id="authPass" type="password" placeholder="Password" autocomplete="current-password">
+        <button class="btn btn-primary" id="btnSignIn">Sign In</button>
+        <button class="btn" id="btnSignUp">Sign Up</button>
+        <div id="authStatus" class="meta" style="text-align: center;"></div>
     </div>
-    
-    <div id="app-view" class="app" style="display: none;">
-        <div class="left-sidebar">
-            <div class="logo">
+
+    <div id="app-view" class="app" style="display:none">
+        <div class="topbar">
+            <div class="brand">
                 <h1>Lead Studio Pro</h1>
-                <p>YouTube Channel Finder</p>
+                <p>Apple-grade UI • Advanced YouTube lead extractor</p>
             </div>
-            
-            <div class="controls-panel">
-                <div class="meta">Advanced Filters</div>
-                <div class="controls-group">
-                    <select id="order" class="full-width"><option value="relevance">Order: Relevance</option><option value="date">Order: Date</option><option value="viewCount">Order: Views</option><option value="rating">Order: Rating</option></select>
+            <div class="bar-controls">
+                <input id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA"/>
+                <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)"></textarea>
+                <div class="button-group" style="margin-left:auto;">
+                  <button class="btn btn-primary" id="btnSearch">Search</button>
+                  <button class="btn" id="btnClear">Clear</button>
                 </div>
-                <div class="controls-group">
-                    <select id="duration" class="full-width"><option value="">Duration: Any</option><option value="short">Short (<4m)</option><option value="medium">Medium (4–20m)</option><option value="long">Long (>20m)</option></select>
-                </div>
-                <div class="controls-group">
-                    <select id="upload" class="full-width"><option value="">Upload Time: Any</option><option value="hour">Last hour</option><option value="today">Today</option><option value="week">This week</option><option value="month">This month</option></select>
-                </div>
-                <div class="controls-group">
-                    <select id="region" class="full-width"><option value="">Region: Any</option><option>US</option><option>IN</option><option>GB</option><option>CA</option><option>AU</option><option>DE</option></select>
-                </div>
-                <div class="controls-group">
-                    <select id="definition" class="full-width"><option value="">Definition: Any</option><option value="high">HD</option><option value="standard">SD</option></select>
-                </div>
-                <div class="controls-group">
-                    <select id="safe" class="full-width"><option value="">Safe: Any</option><option value="none">None</option><option value="moderate">Moderate</option><option value="strict">Strict</option></select>
-                </div>
-                
-                <input id="perPage" class="full-width" type="number" min="1" max="50" value="25" placeholder="Results per page (1–50)"/>
-                <input id="pages" class="full-width" type="number" min="1" max="10" value="2" placeholder="Pages per query (1–10)"/>
-
-                <div class="controls-group">
-                    <input id="minSubs" type="number" placeholder="Min subs"/>
-                    <input id="maxSubs" type="number" placeholder="Max subs"/>
-                </div>
-
-                <input id="searchInResults" class="full-width" type="text" placeholder="Search within results (title / ID)"/>
-                
-                <div class="controls-group" style="justify-content: space-between;">
-                    <div class="meta" id="status">Idle</div>
-                    <div class="meta" id="count">0 channels</div>
-                </div>
-                <div class="progress-bar"><i id="progressBar"></i></div>
             </div>
         </div>
 
-        <div class="main-content">
-            <div class="search-inputs">
-                <div class="search-bar">
-                    <input id="query" type="text" placeholder="Enter one or more queries (comma or newline separated)"/>
-                    <button class="btn btn-primary" id="btnSearch">Search</button>
-                    <button class="btn" id="btnClear">Clear</button>
+        <div class="main">
+            <div class="panel">
+                <div class="row" style="justify-content:space-between;margin-bottom:8px">
+                    <div class="meta">Advanced Filters</div>
+                    <div class="meta" id="status">Idle</div>
                 </div>
-                <input id="apiKey" type="text" placeholder="Enter your YouTube API Key" value="" style="flex-grow: 1"/>
+                <div class="filters">
+                    <select id="order"><option value="relevance">Order: Relevance</option><option value="date">Order: Date</option><option value="viewCount">Order: Views</option><option value="rating">Order: Rating</option></select>
+                    <select id="duration"><option value="">Duration: Any</option><option value="short">Short (<4m)</option><option value="medium">Medium (4–20m)</option><option value="long">Long (>20m)</option></select>
+                    <select id="upload"><option value="">Upload Time: Any</option><option value="hour">Last hour</option><option value="today">Today</option><option value="week">This week</option><option value="month">This month</option></select>
+                    <select id="region"><option value="">Region: Any</option><option>US</option><option>IN</option><option>GB</option><option>CA</option><option>AU</option><option>DE</option></select>
+                    <select id="definition"><option value="">Definition: Any</option><option value="high">HD</option><option value="standard">SD</option></select>
+                    <select id="safe"><option value="">Safe: Any</option><option value="none">None</option><option value="moderate">Moderate</option><option value="strict">Strict</option></select>
+
+                    <input id="perPage" class="full" type="number" min="1" max="50" value="25" placeholder="Results per page (1–50)"/>
+                    <input id="pages" class="full" type="number" min="1" max="10" value="2" placeholder="Pages per query (1–10)"/>
+
+                    <div class="full row">
+                        <input id="minSubs" type="number" placeholder="Min subs"/>
+                        <input id="maxSubs" type="number" placeholder="Max subs"/>
+                        <input id="searchInResults" type="text" placeholder="Search within results (title / ID)"/>
+                    </div>
+
+                    <div class="full row">
+                        <input id="corsProxy" type="url" placeholder="Optional CORS proxy for verification (best-effort)"/>
+                        <label class="switch"><input id="doVerify" type="checkbox"/> <small>Attempt verify check</small></label>
+                    </div>
+
+                    <div class="full row" style="justify-content:space-between;margin-top:2px">
+                        <div class="progress"><i id="progressBar"></i></div>
+                        <small id="count">0 channels</small>
+                    </div>
+                </div>
             </div>
 
-            <div class="panel results-container">
-                <div class="table-toolbar">
-                    <div class="button-group">
+            <div class="panel results-wrap">
+                <div class="results-toolbar">
+                    <div class="left button-group">
                         <button class="btn" id="btnSelectAll">Select All</button>
                         <button class="btn" id="btnDeselectAll">Deselect</button>
-                        <select id="clientSort" class="full-width">
+                        <button class="btn" id="btnSaveLib">Save Library</button>
+                        <button class="btn" id="btnLoadLib">Load Library</button>
+                    </div>
+                    <div class="right button-group">
+                        <select id="clientSort">
                             <option value="subs-desc">Sort: Subs ↓</option>
                             <option value="subs-asc">Sort: Subs ↑</option>
                             <option value="views-desc">Sort: Views ↓</option>
@@ -504,20 +397,18 @@
                             <option value="title-asc">Sort: Title A→Z</option>
                             <option value="title-desc">Sort: Title Z→A</option>
                         </select>
-                    </div>
-                    <div class="button-group">
-                        <button class="btn" id="btnSaveLib">Save</button>
-                        <button class="btn" id="btnLoadLib">Load</button>
-                        <button class="btn btn-primary" id="btnExportCSV">Export</button>
-                        <button class="btn btn-danger" id="btnClearResults">Clear All</button>
+                        <button class="btn btn-primary" id="btnExportCSV">Export CSV</button>
+                        <button class="btn" id="btnExportJSON">Export JSON</button>
+                        <button class="btn" id="btnCopyIDs">Copy Channel IDs</button>
+                        <button class="btn btn-danger" id="btnClearResults">Clear</button>
                     </div>
                 </div>
 
-                <div class="table-wrap">
-                    <table>
+                <div class="table-wrap" id="resultsScroller">
+                    <table aria-label="Channel results">
                         <thead>
                             <tr>
-                                <th style="width: 40px;"></th>
+                                <th style="width:42px"></th>
                                 <th>Channel</th>
                                 <th>Subs</th>
                                 <th>Videos</th>
@@ -528,33 +419,34 @@
                         <tbody id="resultsTbody"></tbody>
                     </table>
                 </div>
-            </div>
-            
-            <div id="detailView" class="panel details-panel" style="display: none;">
-                <div class="details-header">
-                    <div class="detail-title">
-                        <h3 id="detailTitle"></h3>
-                        <div class="meta" id="detailId"></div>
-                    </div>
-                    <div class="button-group">
-                        <button class="btn" id="btnExportSelected">Export Selected</button>
-                        <button class="btn" id="btnCopySelected">Copy Selected CSV</button>
-                    </div>
-                </div>
-                
-                <div class="stats-grid">
-                    <div class="stat-card"><b><span id="statSubs"></span></b><div class="meta">Subscribers</div></div>
-                    <div class="stat-card"><b><span id="statViews"></span></b><div class="meta">Total Views</div></div>
-                    <div class="stat-card"><b><b><span id="statVideos"></span></b></b><div class="meta">Total Videos</div></div>
-                </div>
 
-                <div class="video-grid" id="latestVideos"></div>
-                
-                <div style="border-top: 1px solid var(--border); padding-top: 16px;">
-                    <div class="meta">
-                        Logged in as: <span id="userEmail"></span>
+                <div class="row" style="justify-content:flex-end">
+                    <small class="meta">Tip: Click a row to open full details in the panel on the right.</small>
+                </div>
+            </div>
+
+            <div class="panel details">
+                <div>
+                    <div class="row" style="justify-content:space-between">
+                        <div>
+                            <div class="meta">Channel Details</div>
+                            <h3 id="detailTitle" style="margin:6px 0 0">Select a channel</h3>
+                        </div>
+                        <div class="row button-group">
+                            <button class="btn" id="btnExportSelected">Export Selected</button>
+                            <button class="btn" id="btnCopySelected">Copy Selected CSV</button>
+                        </div>
                     </div>
-                    <div class="button-group" style="margin-top: 10px;">
+                </div>
+                <div id="banner" class="banner" style="display:none"></div>
+                <div class="about" id="detailContent">
+                    <div class="meta">No channel selected.</div>
+                </div>
+                <div class="meta">
+                    <div class="row" style="justify-content:space-between;align-items:flex-end">
+                        <div class="user-info">
+                            <div id="userEmail"></div>
+                        </div>
                         <button class="btn" id="btnSignOut">Sign Out</button>
                     </div>
                 </div>
@@ -562,7 +454,6 @@
         </div>
     </div>
     
-    <!-- Custom Message Box -->
     <div id="messageBoxOverlay" class="message-box-overlay">
         <div id="messageBox" class="message-box">
             <h4 id="messageTitle"></h4>
@@ -573,21 +464,15 @@
     
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut, signInWithCustomToken, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-functions.js";
         
-        // --- MANDATORY: Firebase Global Variables ---
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-        // --- END MANDATORY: Firebase Global Variables ---
-
         /* =========================
            STATE + HELPERS
            ========================= */
         const $ = id => document.getElementById(id);
-        const sleep = ms => new Promise(r => setTimeout(r, r));
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
         const esc = s => String(s ?? '').replace(/"/g,'""');
 
         const savedLibraryKey = 'lead_studio_pro_lib_v1';
@@ -610,94 +495,63 @@
         $('messageBoxOk').addEventListener('click', () => {
             $('messageBoxOverlay').style.display = 'none';
         });
-        
-        // UI Toggling
-        const authView = $('auth-view');
-        const appView = $('app-view');
-
-        function showAppView() {
-            authView.style.display = 'none';
-            appView.style.display = 'grid';
-        }
-
-        function showAuthView() {
-            authView.style.display = 'flex';
-            appView.style.display = 'none';
-        }
 
         // === FIREBASE CONFIGURATION ===
+        const firebaseConfig = {
+          apiKey: "AIzaSyBvU3_Njbi1JQr_wD1a16h5coTW2ifaRDU",
+          authDomain: "youleadmax.firebaseapp.com",
+          projectId: "youleadmax",
+          storageBucket: "youleadmax.firebasestorage.app",
+          messagingSenderId: "710806971072",
+          appId: "1:710806971072:web:ced903befe8693f886c325",
+          measurementId: "G-JW9W20C1LQ"
+        };
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const functions = getFunctions(app);
-        // Functions will not be available in this environment, but we can keep the code.
-        const logSearchCallable = (data) => Promise.resolve(console.log('Log search called:', data));
+        const logSearchCallable = httpsCallable(functions, 'logSearch');
 
         /* ========================= AUTHENTICATION ========================= */
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                $('userEmail').innerText = `${user.email || 'Anonymous'}`;
+                $('app-view').style.display = 'grid';
+                $('auth-view').style.display = 'none';
+                $('userEmail').innerText = `Logged in as: ${user.email}`;
+
+                // Log user usage for tracking purposes
                 const userRef = doc(db, 'users', user.uid);
                 await setDoc(userRef, {
                     lastLogin: new Date().toISOString()
                 }, { merge: true });
-                showAppView();
+
             } else {
                 currentUser = null;
-                showAuthView();
+                $('app-view').style.display = 'none';
+                $('auth-view').style.display = 'flex';
             }
         });
 
-        // Use the initial auth token provided by the environment to sign in automatically
-        if (initialAuthToken) {
-            signInWithCustomToken(auth, initialAuthToken).catch(error => {
-                console.error("Custom token sign-in failed:", error);
-                // Fallback to anonymous sign-in
-                signInAnonymously(auth).catch(anonError => {
-                    console.error("Anonymous sign-in failed:", anonError);
-                    showMessage('Authentication Error', 'Failed to sign in. Please try again.');
-                });
-            });
-        } else {
-             // Fallback to anonymous sign-in if no token is provided
-            signInAnonymously(auth).catch(error => {
-                console.error("Anonymous sign-in failed:", error);
-                 showMessage('Authentication Error', 'Failed to sign in anonymously. Please try again.');
-            });
-        }
-
-        // Event listeners for login page
         $('btnSignIn').addEventListener('click', async () => {
-          const email = $('email').value;
-          const password = $('password').value;
-          try {
-            await signInWithEmailAndPassword(auth, email, password);
-          } catch(e) {
-            console.error(e);
-            showMessage('Sign-In Error', e.message);
-          }
+            const email = $('authEmail').value;
+            const pass = $('authPass').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (error) {
+                $('authStatus').innerText = 'Sign-in failed: ' + error.message;
+            }
         });
 
         $('btnSignUp').addEventListener('click', async () => {
-          const email = $('email').value;
-          const password = $('password').value;
-          try {
-            await createUserWithEmailAndPassword(auth, email, password);
-            showMessage('Success', 'Account created! Please sign in.');
-          } catch(e) {
-            console.error(e);
-            showMessage('Sign-Up Error', e.message);
-          }
-        });
-
-        $('btnGuest').addEventListener('click', async () => {
-          try {
-            await signInAnonymously(auth);
-          } catch(e) {
-            console.error(e);
-            showMessage('Guest Sign-In Error', e.message);
-          }
+            const email = $('authEmail').value;
+            const pass = $('authPass').value;
+            try {
+                await createUserWithEmailAndPassword(auth, email, pass);
+            } catch (error) {
+                $('authStatus').innerText = 'Sign-up failed: ' + error.message;
+            }
         });
 
         $('btnSignOut').addEventListener('click', async () => {
@@ -715,14 +569,14 @@
             const queries = queryRaw.split(/[,\\n]/).map(q=>q.trim()).filter(Boolean);
             const perPage = clamp(Number($('perPage').value||25), 1, 50);
             const pages = clamp(Number($('pages').value||2), 1, 10);
-            const apiKey = $('apiKey').value.trim();
 
             if(!queries.length){ showMessage('Search Error', 'Please enter at least one query'); return; }
-            if(!apiKey){ showMessage('Search Error', 'Please enter a YouTube API Key.'); return; }
             if(!currentUser){ showMessage('Authentication Required', 'Please sign in first.'); return; }
 
+            // Call the logSearch Cloud Function to record the search action
             try {
-              // Using a placeholder since functions are not supported
+              // The CORS issue means we need to handle the error, but the app should still work.
+              // We will continue the search process even if logging fails.
               await logSearchCallable({ query: queryRaw });
             } catch (error) {
               console.error('Failed to log search:', error);
@@ -732,6 +586,7 @@
             lastSearch = { queryRaw, queries, perPage, pages };
             
             setStatus('Searching for channels...');
+            const apiKey = $('apiKey').value.trim();
             const order = $('order').value;
             const duration = $('duration').value;
             const upload = $('upload').value;
@@ -773,6 +628,7 @@
                     const data = await resp.json();
                     
                     (data.items || []).forEach(item => {
+                        // Shorts filtering (multi-heuristic)
                         const t = (item.snippet.title||'').toLowerCase();
                         const d = (item.snippet.description||'').toLowerCase();
                         if(t.includes('#shorts') || t.includes('shorts ') || t.endsWith('shorts') || d.includes('#shorts') || d.includes('shorts ')) return;
@@ -791,6 +647,7 @@
             
             setStatus(`Found ${chanIds.size} channels — fetching details…`);
             
+            // fetch channels in batches of 50
             const ids = Array.from(chanIds);
             for(let i=0;i<ids.length;i+=50){
                 const batch = ids.slice(i,i+50);
@@ -812,7 +669,7 @@
                 const data = await resp.json();
                 
                 (data.items||[]).forEach(ch => {
-                    if(!ch.snippet || !ch.snippet.title) return;
+                    if(!ch.snippet || !ch.snippet.title) return; // junk
                     const stats = ch.statistics || {};
                     const title = ch.snippet.title;
                     
@@ -877,6 +734,7 @@
                 return true;
             });
 
+            // client sort
             const sort = $('clientSort').value;
             VIEW.sort((a,b) => {
                 if(sort==='subs-desc') return (b.subs||0) - (a.subs||0);
@@ -911,11 +769,11 @@
                 tr.innerHTML = `
                     <td><input type="checkbox" class="sel" data-idx="${idx}"/></td>
                     <td>
-                        <div class="channel-info">
-                            <img class="avatar" src="${sanitize(c.avatar)}" alt="${sanitize(c.title)} avatar">
+                        <div style="display:flex;align-items:center;gap:10px">
+                            <img class="avatar" src="${sanitize(c.avatar)}" alt="">
                             <div>
-                                <div class="title">${sanitize(c.title)}</div>
-                                <div class="id">${sanitize(c.channelId)}</div>
+                                <div style="font-weight:700">${sanitize(c.title)}</div>
+                                <div class="meta">${sanitize(c.channelId)}</div>
                             </div>
                         </div>
                     </td>
@@ -934,22 +792,70 @@
         }
         
         function renderDetails(c){
-            $('detailView').style.display = 'flex';
             $('detailTitle').innerText = c.title;
-            $('detailId').innerText = c.channelId;
-            
-            $('statSubs').innerText = c.subs.toLocaleString();
-            $('statViews').innerText = c.views.toLocaleString();
-            $('statVideos').innerText = c.videos.toLocaleString();
+            const socialLinks = getSocialLinksFromDesc(c);
 
+            $('detailContent').innerHTML = `
+                <div class="meta">Channel ID: ${c.channelId} • ${c.country} • Created: ${c.createdAt}</div>
+                <p style="margin-top:10px;line-height:1.5;font-size:14px;color:var(--muted)">${sanitize(c.description)}</p>
+                <div class="stats" style="margin-top:14px">
+                    <div class="stat"><b>${c.subs.toLocaleString()}</b><div class="meta">Subscribers</div></div>
+                    <div class="stat"><b>${c.views.toLocaleString()}</b><div class="meta">Total Views</div></div>
+                    <div class="stat"><b>${c.videos.toLocaleString()}</b><div class="meta">Total Videos</div></div>
+                </div>
+                
+                <h4 style="margin:20px 0 8px">Social Links</h4>
+                <div class="row" style="flex-wrap:nowrap;justify-content:space-between">
+                    <div class="row button-group">
+                        ${socialLinks.website?`<a href="${sanitize(socialLinks.website)}" target="_blank" class="btn">Website</a>`:''}
+                        ${socialLinks.twitter?`<a href="${sanitize(socialLinks.twitter)}" target="_blank" class="btn">Twitter</a>`:''}
+                        ${socialLinks.instagram?`<a href="${sanitize(socialLinks.instagram)}" target="_blank" class="btn">Instagram</a>`:''}
+                        ${socialLinks.facebook?`<a href="${sanitize(socialLinks.facebook)}" target="_blank" class="btn">Facebook</a>`:''}
+                        ${socialLinks.tiktok?`<a href="${sanitize(socialLinks.tiktok)}" target="_blank" class="btn">TikTok</a>`:''}
+                        ${socialLinks.linkedin?`<a href="${sanitize(socialLinks.linkedin)}" target="_blank" class="btn">LinkedIn</a>`:''}
+                    </div>
+                </div>
+                <h4 style="margin:20px 0 8px">Latest Videos <small class="meta">(up to 6)</small></h4>
+                <div class="videos-grid" id="latestVideos">
+                    <div class="meta">Loading...</div>
+                </div>
+            `;
+            if(c.banner){
+                $('banner').style.display = 'block';
+                $('banner').style.backgroundImage = `url(${sanitize(c.banner)})`;
+            } else {
+                $('banner').style.display = 'none';
+            }
+            
             loadLatestVideos(c.channelId);
+        }
+
+        function getSocialLinksFromDesc(c){
+            let links = [];
+            const desc = (c.description||'') + ' ' + (c.brandingSettings?.channel?.description||'');
+            const regex = /(https?:\/\/[w.-]+\.[a-z]{2,}(?:[w\-_~:/?#[\]@!$&'()*+,;=%]*)?)/gi;
+            let m; while((m=regex.exec(desc))!==null){ links.push(m[1]); }
+            // deduplicate
+            const uniq = Array.from(new Set(links));
+            const socials = {};
+            uniq.forEach(u=>{
+                if(/twitter\.com/i.test(u)) socials.twitter=u;
+                else if(/instagram\.com/i.test(u)) socials.instagram=u;
+                else if(/facebook\.com/i.test(u)) socials.facebook=u;
+                else if(/tiktok\.com/i.test(u)) socials.tiktok=u;
+                else if(/linkedin\.com/i.test(u)) socials.linkedin=u;
+                else if(!socials.website) socials.website=u;
+            });
+            return socials;
         }
 
         /* ========================= UTIL ========================= */
         function resetResults(){
             LIB = []; VIEW = []; lastExport = [];
             $('resultsTbody').innerHTML=''; $('count').innerText='0 channels';
-            $('detailView').style.display = 'none';
+            $('detailTitle').innerText = 'Select a channel';
+            $('detailContent').innerHTML = '<div class="meta">No channel selected.</div>';
+            $('banner').style.display='none'; $('banner').style.backgroundImage='none';
             setProgress(0); setStatus('Idle');
         }
 
@@ -958,7 +864,6 @@
         async function loadLatestVideos(channelId){
             const apiKey = $('apiKey').value.trim();
             const box = $('latestVideos');
-            box.innerHTML = '<div class="meta" style="text-align:center">Loading...</div>';
             try{
                 const u = new URL('https://www.googleapis.com/youtube/v3/search');
                 u.searchParams.set('part','snippet');
@@ -969,12 +874,12 @@
                 u.searchParams.set('key', apiKey);
                 const r = await fetch(u.toString());
                 if(!r.ok){
-                    box.innerHTML = '<div class="meta" style="text-align:center">Cannot load videos.</div>';
+                    box.innerHTML = '<div class="meta">Cannot load videos.</div>';
                     return;
                 }
                 const data = await r.json();
                 if(!data.items?.length){
-                    box.innerHTML = '<div class="meta" style="text-align:center">No recent videos.</div>';
+                    box.innerHTML = '<div class="meta">No recent videos.</div>';
                     return;
                 }
                 box.innerHTML='';
@@ -986,23 +891,22 @@
                     card.className = 'video-card';
                     card.innerHTML = `
                         <img src="${sanitize(thumb)}" alt="">
-                        <div class="video-card-body">
-                            <h4>${sanitize(title)}</h4>
-                            <div class="button-group">
-                                <button class="btn" onclick="window.open('https://www.youtube.com/watch?v=${vid}', '_blank')">Open</button>
-                                <button class="btn" onclick="embed('${vid}')">Preview</button>
-                            </div>
+                        <h4>${sanitize(title)}</h4>
+                        <div class="row" style="margin-top:6px">
+                            <button class="btn btn-primary" onclick="window.open('https://www.youtube.com/watch?v=${vid}')">Open</button>
+                            <button class="btn" onclick="embed('${vid}')">Preview</button>
                         </div>
                     `;
                     box.appendChild(card);
                 });
             }catch(e){
                 console.error(e);
-                box.innerHTML = '<div class="meta" style="text-align:center">Error loading videos.</div>';
+                box.innerHTML = '<div class="meta">Error loading videos.</div>';
             }
         }
         
         function embed(videoId){
+            // add/replace a small embed at bottom-right of results panel
             let frame = document.getElementById('previewFrame');
             if(frame){ frame.remove(); }
             frame = document.createElement('iframe');
@@ -1012,13 +916,15 @@
             frame.style.marginTop='10px';
             frame.src=`https://www.youtube.com/embed/${videoId}?autoplay=1`;
             frame.setAttribute('allow','accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture');
-            $('detailView').appendChild(frame);
+            $('detailContent').appendChild(frame);
         }
         
+        // Helper for copying text to clipboard
         async function copyText(text) {
             try {
                 await navigator.clipboard.writeText(text);
             } catch (err) {
+                // Fallback for older browsers or restricted environments
                 const textarea = document.createElement('textarea');
                 textarea.value = text;
                 document.body.appendChild(textarea);
@@ -1091,6 +997,7 @@
         }
 
         function cToSafe(c){
+            // strip big strings that might break inline JSON calls
             return {
                 channelId:c.channelId,
                 title:c.title,
