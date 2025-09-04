@@ -6,294 +6,344 @@
 <title>Lead Studio Pro — YouTube Channel Finder</title>
 <style>
   /* =========================
-     THEME — Apple-ish + Purple
+     DRIPPI UI OVERHAUL
      ========================= */
-  :root{
-    --bg-0:#07080c;            /* page base */
-    --bg-1:#0b0d14;            /* panels */
-    --bg-2:#0f1320;            /* deeper */
-    --glass: rgba(255,255,255,.06);
-    --glass-2: rgba(255,255,255,.08);
-    --muted:#a6b0c3;
-    --text:#f5f7ff;
-    --accent:#7c3aed;          /* purple */
-    --accent-2:#a78bfa;        /* light purple */
-    --ok:#22c55e;              /* green */
-    --warn:#f59e0b;            /* amber */
-    --danger:#ef4444;
-    --radius:14px;
-    --radius-sm:10px;
-    --shadow: 0 30px 70px rgba(0,0,0,.45);
+
+  /* Global variables */
+  :root {
+    --bg-0: #0D0D11;
+    --bg-1: #1A1B22;
+    --bg-2: #24252E;
+    --border: rgba(255, 255, 255, 0.08);
+    --text-primary: #f5f7ff;
+    --text-secondary: #a6b0c3;
+    --accent-1: #8A43E8;
+    --accent-2: #805BE2;
+    --glass-fill: rgba(255, 255, 255, 0.05);
+    --glass-stroke: rgba(255, 255, 255, 0.1);
+    --glass-shadow: rgba(0, 0, 0, 0.25);
+    --radius: 12px;
+    --shadow-strong: 0 10px 40px rgba(0, 0, 0, 0.4);
+    --shadow-subtle: 0 4px 15px rgba(0, 0, 0, 0.2);
   }
 
-  /* Base reset */
-  * { box-sizing:border-box; }
-  html,body { height:100%; }
+  /* Base reset & fonts */
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; padding: 0; }
   body {
-    margin:0;
-    font-family: ui-sans-serif, -apple-system, system-ui, "Segoe UI", Roboto, Inter, Arial;
-    color: var(--text);
-    background:
-      radial-gradient(1200px 800px at 10% -20%, #24103e 0%, transparent 60%),
-      radial-gradient(1200px 800px at 110% 120%, #1f1440 0%, transparent 60%),
-      linear-gradient(180deg, #080910, #0a0c14 60%, #090b12);
-    overflow:hidden; /* prevent random page scrollbars */
-    overscroll-behavior:none;
-  }
-
-  a { color: var(--accent-2); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-
-  /* ===== App shell ===== */
-  .app {
-    max-width: 1350px;
-    margin: 0 auto;
-    padding: 18px;
-    display: grid;
-    gap: 14px;
-    grid-template-rows: auto 1fr;
-    height: 100vh;
-  }
-
-  /* ===== Topbar ===== */
-  .topbar {
-    display:flex; gap:12px; align-items:center;
-    padding: 14px;
-    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-    border: 1px solid rgba(255,255,255,.06);
-    border-radius: var(--radius);
-    backdrop-filter: blur(10px);
-    box-shadow: var(--shadow);
-  }
-  .brand { display:flex; gap:2px; flex-direction:column; min-width: 230px; }
-  .brand h1 { margin:0; font-size:18px; letter-spacing:.2px; color:#e9e8ff; }
-  .brand p { margin:0; color: var(--muted); font-size:12px; }
-
-  .bar-controls { display:flex; gap:8px; align-items:center; flex:1; }
-
-  input[type="text"], input[type="number"], input[type="url"], select, textarea {
-    background: var(--glass);
-    border: 1px solid rgba(255,255,255,.07);
-    color: var(--text);
-    padding: 10px 12px;
-    border-radius: var(--radius-sm);
-    outline: none;
-    transition: box-shadow .18s ease, transform .12s ease, border-color .18s ease;
-  }
-  textarea { min-height: 44px; resize: vertical; }
-  input::placeholder, textarea::placeholder { color: #8f9ab2; }
-
-  input:focus, select:focus, textarea:focus {
-    box-shadow: 0 10px 26px rgba(124,58,237,.18);
-    border-color: rgba(124,58,237,.35);
-    transform: translateY(-1px);
-  }
-
-  .btn {
-    padding: 10px 14px;
-    border-radius: var(--radius-sm);
-    border: 1px solid rgba(255,255,255,.08);
-    background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
-    color: var(--text);
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
-  }
-  .btn:hover { transform: translateY(-1px); }
-  .btn:active { transform: translateY(0); }
-  .btn-primary {
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    border-color: transparent;
-    color:#0b0d14;
-    box-shadow: 0 12px 28px rgba(124,58,237,.25);
-  }
-  .btn-danger {
-    background: linear-gradient(90deg, #d83a56, #ef4444);
-    border-color: transparent;
+    font-family: 'Inter', ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
+    color: var(--text-primary);
+    background: var(--bg-0);
+    overflow: hidden;
+    overscroll-behavior: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   
-  /* =========================
-     CUSTOM BUTTON ALIGNMENT
-     ========================= */
+  a { color: var(--accent-1); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Generic styles */
+  .panel, .card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-subtle);
+  }
+
+  input, select, textarea, button {
+    font-family: inherit;
+    color: var(--text-primary);
+    background: var(--glass-fill);
+    border: 1px solid var(--glass-stroke);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    transition: all 0.2s ease;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--accent-1), var(--shadow-strong);
+    border-color: var(--accent-1);
+  }
+  
+  button {
+    cursor: pointer;
+    background: var(--bg-2);
+  }
+  
+  .btn-primary {
+    background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+    border-color: transparent;
+    font-weight: 600;
+  }
+  .btn-danger {
+    background: #E84343;
+    border-color: transparent;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px var(--accent-2);
+  }
+  .btn-primary:hover {
+    box-shadow: 0 5px 20px rgba(138, 67, 232, 0.6);
+  }
+  .btn:active {
+    transform: translateY(0);
+  }
+
+  /* App Shell */
+  .app {
+    max-width: 1400px;
+    margin: 20px;
+    height: calc(100vh - 40px);
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 16px;
+  }
+  
+  .left-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .logo {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+  .logo h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1;
+  }
+  .logo p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 5px 0 0;
+  }
+  
+  .main-content {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 16px;
+    min-height: 0;
+  }
+  
+  .controls-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .controls-group {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  .search-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .search-bar {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .search-bar input {
+    flex-grow: 1;
+  }
+  
   .button-group {
-      display: flex;
-      gap: 8px;
+    display: flex;
+    gap: 8px;
   }
   .button-group .btn {
       flex: 1;
       text-align: center;
   }
 
-  /* ===== Main layout (3 columns) ===== */
-  .main {
-    display: grid;
-    gap: 14px;
-    grid-template-columns: 350px 1fr 420px;
-    grid-template-rows: 1fr;
-    min-height: 0; /* enable child overflow scrolling */
+  /* Results Table */
+  .results-container {
+    padding: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
-
-  .panel {
-    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-    border: 1px solid rgba(255,255,255,.06);
-    border-radius: var(--radius);
-    backdrop-filter: blur(10px);
-    box-shadow: var(--shadow);
-    padding: 14px;
-    min-height: 0; /* important for overflow children */
-    overflow: hidden; /* contain */
+  
+  .table-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-
-  /* Filters panel (left) */
-  .filters { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
-  .filters .full { grid-column: 1/-1; }
-  .filters small { color: var(--muted); }
-  .switch { display:flex; gap:8px; align-items:center; }
-  .row { display:flex; gap:8px; align-items:center; flex-wrap: wrap; }
-
-  /* Results panel (center) */
-  .results-wrap {
-    height: 100%;
-    display:grid;
-    grid-template-rows: auto auto 1fr auto;
-    gap: 10px;
-    min-height:0;
-  }
-  .results-toolbar { display:flex; gap:8px; align-items:center; justify-content:space-between; }
-  .results-toolbar .left { display:flex; gap:8px; align-items:center; }
-  .results-toolbar .right{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-
-  .progress {
-    width:180px; height:9px; border-radius: 999px;
-    background: rgba(255,255,255,.07);
-    overflow:hidden;
-  }
-  .progress > i {
-    display:block; height:100%; width:0%;
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    transition: width .25s ease;
-  }
-
+  
   .table-wrap {
-    overflow:auto;
-    border-radius: calc(var(--radius) - 6px);
-    border: 1px solid rgba(255,255,255,.06);
+    overflow: auto;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
   }
+  
   table {
-    width:100%;
+    width: 100%;
     border-collapse: collapse;
-    background: transparent;
   }
+  
   thead th {
-    position: sticky; top: 0; backdrop-filter: blur(10px);
-    background: rgba(16,18,30,.6);
-    color: var(--muted);
-    font-weight: 600;
-    font-size: 13px;
+    background: var(--bg-2);
+    padding: 14px;
     text-align: left;
-    padding: 12px;
-    border-bottom: 1px solid rgba(255,255,255,.08);
+    font-weight: 600;
+    color: var(--text-secondary);
+    position: sticky;
+    top: 0;
   }
+  
   tbody td {
-    padding: 12px;
-    border-bottom: 1px solid rgba(255,255,255,.06);
+    padding: 12px 14px;
+    border-top: 1px solid var(--border);
     vertical-align: middle;
-    font-size: 14px;
   }
-  tbody tr {
-    transition: background .18s ease, transform .14s ease;
-  }
+  
   tbody tr:hover {
-    background: rgba(124,58,237,.12);
-    transform: translateY(-1px);
-    cursor: pointer;
+    background: var(--glass-fill);
   }
-  .avatar { width:42px; height:42px; border-radius: 12px; object-fit: cover; margin-right:10px; }
-
-  /* Details panel (right) */
-  .details {
-    height: 100%;
-    display:grid;
-    grid-template-rows: auto auto 1fr;
-    gap:10px; min-height:0;
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
   }
-  .banner {
-    height: 120px; border-radius: 12px; background-size: cover; background-position: center;
-    border:1px solid rgba(255,255,255,.06);
+  
+  .channel-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
-  .about { overflow:auto; }
-  .meta { color: var(--muted); font-size: 13px; }
-  .stats { display:grid; grid-template-columns: repeat(3,1fr); gap:10px; }
-  .stat {
-    text-align:center; padding:10px; border-radius:12px; background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.08);
+  .channel-info .title {
+    font-weight: 600;
   }
-  .stat b { display:block; font-size: 16px; color: #eef; }
-
-  .videos-grid { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
-  .video-card { background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:8px; }
-  .video-card img { width:100%; height:110px; object-fit:cover; border-radius:10px; }
-  .video-card h4 { font-size: 13px; margin:8px 0 4px; }
-
-  /* Custom selects + scrollbar (subtle) */
-  select {
-    appearance: none;
-    background-image:
-      linear-gradient(45deg, transparent 50%, #cfd6ea 50%),
-      linear-gradient(135deg, #cfd6ea 50%, transparent 50%),
-      linear-gradient(to right, transparent, transparent);
-    background-position:
-      calc(100% - 18px) calc(50% - 3px),
-      calc(100% - 12px) calc(50% - 3px),
-      calc(100% - 2.5em) 0.5em;
-    background-size: 6px 6px, 6px 6px, 1px 1.8em;
-    background-repeat: no-repeat;
+  .channel-info .id {
+    font-size: 12px;
+    color: var(--text-secondary);
   }
 
-  ::-webkit-scrollbar { width: 10px; height:10px; }
-  ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  /* Progress bar */
+  .progress-bar {
+    height: 6px;
     border-radius: 999px;
-    border: 3px solid rgba(0,0,0,.25);
+    background: var(--border);
+    overflow: hidden;
   }
-  ::-webkit-scrollbar-track { background: transparent; }
+  .progress-bar i {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+    width: 0%;
+    transition: width 0.3s ease;
+  }
 
-  /* Responsive */
-  @media (max-width: 1200px){
-    .main { grid-template-columns: 1fr; grid-template-rows: 420px 1fr 520px; }
-    .details { grid-template-rows: auto 1fr 1fr; }
+  /* Details Panel */
+  .details-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .detail-title h3 {
+    margin: 0;
+  }
+  .detail-title .meta {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .stat-card {
+    padding: 14px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-align: center;
+  }
+  .stat-card b {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .stat-card .meta {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+  }
+  .video-card {
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+  }
+  .video-card img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+  }
+  .video-card-body {
+    padding: 10px;
+  }
+  .video-card-body h4 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    line-height: 1.3;
+    font-weight: 500;
   }
   
-  /* Additional styles for authentication and admin controls */
-  .auth-form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 320px;
-      margin: 10vh auto;
-      padding: 24px;
-      background: var(--bg-1);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+  /* Auth View */
+  .auth-view {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 360px;
+    padding: 30px;
+    background: var(--bg-1);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-strong);
   }
-  .auth-form h2 {
-      text-align: center;
-      margin-bottom: 12px;
-      font-size: 24px;
+  .auth-view h2 {
+    text-align: center;
+    font-size: 28px;
+    margin: 0 0 10px;
   }
-  .auth-form input {
-      width: 100%;
-  }
-  .auth-form button {
-      width: 100%;
-  }
-  .user-info {
-      display: flex;
-      gap: 8px;
-      align-items: center;
+  .auth-view .meta {
+    text-align: center;
+    color: var(--text-secondary);
   }
   
-  /* Message Box Styling */
+  /* Custom Message Box Styling */
   .message-box-overlay {
       position: fixed;
       top: 0;
@@ -310,86 +360,97 @@
       background: var(--bg-1);
       padding: 24px;
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-strong);
       max-width: 400px;
       text-align: center;
       display: flex;
       flex-direction: column;
       gap: 16px;
+      border: 1px solid var(--border);
   }
+
+  @media (max-width: 1200px) {
+    .app {
+      grid-template-columns: 1fr;
+      height: auto;
+      min-height: 100vh;
+    }
+  }
+
 </style>
 </head>
 <body>
-    <div id="auth-view" class="auth-form">
-        <h2>Welcome to Lead Studio Pro</h2>
+    <div id="auth-view" class="auth-view">
+        <h2>Welcome</h2>
         <input id="authEmail" type="email" placeholder="Email" autocomplete="username">
         <input id="authPass" type="password" placeholder="Password" autocomplete="current-password">
         <button class="btn btn-primary" id="btnSignIn">Sign In</button>
         <button class="btn" id="btnSignUp">Sign Up</button>
-        <div id="authStatus" class="meta" style="text-align: center;"></div>
+        <div id="authStatus" class="meta"></div>
     </div>
 
     <div id="app-view" class="app" style="display:none">
-        <div class="topbar">
-            <div class="brand">
+        <div class="left-sidebar">
+            <div class="logo">
                 <h1>Lead Studio Pro</h1>
-                <p>Apple-grade UI • Advanced YouTube lead extractor</p>
+                <p>YouTube Channel Finder</p>
             </div>
-            <div class="bar-controls">
-                <input id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA"/>
-                <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)"></textarea>
-                <div class="button-group" style="margin-left:auto;">
-                  <button class="btn btn-primary" id="btnSearch">Search</button>
-                  <button class="btn" id="btnClear">Clear</button>
+            
+            <div class="controls-panel">
+                <div class="meta">Advanced Filters</div>
+                <div class="controls-group">
+                    <select id="order" class="full-width"><option value="relevance">Order: Relevance</option><option value="date">Order: Date</option><option value="viewCount">Order: Views</option><option value="rating">Order: Rating</option></select>
                 </div>
+                <div class="controls-group">
+                    <select id="duration" class="full-width"><option value="">Duration: Any</option><option value="short">Short (<4m)</option><option value="medium">Medium (4–20m)</option><option value="long">Long (>20m)</option></select>
+                </div>
+                <div class="controls-group">
+                    <select id="upload" class="full-width"><option value="">Upload Time: Any</option><option value="hour">Last hour</option><option value="today">Today</option><option value="week">This week</option><option value="month">This month</option></select>
+                </div>
+                <div class="controls-group">
+                    <select id="region" class="full-width"><option value="">Region: Any</option><option>US</option><option>IN</option><option>GB</option><option>CA</option><option>AU</option><option>DE</option></select>
+                </div>
+                <div class="controls-group">
+                    <select id="definition" class="full-width"><option value="">Definition: Any</option><option value="high">HD</option><option value="standard">SD</option></select>
+                </div>
+                <div class="controls-group">
+                    <select id="safe" class="full-width"><option value="">Safe: Any</option><option value="none">None</option><option value="moderate">Moderate</option><option value="strict">Strict</option></select>
+                </div>
+                
+                <input id="perPage" class="full-width" type="number" min="1" max="50" value="25" placeholder="Results per page (1–50)"/>
+                <input id="pages" class="full-width" type="number" min="1" max="10" value="2" placeholder="Pages per query (1–10)"/>
+
+                <div class="controls-group">
+                    <input id="minSubs" type="number" placeholder="Min subs"/>
+                    <input id="maxSubs" type="number" placeholder="Max subs"/>
+                </div>
+
+                <input id="searchInResults" class="full-width" type="text" placeholder="Search within results (title / ID)"/>
+                
+                <div class="controls-group" style="justify-content: space-between;">
+                    <div class="meta" id="status">Idle</div>
+                    <div class="meta" id="count">0 channels</div>
+                </div>
+                <div class="progress-bar"><i id="progressBar"></i></div>
             </div>
         </div>
 
-        <div class="main">
-            <div class="panel">
-                <div class="row" style="justify-content:space-between;margin-bottom:8px">
-                    <div class="meta">Advanced Filters</div>
-                    <div class="meta" id="status">Idle</div>
+        <div class="main-content">
+            <div class="search-inputs">
+                <div class="search-bar">
+                    <input id="query" type="text" placeholder="Enter one or more queries (comma or newline separated)"/>
+                    <button class="btn btn-primary" id="btnSearch">Search</button>
+                    <button class="btn" id="btnClear">Clear</button>
                 </div>
-                <div class="filters">
-                    <select id="order"><option value="relevance">Order: Relevance</option><option value="date">Order: Date</option><option value="viewCount">Order: Views</option><option value="rating">Order: Rating</option></select>
-                    <select id="duration"><option value="">Duration: Any</option><option value="short">Short (<4m)</option><option value="medium">Medium (4–20m)</option><option value="long">Long (>20m)</option></select>
-                    <select id="upload"><option value="">Upload Time: Any</option><option value="hour">Last hour</option><option value="today">Today</option><option value="week">This week</option><option value="month">This month</option></select>
-                    <select id="region"><option value="">Region: Any</option><option>US</option><option>IN</option><option>GB</option><option>CA</option><option>AU</option><option>DE</option></select>
-                    <select id="definition"><option value="">Definition: Any</option><option value="high">HD</option><option value="standard">SD</option></select>
-                    <select id="safe"><option value="">Safe: Any</option><option value="none">None</option><option value="moderate">Moderate</option><option value="strict">Strict</option></select>
-
-                    <input id="perPage" class="full" type="number" min="1" max="50" value="25" placeholder="Results per page (1–50)"/>
-                    <input id="pages" class="full" type="number" min="1" max="10" value="2" placeholder="Pages per query (1–10)"/>
-
-                    <div class="full row">
-                        <input id="minSubs" type="number" placeholder="Min subs"/>
-                        <input id="maxSubs" type="number" placeholder="Max subs"/>
-                        <input id="searchInResults" type="text" placeholder="Search within results (title / ID)"/>
-                    </div>
-
-                    <div class="full row">
-                        <input id="corsProxy" type="url" placeholder="Optional CORS proxy for verification (best-effort)"/>
-                        <label class="switch"><input id="doVerify" type="checkbox"/> <small>Attempt verify check</small></label>
-                    </div>
-
-                    <div class="full row" style="justify-content:space-between;margin-top:2px">
-                        <div class="progress"><i id="progressBar"></i></div>
-                        <small id="count">0 channels</small>
-                    </div>
-                </div>
+                <input id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA" style="flex-grow: 1"/>
             </div>
 
-            <div class="panel results-wrap">
-                <div class="results-toolbar">
-                    <div class="left button-group">
+            <div class="panel results-container">
+                <div class="table-toolbar">
+                    <div class="button-group">
                         <button class="btn" id="btnSelectAll">Select All</button>
                         <button class="btn" id="btnDeselectAll">Deselect</button>
-                        <button class="btn" id="btnSaveLib">Save Library</button>
-                        <button class="btn" id="btnLoadLib">Load Library</button>
-                    </div>
-                    <div class="right button-group">
-                        <select id="clientSort">
+                        <select id="clientSort" class="full-width">
                             <option value="subs-desc">Sort: Subs ↓</option>
                             <option value="subs-asc">Sort: Subs ↑</option>
                             <option value="views-desc">Sort: Views ↓</option>
@@ -397,18 +458,20 @@
                             <option value="title-asc">Sort: Title A→Z</option>
                             <option value="title-desc">Sort: Title Z→A</option>
                         </select>
-                        <button class="btn btn-primary" id="btnExportCSV">Export CSV</button>
-                        <button class="btn" id="btnExportJSON">Export JSON</button>
-                        <button class="btn" id="btnCopyIDs">Copy Channel IDs</button>
-                        <button class="btn btn-danger" id="btnClearResults">Clear</button>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn" id="btnSaveLib">Save</button>
+                        <button class="btn" id="btnLoadLib">Load</button>
+                        <button class="btn btn-primary" id="btnExportCSV">Export</button>
+                        <button class="btn btn-danger" id="btnClearResults">Clear All</button>
                     </div>
                 </div>
 
-                <div class="table-wrap" id="resultsScroller">
-                    <table aria-label="Channel results">
+                <div class="table-wrap">
+                    <table>
                         <thead>
                             <tr>
-                                <th style="width:42px"></th>
+                                <th style="width: 40px;"></th>
                                 <th>Channel</th>
                                 <th>Subs</th>
                                 <th>Videos</th>
@@ -419,34 +482,33 @@
                         <tbody id="resultsTbody"></tbody>
                     </table>
                 </div>
-
-                <div class="row" style="justify-content:flex-end">
-                    <small class="meta">Tip: Click a row to open full details in the panel on the right.</small>
-                </div>
             </div>
-
-            <div class="panel details">
-                <div>
-                    <div class="row" style="justify-content:space-between">
-                        <div>
-                            <div class="meta">Channel Details</div>
-                            <h3 id="detailTitle" style="margin:6px 0 0">Select a channel</h3>
-                        </div>
-                        <div class="row button-group">
-                            <button class="btn" id="btnExportSelected">Export Selected</button>
-                            <button class="btn" id="btnCopySelected">Copy Selected CSV</button>
-                        </div>
+            
+            <div id="detailView" class="panel details-panel" style="display: none;">
+                <div class="details-header">
+                    <div class="detail-title">
+                        <h3 id="detailTitle"></h3>
+                        <div class="meta" id="detailId"></div>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn" id="btnExportSelected">Export Selected</button>
+                        <button class="btn" id="btnCopySelected">Copy Selected CSV</button>
                     </div>
                 </div>
-                <div id="banner" class="banner" style="display:none"></div>
-                <div class="about" id="detailContent">
-                    <div class="meta">No channel selected.</div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card"><b><span id="statSubs"></span></b><div class="meta">Subscribers</div></div>
+                    <div class="stat-card"><b><span id="statViews"></span></b><div class="meta">Total Views</div></div>
+                    <div class="stat-card"><b><span id="statVideos"></span></b><div class="meta">Total Videos</div></div>
                 </div>
-                <div class="meta">
-                    <div class="row" style="justify-content:space-between;align-items:flex-end">
-                        <div class="user-info">
-                            <div id="userEmail"></div>
-                        </div>
+
+                <div class="video-grid" id="latestVideos"></div>
+                
+                <div style="border-top: 1px solid var(--border); padding-top: 16px;">
+                    <div class="meta">
+                        Logged in as: <span id="userEmail"></span>
+                    </div>
+                    <div class="button-group" style="margin-top: 10px;">
                         <button class="btn" id="btnSignOut">Sign Out</button>
                     </div>
                 </div>
@@ -454,6 +516,7 @@
         </div>
     </div>
     
+    <!-- Custom Message Box -->
     <div id="messageBoxOverlay" class="message-box-overlay">
         <div id="messageBox" class="message-box">
             <h4 id="messageTitle"></h4>
@@ -519,7 +582,7 @@
                 currentUser = user;
                 $('app-view').style.display = 'grid';
                 $('auth-view').style.display = 'none';
-                $('userEmail').innerText = `Logged in as: ${user.email}`;
+                $('userEmail').innerText = `${user.email}`;
 
                 // Log user usage for tracking purposes
                 const userRef = doc(db, 'users', user.uid);
@@ -769,11 +832,11 @@
                 tr.innerHTML = `
                     <td><input type="checkbox" class="sel" data-idx="${idx}"/></td>
                     <td>
-                        <div style="display:flex;align-items:center;gap:10px">
-                            <img class="avatar" src="${sanitize(c.avatar)}" alt="">
+                        <div class="channel-info">
+                            <img class="avatar" src="${sanitize(c.avatar)}" alt="${sanitize(c.title)} avatar">
                             <div>
-                                <div style="font-weight:700">${sanitize(c.title)}</div>
-                                <div class="meta">${sanitize(c.channelId)}</div>
+                                <div class="title">${sanitize(c.title)}</div>
+                                <div class="id">${sanitize(c.channelId)}</div>
                             </div>
                         </div>
                     </td>
@@ -792,41 +855,14 @@
         }
         
         function renderDetails(c){
+            $('detailView').style.display = 'flex';
             $('detailTitle').innerText = c.title;
-            const socialLinks = getSocialLinksFromDesc(c);
-
-            $('detailContent').innerHTML = `
-                <div class="meta">Channel ID: ${c.channelId} • ${c.country} • Created: ${c.createdAt}</div>
-                <p style="margin-top:10px;line-height:1.5;font-size:14px;color:var(--muted)">${sanitize(c.description)}</p>
-                <div class="stats" style="margin-top:14px">
-                    <div class="stat"><b>${c.subs.toLocaleString()}</b><div class="meta">Subscribers</div></div>
-                    <div class="stat"><b>${c.views.toLocaleString()}</b><div class="meta">Total Views</div></div>
-                    <div class="stat"><b>${c.videos.toLocaleString()}</b><div class="meta">Total Videos</div></div>
-                </div>
-                
-                <h4 style="margin:20px 0 8px">Social Links</h4>
-                <div class="row" style="flex-wrap:nowrap;justify-content:space-between">
-                    <div class="row button-group">
-                        ${socialLinks.website?`<a href="${sanitize(socialLinks.website)}" target="_blank" class="btn">Website</a>`:''}
-                        ${socialLinks.twitter?`<a href="${sanitize(socialLinks.twitter)}" target="_blank" class="btn">Twitter</a>`:''}
-                        ${socialLinks.instagram?`<a href="${sanitize(socialLinks.instagram)}" target="_blank" class="btn">Instagram</a>`:''}
-                        ${socialLinks.facebook?`<a href="${sanitize(socialLinks.facebook)}" target="_blank" class="btn">Facebook</a>`:''}
-                        ${socialLinks.tiktok?`<a href="${sanitize(socialLinks.tiktok)}" target="_blank" class="btn">TikTok</a>`:''}
-                        ${socialLinks.linkedin?`<a href="${sanitize(socialLinks.linkedin)}" target="_blank" class="btn">LinkedIn</a>`:''}
-                    </div>
-                </div>
-                <h4 style="margin:20px 0 8px">Latest Videos <small class="meta">(up to 6)</small></h4>
-                <div class="videos-grid" id="latestVideos">
-                    <div class="meta">Loading...</div>
-                </div>
-            `;
-            if(c.banner){
-                $('banner').style.display = 'block';
-                $('banner').style.backgroundImage = `url(${sanitize(c.banner)})`;
-            } else {
-                $('banner').style.display = 'none';
-            }
+            $('detailId').innerText = c.channelId;
             
+            $('statSubs').innerText = c.subs.toLocaleString();
+            $('statViews').innerText = c.views.toLocaleString();
+            $('statVideos').innerText = c.videos.toLocaleString();
+
             loadLatestVideos(c.channelId);
         }
 
@@ -853,9 +889,7 @@
         function resetResults(){
             LIB = []; VIEW = []; lastExport = [];
             $('resultsTbody').innerHTML=''; $('count').innerText='0 channels';
-            $('detailTitle').innerText = 'Select a channel';
-            $('detailContent').innerHTML = '<div class="meta">No channel selected.</div>';
-            $('banner').style.display='none'; $('banner').style.backgroundImage='none';
+            $('detailView').style.display = 'none';
             setProgress(0); setStatus('Idle');
         }
 
@@ -864,6 +898,7 @@
         async function loadLatestVideos(channelId){
             const apiKey = $('apiKey').value.trim();
             const box = $('latestVideos');
+            box.innerHTML = '<div class="meta" style="text-align:center">Loading...</div>';
             try{
                 const u = new URL('https://www.googleapis.com/youtube/v3/search');
                 u.searchParams.set('part','snippet');
@@ -874,12 +909,12 @@
                 u.searchParams.set('key', apiKey);
                 const r = await fetch(u.toString());
                 if(!r.ok){
-                    box.innerHTML = '<div class="meta">Cannot load videos.</div>';
+                    box.innerHTML = '<div class="meta" style="text-align:center">Cannot load videos.</div>';
                     return;
                 }
                 const data = await r.json();
                 if(!data.items?.length){
-                    box.innerHTML = '<div class="meta">No recent videos.</div>';
+                    box.innerHTML = '<div class="meta" style="text-align:center">No recent videos.</div>';
                     return;
                 }
                 box.innerHTML='';
@@ -891,17 +926,19 @@
                     card.className = 'video-card';
                     card.innerHTML = `
                         <img src="${sanitize(thumb)}" alt="">
-                        <h4>${sanitize(title)}</h4>
-                        <div class="row" style="margin-top:6px">
-                            <button class="btn btn-primary" onclick="window.open('https://www.youtube.com/watch?v=${vid}')">Open</button>
-                            <button class="btn" onclick="embed('${vid}')">Preview</button>
+                        <div class="video-card-body">
+                            <h4>${sanitize(title)}</h4>
+                            <div class="button-group">
+                                <button class="btn" onclick="window.open('https://www.youtube.com/watch?v=${vid}', '_blank')">Open</button>
+                                <button class="btn" onclick="embed('${vid}')">Preview</button>
+                            </div>
                         </div>
                     `;
                     box.appendChild(card);
                 });
             }catch(e){
                 console.error(e);
-                box.innerHTML = '<div class="meta">Error loading videos.</div>';
+                box.innerHTML = '<div class="meta" style="text-align:center">Error loading videos.</div>';
             }
         }
         
@@ -916,7 +953,7 @@
             frame.style.marginTop='10px';
             frame.src=`https://www.youtube.com/embed/${videoId}?autoplay=1`;
             frame.setAttribute('allow','accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture');
-            $('detailContent').appendChild(frame);
+            $('detailView').appendChild(frame);
         }
         
         // Helper for copying text to clipboard
