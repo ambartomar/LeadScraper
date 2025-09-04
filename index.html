@@ -6,22 +6,23 @@
 <title>Lead Studio Pro — YouTube Channel Finder</title>
 <style>
   /* =========================
-     DRIPPI UI OVERHAUL
+     DRIPPI UI - BLUE OVERHAUL
      ========================= */
 
   /* Global variables */
   :root {
-    --bg-0: #0D0D11;
-    --bg-1: #1A1B22;
-    --bg-2: #24252E;
+    --bg-0: #0C111E;
+    --bg-1: #181E2C;
+    --bg-2: #212B3E;
+    --bg-3: #2A364A;
     --border: rgba(255, 255, 255, 0.08);
-    --text-primary: #f5f7ff;
-    --text-secondary: #a6b0c3;
-    --accent-1: #8A43E8;
-    --accent-2: #805BE2;
+    --text-primary: #F0F4FD;
+    --text-secondary: #9FAAC0;
+    --accent-1: #007BFF;
+    --accent-2: #00A3FF;
     --glass-fill: rgba(255, 255, 255, 0.05);
-    --glass-stroke: rgba(255, 255, 255, 0.1);
-    --glass-shadow: rgba(0, 0, 0, 0.25);
+    --glass-stroke: rgba(255, 255, 255, 0.15);
+    --glass-shadow: rgba(0, 0, 0, 0.35);
     --radius: 12px;
     --shadow-strong: 0 10px 40px rgba(0, 0, 0, 0.4);
     --shadow-subtle: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -64,7 +65,7 @@
     transition: all 0.2s ease;
   }
 
-  input:focus, select:focus, textarea:focus {
+  input:focus, select:focus, textarea:focus, button:focus {
     outline: none;
     box-shadow: 0 0 0 2px var(--accent-1), var(--shadow-strong);
     border-color: var(--accent-1);
@@ -73,6 +74,7 @@
   button {
     cursor: pointer;
     background: var(--bg-2);
+    box-shadow: 0 2px 5px var(--glass-shadow);
   }
   
   .btn-primary {
@@ -81,19 +83,26 @@
     font-weight: 600;
   }
   .btn-danger {
-    background: #E84343;
+    background: #FF5A5A;
     border-color: transparent;
   }
-  .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px var(--accent-2);
+  
+  button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   }
   .btn-primary:hover {
-    box-shadow: 0 5px 20px rgba(138, 67, 232, 0.6);
+    box-shadow: 0 5px 20px rgba(0, 123, 255, 0.6);
   }
-  .btn:active {
+  button:active {
     transform: translateY(0);
   }
+  
+  .input-group {
+    display: flex;
+    gap: 10px;
+  }
+  .input-group input { flex-grow: 1; }
 
   /* App Shell */
   .app {
@@ -499,7 +508,7 @@
                 <div class="stats-grid">
                     <div class="stat-card"><b><span id="statSubs"></span></b><div class="meta">Subscribers</div></div>
                     <div class="stat-card"><b><span id="statViews"></span></b><div class="meta">Total Views</div></div>
-                    <div class="stat-card"><b><span id="statVideos"></span></b><div class="meta">Total Videos</div></div>
+                    <div class="stat-card"><b><b><span id="statVideos"></span></b></b><div class="meta">Total Videos</div></div>
                 </div>
 
                 <div class="video-grid" id="latestVideos"></div>
@@ -527,10 +536,16 @@
     
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-functions.js";
         
+        // --- MANDATORY: Firebase Global Variables ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        // --- END MANDATORY: Firebase Global Variables ---
+
         /* =========================
            STATE + HELPERS
            ========================= */
@@ -560,16 +575,6 @@
         });
 
         // === FIREBASE CONFIGURATION ===
-        const firebaseConfig = {
-          apiKey: "AIzaSyBvU3_Njbi1JQr_wD1a16h5coTW2ifaRDU",
-          authDomain: "youleadmax.firebaseapp.com",
-          projectId: "youleadmax",
-          storageBucket: "youleadmax.firebasestorage.app",
-          messagingSenderId: "710806971072",
-          appId: "1:710806971072:web:ced903befe8693f886c325",
-          measurementId: "G-JW9W20C1LQ"
-        };
-
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
@@ -584,7 +589,6 @@
                 $('auth-view').style.display = 'none';
                 $('userEmail').innerText = `${user.email}`;
 
-                // Log user usage for tracking purposes
                 const userRef = doc(db, 'users', user.uid);
                 await setDoc(userRef, {
                     lastLogin: new Date().toISOString()
@@ -636,10 +640,7 @@
             if(!queries.length){ showMessage('Search Error', 'Please enter at least one query'); return; }
             if(!currentUser){ showMessage('Authentication Required', 'Please sign in first.'); return; }
 
-            // Call the logSearch Cloud Function to record the search action
             try {
-              // The CORS issue means we need to handle the error, but the app should still work.
-              // We will continue the search process even if logging fails.
               await logSearchCallable({ query: queryRaw });
             } catch (error) {
               console.error('Failed to log search:', error);
@@ -691,7 +692,6 @@
                     const data = await resp.json();
                     
                     (data.items || []).forEach(item => {
-                        // Shorts filtering (multi-heuristic)
                         const t = (item.snippet.title||'').toLowerCase();
                         const d = (item.snippet.description||'').toLowerCase();
                         if(t.includes('#shorts') || t.includes('shorts ') || t.endsWith('shorts') || d.includes('#shorts') || d.includes('shorts ')) return;
@@ -710,7 +710,6 @@
             
             setStatus(`Found ${chanIds.size} channels — fetching details…`);
             
-            // fetch channels in batches of 50
             const ids = Array.from(chanIds);
             for(let i=0;i<ids.length;i+=50){
                 const batch = ids.slice(i,i+50);
@@ -732,7 +731,7 @@
                 const data = await resp.json();
                 
                 (data.items||[]).forEach(ch => {
-                    if(!ch.snippet || !ch.snippet.title) return; // junk
+                    if(!ch.snippet || !ch.snippet.title) return;
                     const stats = ch.statistics || {};
                     const title = ch.snippet.title;
                     
@@ -797,7 +796,6 @@
                 return true;
             });
 
-            // client sort
             const sort = $('clientSort').value;
             VIEW.sort((a,b) => {
                 if(sort==='subs-desc') return (b.subs||0) - (a.subs||0);
@@ -866,25 +864,6 @@
             loadLatestVideos(c.channelId);
         }
 
-        function getSocialLinksFromDesc(c){
-            let links = [];
-            const desc = (c.description||'') + ' ' + (c.brandingSettings?.channel?.description||'');
-            const regex = /(https?:\/\/[w.-]+\.[a-z]{2,}(?:[w\-_~:/?#[\]@!$&'()*+,;=%]*)?)/gi;
-            let m; while((m=regex.exec(desc))!==null){ links.push(m[1]); }
-            // deduplicate
-            const uniq = Array.from(new Set(links));
-            const socials = {};
-            uniq.forEach(u=>{
-                if(/twitter\.com/i.test(u)) socials.twitter=u;
-                else if(/instagram\.com/i.test(u)) socials.instagram=u;
-                else if(/facebook\.com/i.test(u)) socials.facebook=u;
-                else if(/tiktok\.com/i.test(u)) socials.tiktok=u;
-                else if(/linkedin\.com/i.test(u)) socials.linkedin=u;
-                else if(!socials.website) socials.website=u;
-            });
-            return socials;
-        }
-
         /* ========================= UTIL ========================= */
         function resetResults(){
             LIB = []; VIEW = []; lastExport = [];
@@ -943,7 +922,6 @@
         }
         
         function embed(videoId){
-            // add/replace a small embed at bottom-right of results panel
             let frame = document.getElementById('previewFrame');
             if(frame){ frame.remove(); }
             frame = document.createElement('iframe');
@@ -956,12 +934,10 @@
             $('detailView').appendChild(frame);
         }
         
-        // Helper for copying text to clipboard
         async function copyText(text) {
             try {
                 await navigator.clipboard.writeText(text);
             } catch (err) {
-                // Fallback for older browsers or restricted environments
                 const textarea = document.createElement('textarea');
                 textarea.value = text;
                 document.body.appendChild(textarea);
@@ -1034,7 +1010,6 @@
         }
 
         function cToSafe(c){
-            // strip big strings that might break inline JSON calls
             return {
                 channelId:c.channelId,
                 title:c.title,
