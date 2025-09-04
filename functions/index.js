@@ -1,91 +1,30 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
+// Initialize the Firebase Admin SDK
 admin.initializeApp();
 const db = admin.firestore();
 
-// Set up App Check verification
-const { initializeAppCheck, getAppCheck } = require('firebase-admin/app-check');
-const appCheck = initializeAppCheck({
-  appId: '1:710806971072:web:ced903befe8693f886c325', // Your App ID is correct
-  serviceAccountId: 'firebase-adminsdk-fbsvc@youleadmax.iam.gserviceaccount.com', // Your service account ID is correct
-});
-
-// Admin UID to grant special permissions. MUST BE SET SECURELY.
-// You must get this from your Firebase Authentication console after creating the user.
-const ADMIN_UID = 'DhD6XzfVq2fEJSvrHvws2KTKZlu1';
-
-// Deducts credits from a user's account
-exports.deductCredits = functions.https.onCall(async (data, context) => {
-  // TEMPORARY FIX: App Check verification has been commented out to fix the "Credit deduction failed: internal" error.
-  // Once you properly configure App Check with your Render domain, you can uncomment this code.
-  /*
-  if (data.appCheckToken) {
-    try {
-      await getAppCheck().verifyToken(data.appCheckToken);
-    } catch (error) {
-      console.error('App Check verification failed:', error);
-      throw new functions.https.HttpsError('internal', 'App Check verification failed.');
-    }
-  }
-  */
-
-  // Ensure user is authenticated
-  if (!context.auth) {
-    throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
-  }
-
-  const uid = context.auth.uid;
-  const deduction = data.deduction || 0;
-  const userRef = db.collection('users').doc(uid);
-
-  return db.runTransaction(async (transaction) => {
-    const doc = await transaction.get(userRef);
-    if (!doc.exists) {
-      throw new functions.https.HttpsError('not-found', 'User data not found.');
-    }
-    
-    const currentCredits = doc.data().credits || 0;
-    if (currentCredits < deduction) {
-      throw new functions.https.HttpsError('failed-precondition', 'Insufficient credits.');
+// This function logs a search query to a user's Firestore document.
+// It is used for tracking purposes and does not affect the user's ability to perform searches.
+exports.logSearch = functions.https.onCall(async (data, context) => {
+    // Ensure the function is called by an authenticated user
+    if (!context.auth) {
+        throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
     }
 
-    const newCredits = currentCredits - deduction;
-    transaction.update(userRef, { credits: newCredits });
-    return { credits: newCredits };
-  });
-});
+    const uid = context.auth.uid;
+    const query = data.query || 'N/A';
+    const timestamp = admin.firestore.FieldValue.serverTimestamp();
 
-// Admin function to reset all user credits
-exports.adminResetCredits = functions.https.onCall(async (data, context) => {
-  // TEMPORARY FIX: App Check verification has been commented out.
-  /*
-  if (data.appCheckToken) {
-    try {
-      await getAppCheck().verifyToken(data.appCheckToken);
-    } catch (error) {
-      console.error('App Check verification failed:', error);
-      throw new functions.https.HttpsError('internal', 'App Check verification failed.');
-    }
-  }
-  */
+    const userRef = db.collection('users').doc(uid);
 
-  // Ensure user is authenticated and is the admin
-  if (!context.auth) {
-    throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
-  }
-  if (context.auth.uid !== ADMIN_UID) {
-    throw new functions.https.HttpsError('permission-denied', 'You do not have permission to perform this action.');
-  }
+    // Use a subcollection to log each search for better data organization and scalability.
+    const logRef = userRef.collection('searchLogs');
+    await logRef.add({
+        query: query,
+        timestamp: timestamp
+    });
 
-  const usersRef = db.collection('users');
-  const snapshot = await usersRef.get();
-
-  const batch = db.batch();
-  snapshot.forEach(doc => {
-    batch.update(doc.ref, { credits: 100 }); // Reset to 100 credits
-  });
-
-  await batch.commit();
-  return { message: 'All user credits have been reset.' };
+    return { message: 'Search logged successfully.' };
 });
