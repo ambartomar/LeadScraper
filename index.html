@@ -407,12 +407,8 @@
                     <div class="row" style="justify-content:space-between;align-items:flex-end">
                         <div class="user-info">
                             <div id="userEmail"></div>
-                            <div id="userCredits"></div>
                         </div>
                         <button class="btn" id="btnSignOut">Sign Out</button>
-                    </div>
-                    <div id="admin-controls" style="display:none;margin-top:10px">
-                        <button class="btn btn-primary" id="btnResetCredits">Reset All Credits</button>
                     </div>
                 </div>
             </div>
@@ -422,9 +418,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-functions.js";
-        import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app-check.js";
         
         /* =========================
            STATE + HELPERS
@@ -435,8 +430,6 @@
 
         const savedLibraryKey = 'lead_studio_pro_lib_v1';
         let currentUser = null;
-        let isAppCheckInitialized = false;
-        let appCheckToken = null;
         
         function setStatus(t){ $('status').innerText = t; }
         function setProgress(p){ $('progressBar').style.width = Math.min(100, Math.round(p*100)) + '%'; }
@@ -462,61 +455,20 @@
         const db = getFirestore(app);
         const functions = getFunctions(app);
 
-        // This is a placeholder. You MUST replace this with the real UID
-        // after creating the admin user in Firebase Authentication.
-        const ADMIN_UID = 'YOUR_REAL_ADMIN_UID'; 
-        let isAdmin = false;
-        let userCredits = 0;
-
-        async function initAppCheck() {
-            if (isAppCheckInitialized) return;
-            isAppCheckInitialized = true;
-            try {
-                const appCheckInstance = initializeAppCheck(app, {
-                    provider: new ReCaptchaV3Provider('6Lcw71MpAAAAAPJqGgV8t4-3gR3eO3C_w_f-L6y_'), // Replace with your actual ReCaptcha v3 key
-                    isTokenAutoRefreshEnabled: true
-                });
-                appCheckInstance.getToken(true).then(tokenResponse => {
-                    appCheckToken = tokenResponse.token;
-                    console.log("App Check initialized successfully.");
-                }).catch(error => {
-                    console.error("App Check initialization error:", error);
-                });
-            } catch (e) {
-                console.error("App Check setup failed:", e);
-            }
-        }
-
         /* ========================= AUTHENTICATION ========================= */
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                isAdmin = (user.uid === ADMIN_UID);
                 $('app-view').style.display = 'grid';
                 $('auth-view').style.display = 'none';
                 $('userEmail').innerText = `Logged in as: ${user.email}`;
 
-                if (isAdmin) {
-                    $('admin-controls').style.display = 'block';
-                } else {
-                    $('admin-controls').style.display = 'none';
-                }
-
-                // Fetch user data from Firestore
+                // Log user usage for tracking purposes
                 const userRef = doc(db, 'users', user.uid);
-                const userDoc = await getDoc(userRef);
+                await setDoc(userRef, {
+                    lastLogin: new Date().toISOString()
+                }, { merge: true });
 
-                if (userDoc.exists()) {
-                    userCredits = userDoc.data().credits || 0;
-                } else {
-                    // Create new user document with initial credits
-                    userCredits = 100; // default
-                    await setDoc(userRef, {
-                        email: user.email,
-                        credits: userCredits
-                    }, { merge: true });
-                }
-                updateCreditsUI();
             } else {
                 currentUser = null;
                 $('app-view').style.display = 'none';
@@ -549,25 +501,6 @@
             resetResults();
         });
 
-        $('btnResetCredits').addEventListener('click', async () => {
-            if (!confirm('Are you sure you want to reset ALL user credits to 100?')) return;
-            const resetCredits = httpsCallable(functions, 'adminResetCredits');
-            try {
-                setStatus('Resetting all credits...');
-                const result = await resetCredits({appCheckToken});
-                alert(result.data.message);
-                setStatus('Credits reset.');
-            } catch(error) {
-                console.error('Reset credits failed:', error);
-                alert('Failed to reset credits: ' + error.message);
-                setStatus('Ready.');
-            }
-        });
-
-        function updateCreditsUI() {
-            $('userCredits').innerText = `Credits: ${userCredits}`;
-        }
-
         /* ========================= SEARCH / FETCH ========================= */
         $('btnSearch').addEventListener('click', searchAll);
         $('btnClear').addEventListener('click', () => { $('query').value=''; resetResults(); });
@@ -578,30 +511,19 @@
             const queries = queryRaw.split(/[,\\n]/).map(q=>q.trim()).filter(Boolean);
             const perPage = clamp(Number($('perPage').value||25), 1, 50);
             const pages = clamp(Number($('pages').value||2), 1, 10);
-            const deduction = queries.length * pages;
 
             if(!queries.length){ alert('Please enter at least one query'); return; }
             if(!currentUser){ alert('Please sign in first'); return; }
 
-            try {
-                setStatus('Deducting credits...');
-                const deductCredits = httpsCallable(functions, 'deductCredits');
-                const result = await deductCredits({ deduction, appCheckToken });
-                userCredits = result.data.credits;
-                updateCreditsUI();
-                setStatus('Credits deducted. Searching...');
-            } catch (e) {
-                console.error("Credit deduction failed:", e);
-                alert('Credit deduction failed: ' + e.message);
-                setStatus('Ready.');
-                return;
-            }
+            // Log the search action to Firestore
+            const usageRef = doc(db, 'users', currentUser.uid, 'usage', new Date().toISOString());
+            await setDoc(usageRef, {
+              query: queryRaw,
+              timestamp: new Date().toISOString()
+            });
 
             resetResults();
             lastSearch = { queryRaw, queries, perPage, pages, filters:{order,duration,upload,region,definition,safe} };
-
-            // Your existing search logic from this point on, but with a few changes
-            // ... (rest of the searchAll function)
             
             setStatus('Searching for channels...');
             const apiKey = $('apiKey').value.trim();
@@ -868,9 +790,7 @@
             return socials;
         }
 
-        /* =========================
-           UTIL
-           ========================= */
+        /* ========================= UTIL ========================= */
         function resetResults(){
             LIB = []; VIEW = []; lastExport = [];
             $('resultsTbody').innerHTML=''; $('count').innerText='0 channels';
@@ -1042,9 +962,6 @@
                 alert('Failed to load library. Data may be corrupted.');
             }
         });
-
-        // Initialize App Check
-        initAppCheck();
     </script>
 </body>
 </html>
