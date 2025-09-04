@@ -330,28 +330,6 @@
     font-weight: 500;
   }
   
-  /* Auth View */
-  .auth-view {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    width: 360px;
-    padding: 30px;
-    background: var(--bg-1);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-strong);
-  }
-  .auth-view h2 {
-    text-align: center;
-    font-size: 28px;
-    margin: 0 0 10px;
-  }
-  .auth-view .meta {
-    text-align: center;
-    color: var(--text-secondary);
-  }
-  
   /* Custom Message Box Styling */
   .message-box-overlay {
       position: fixed;
@@ -378,6 +356,57 @@
       border: 1px solid var(--border);
   }
 
+  /* Login screen styles */
+  .auth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: 380px;
+    padding: 40px;
+    background: var(--bg-2);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-strong);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+  
+  .auth-card h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+  }
+  
+  .auth-card p {
+    color: var(--text-secondary);
+    margin-top: -10px;
+  }
+
+  .auth-card .input-group {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .auth-card button {
+    width: 100%;
+  }
+
+  .auth-card .meta {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-top: -10px;
+  }
+
   @media (max-width: 1200px) {
     .app {
       grid-template-columns: 1fr;
@@ -389,16 +418,24 @@
 </style>
 </head>
 <body>
-    <div id="auth-view" class="auth-view" style="display:none">
-        <h2>Welcome</h2>
-        <input id="authEmail" type="email" placeholder="Email" autocomplete="username">
-        <input id="authPass" type="password" placeholder="Password" autocomplete="current-password">
-        <button class="btn btn-primary" id="btnSignIn">Sign In</button>
-        <button class="btn" id="btnSignUp">Sign Up</button>
-        <div id="authStatus" class="meta"></div>
+    <div id="auth-view" class="auth-container" style="display: none;">
+        <div class="auth-card">
+            <h2>Welcome Back</h2>
+            <p>Sign in to your account to continue.</p>
+            <div class="input-group">
+                <input id="email" type="email" placeholder="Email"/>
+                <input id="password" type="password" placeholder="Password"/>
+            </div>
+            <button id="btnSignIn" class="btn btn-primary">Sign In</button>
+            <p class="meta">or</p>
+            <div class="input-group">
+              <button id="btnSignUp" class="btn">Sign Up</button>
+              <button id="btnGuest" class="btn">Continue as Guest</button>
+            </div>
+        </div>
     </div>
-
-    <div id="app-view" class="app" style="display:none">
+    
+    <div id="app-view" class="app" style="display: none;">
         <div class="left-sidebar">
             <div class="logo">
                 <h1>Lead Studio Pro</h1>
@@ -536,7 +573,7 @@
     
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut, signInWithCustomToken, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-functions.js";
         
@@ -550,7 +587,7 @@
            STATE + HELPERS
            ========================= */
         const $ = id => document.getElementById(id);
-        const sleep = ms => new Promise(r => setTimeout(r, ms));
+        const sleep = ms => new Promise(r => setTimeout(r, r));
         const esc = s => String(s ?? '').replace(/"/g,'""');
 
         const savedLibraryKey = 'lead_studio_pro_lib_v1';
@@ -573,6 +610,20 @@
         $('messageBoxOk').addEventListener('click', () => {
             $('messageBoxOverlay').style.display = 'none';
         });
+        
+        // UI Toggling
+        const authView = $('auth-view');
+        const appView = $('app-view');
+
+        function showAppView() {
+            authView.style.display = 'none';
+            appView.style.display = 'grid';
+        }
+
+        function showAuthView() {
+            authView.style.display = 'flex';
+            appView.style.display = 'none';
+        }
 
         // === FIREBASE CONFIGURATION ===
         const app = initializeApp(firebaseConfig);
@@ -586,26 +637,23 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                $('app-view').style.display = 'grid';
-                $('auth-view').style.display = 'none';
                 $('userEmail').innerText = `${user.email || 'Anonymous'}`;
-
                 const userRef = doc(db, 'users', user.uid);
                 await setDoc(userRef, {
                     lastLogin: new Date().toISOString()
                 }, { merge: true });
-
+                showAppView();
             } else {
                 currentUser = null;
-                $('app-view').style.display = 'none';
-                $('auth-view').style.display = 'flex';
+                showAuthView();
             }
         });
 
-        // Use the initial auth token provided by the environment
+        // Use the initial auth token provided by the environment to sign in automatically
         if (initialAuthToken) {
             signInWithCustomToken(auth, initialAuthToken).catch(error => {
                 console.error("Custom token sign-in failed:", error);
+                // Fallback to anonymous sign-in
                 signInAnonymously(auth).catch(anonError => {
                     console.error("Anonymous sign-in failed:", anonError);
                     showMessage('Authentication Error', 'Failed to sign in. Please try again.');
@@ -619,24 +667,37 @@
             });
         }
 
+        // Event listeners for login page
         $('btnSignIn').addEventListener('click', async () => {
-            const email = $('authEmail').value;
-            const pass = $('authPass').value;
-            try {
-                await signInWithEmailAndPassword(auth, email, pass);
-            } catch (error) {
-                $('authStatus').innerText = 'Sign-in failed: ' + error.message;
-            }
+          const email = $('email').value;
+          const password = $('password').value;
+          try {
+            await signInWithEmailAndPassword(auth, email, password);
+          } catch(e) {
+            console.error(e);
+            showMessage('Sign-In Error', e.message);
+          }
         });
 
         $('btnSignUp').addEventListener('click', async () => {
-            const email = $('authEmail').value;
-            const pass = $('authPass').value;
-            try {
-                await createUserWithEmailAndPassword(auth, email, pass);
-            } catch (error) {
-                $('authStatus').innerText = 'Sign-up failed: ' + error.message;
-            }
+          const email = $('email').value;
+          const password = $('password').value;
+          try {
+            await createUserWithEmailAndPassword(auth, email, password);
+            showMessage('Success', 'Account created! Please sign in.');
+          } catch(e) {
+            console.error(e);
+            showMessage('Sign-Up Error', e.message);
+          }
+        });
+
+        $('btnGuest').addEventListener('click', async () => {
+          try {
+            await signInAnonymously(auth);
+          } catch(e) {
+            console.error(e);
+            showMessage('Guest Sign-In Error', e.message);
+          }
         });
 
         $('btnSignOut').addEventListener('click', async () => {
