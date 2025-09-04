@@ -111,6 +111,18 @@
     background: linear-gradient(90deg, #d83a56, #ef4444);
     border-color: transparent;
   }
+  
+  /* =========================
+     CUSTOM BUTTON ALIGNMENT
+     ========================= */
+  .button-group {
+      display: flex;
+      gap: 8px;
+  }
+  .button-group .btn {
+      flex: 1;
+      text-align: center;
+  }
 
   /* ===== Main layout (3 columns) ===== */
   .main {
@@ -326,8 +338,10 @@
             <div class="bar-controls">
                 <input id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA"/>
                 <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)"></textarea>
-                <button class="btn btn-primary" id="btnSearch">Search</button>
-                <button class="btn" id="btnClear">Clear</button>
+                <div class="button-group" style="margin-left:auto;">
+                  <button class="btn btn-primary" id="btnSearch">Search</button>
+                  <button class="btn" id="btnClear">Clear</button>
+                </div>
             </div>
         </div>
 
@@ -368,13 +382,13 @@
 
             <div class="panel results-wrap">
                 <div class="results-toolbar">
-                    <div class="left">
+                    <div class="left button-group">
                         <button class="btn" id="btnSelectAll">Select All</button>
                         <button class="btn" id="btnDeselectAll">Deselect</button>
                         <button class="btn" id="btnSaveLib">Save Library</button>
                         <button class="btn" id="btnLoadLib">Load Library</button>
                     </div>
-                    <div class="right">
+                    <div class="right button-group">
                         <select id="clientSort">
                             <option value="subs-desc">Sort: Subs ↓</option>
                             <option value="subs-asc">Sort: Subs ↑</option>
@@ -418,7 +432,7 @@
                             <div class="meta">Channel Details</div>
                             <h3 id="detailTitle" style="margin:6px 0 0">Select a channel</h3>
                         </div>
-                        <div class="row">
+                        <div class="row button-group">
                             <button class="btn" id="btnExportSelected">Export Selected</button>
                             <button class="btn" id="btnCopySelected">Copy Selected CSV</button>
                         </div>
@@ -792,7 +806,7 @@
                 
                 <h4 style="margin:20px 0 8px">Social Links</h4>
                 <div class="row" style="flex-wrap:nowrap;justify-content:space-between">
-                    <div class="row">
+                    <div class="row button-group">
                         ${socialLinks.website?`<a href="${sanitize(socialLinks.website)}" target="_blank" class="btn">Website</a>`:''}
                         ${socialLinks.twitter?`<a href="${sanitize(socialLinks.twitter)}" target="_blank" class="btn">Twitter</a>`:''}
                         ${socialLinks.instagram?`<a href="${sanitize(socialLinks.instagram)}" target="_blank" class="btn">Instagram</a>`:''}
@@ -955,6 +969,10 @@
             const csv = toCSV(rows);
             await copyText(csv);
             showMessage('Copy Success', 'Selected CSV copied to clipboard.');
+        });
+        $('btnClearResults').addEventListener('click', () => {
+          resetResults();
+          showMessage('Results Cleared', 'All search results have been cleared.');
         });
 
         function getSelected(){
