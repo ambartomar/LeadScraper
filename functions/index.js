@@ -17,13 +17,16 @@ const ADMIN_UID = 'DhD6XzfVq2fEJSvrHvws2KTKZlu1';
 
 // Deducts credits from a user's account
 exports.deductCredits = functions.https.onCall(async (data, context) => {
-  // Temporary fix: Commented out App Check verification to fix the "internal" error.
-  // This is a temporary solution to get your site working.
-  // For a long-term solution, you must properly configure App Check with your Render domain
-  // and then uncomment this code.
+  // TEMPORARY FIX: App Check verification has been commented out to fix the "Credit deduction failed: internal" error.
+  // Once you properly configure App Check with your Render domain, you can uncomment this code.
   /*
   if (data.appCheckToken) {
-    await getAppCheck().verifyToken(data.appCheckToken);
+    try {
+      await getAppCheck().verifyToken(data.appCheckToken);
+    } catch (error) {
+      console.error('App Check verification failed:', error);
+      throw new functions.https.HttpsError('internal', 'App Check verification failed.');
+    }
   }
   */
 
@@ -55,10 +58,15 @@ exports.deductCredits = functions.https.onCall(async (data, context) => {
 
 // Admin function to reset all user credits
 exports.adminResetCredits = functions.https.onCall(async (data, context) => {
-  // Temporary fix: Commented out App Check verification.
+  // TEMPORARY FIX: App Check verification has been commented out.
   /*
   if (data.appCheckToken) {
-    await getAppCheck().verifyToken(data.appCheckToken);
+    try {
+      await getAppCheck().verifyToken(data.appCheckToken);
+    } catch (error) {
+      console.error('App Check verification failed:', error);
+      throw new functions.https.HttpsError('internal', 'App Check verification failed.');
+    }
   }
   */
 
