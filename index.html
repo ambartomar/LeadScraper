@@ -479,16 +479,28 @@
     <!-- Firebase Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-functions.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         
         // --- GLOBALS ---
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const firebaseConfig = {
+          apiKey: "AIzaSyBvU3_Njbi1JQr_wD1a16h5coTW2ifaRDU",
+          authDomain: "youleadmax.firebaseapp.com",
+          projectId: "youleadmax",
+          storageBucket: "youleadmax.firebasestorage.app",
+          messagingSenderId: "710806971072",
+          appId: "1:710806971072:web:ced903befe8693f886c325",
+          measurementId: "G-JW9W20C1LQ"
+        };
+        const appId = firebaseConfig.projectId;
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
         
-        let app, auth, db, functions, isAuthReady = false, userId;
+        let isAuthReady = false, userId;
         
         // --- UI ELEMENTS ---
         const $ = s => document.getElementById(s);
@@ -531,17 +543,6 @@
             modal.classList.remove('show');
         });
 
-        // --- FIREBASE INITIALIZATION ---
-        try {
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-            functions = getFunctions(app, 'europe-west1');
-        } catch (error) {
-            console.error("Firebase initialization error:", error);
-            showModal("Initialization Error", "Failed to initialize Firebase. Please check the console for details.");
-        }
-        
         // --- AUTHENTICATION ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -564,9 +565,10 @@
                 isAuthReady = true;
                 authContainer.style.display = 'flex';
                 mainContainer.classList.remove('active');
+                await signInAnonymously(auth);
             }
         });
-        
+
         authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = emailField.value;
@@ -599,14 +601,18 @@
         });
         
         logoutBtn.addEventListener('click', async () => {
-            await signOut(auth);
-            showModal("Logged Out", "You have been successfully logged out.");
+            if(auth) {
+                await signOut(auth);
+                showModal("Logged Out", "You have been successfully logged out.");
+            } else {
+                showModal("Error", "Auth service not available.");
+            }
         });
 
         // --- SEARCH FUNCTIONALITY (PLACEHOLDER) ---
         searchForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!auth.currentUser) {
+            if (!auth || !auth.currentUser) {
                 showModal("Access Denied", "Please sign in to perform a search.");
                 return;
             }
@@ -698,7 +704,9 @@
         }
         
         document.addEventListener('DOMContentLoaded', () => {
-          mainContainer.style.display = 'none';
+          if (!auth || auth.currentUser) {
+            mainContainer.style.display = 'none';
+          }
         });
 
     </script>
