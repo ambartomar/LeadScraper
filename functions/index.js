@@ -1,5 +1,3 @@
-// functions/index.js
-
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
@@ -9,13 +7,13 @@ const db = admin.firestore();
 // Set up App Check verification
 const { initializeAppCheck, getAppCheck } = require('firebase-admin/app-check');
 const appCheck = initializeAppCheck({
-  appId: process.env.1:710806971072:web:ced903befe8693f886c325, // Replace with your actual appId
-  serviceAccountId: 'firebase-adminsdk-fbsvc@youleadmax.iam.gserviceaccount.com', // Replace with your service account ID
+  appId: '1:710806971072:web:ced903befe8693f886c325', // This should be a string literal, not a process.env variable.
+  serviceAccountId: 'firebase-adminsdk-fbsvc@youleadmax.iam.gserviceaccount.com', // Your service account ID is correct.
 });
 
 // Admin UID to grant special permissions. MUST BE SET SECURELY.
 // You must get this from your Firebase Authentication console after creating the user.
-const ADMIN_UID = 'DhD6XzfVq2fEJSvrHvws2KTKZlu1'; 
+const ADMIN_UID = 'DhD6XzfVq2fEJSvrHvws2KTKZlu1';
 
 // Deducts credits from a user's account
 exports.deductCredits = functions.https.onCall(async (data, context) => {
