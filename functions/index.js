@@ -18,7 +18,9 @@ const ADMIN_UID = 'DhD6XzfVq2fEJSvrHvws2KTKZlu1';
 // Deducts credits from a user's account
 exports.deductCredits = functions.https.onCall(async (data, context) => {
   // Temporary fix: Commented out App Check verification to fix the "internal" error.
-  // Uncomment this code after you have properly configured App Check with your Render domain.
+  // This is a temporary solution to get your site working.
+  // For a long-term solution, you must properly configure App Check with your Render domain
+  // and then uncomment this code.
   /*
   if (data.appCheckToken) {
     await getAppCheck().verifyToken(data.appCheckToken);
