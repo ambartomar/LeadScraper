@@ -280,6 +280,31 @@
       gap: 8px;
       align-items: center;
   }
+  
+  /* Message Box Styling */
+  .message-box-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+  }
+  .message-box {
+      background: var(--bg-1);
+      padding: 24px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      max-width: 400px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+  }
 </style>
 </head>
 <body>
@@ -415,6 +440,15 @@
         </div>
     </div>
     
+    <!-- Custom Message Box -->
+    <div id="messageBoxOverlay" class="message-box-overlay">
+        <div id="messageBox" class="message-box">
+            <h4 id="messageTitle"></h4>
+            <p id="messageText"></p>
+            <button class="btn btn-primary" id="messageBoxOk">OK</button>
+        </div>
+    </div>
+    
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
@@ -438,6 +472,16 @@
         let VIEW = []; // filtered/sorted view
         let lastExport = [];
         let lastSearch = {};
+        
+        // Custom message box to replace alert()
+        function showMessage(title, message) {
+            $('messageTitle').innerText = title;
+            $('messageText').innerText = message;
+            $('messageBoxOverlay').style.display = 'flex';
+        }
+        $('messageBoxOk').addEventListener('click', () => {
+            $('messageBoxOverlay').style.display = 'none';
+        });
 
         // === FIREBASE CONFIGURATION ===
         const firebaseConfig = {
@@ -454,6 +498,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         const functions = getFunctions(app);
+        const logSearchCallable = httpsCallable(functions, 'logSearch');
 
         /* ========================= AUTHENTICATION ========================= */
         onAuthStateChanged(auth, async (user) => {
@@ -512,15 +557,15 @@
             const perPage = clamp(Number($('perPage').value||25), 1, 50);
             const pages = clamp(Number($('pages').value||2), 1, 10);
 
-            if(!queries.length){ alert('Please enter at least one query'); return; }
-            if(!currentUser){ alert('Please sign in first'); return; }
+            if(!queries.length){ showMessage('Search Error', 'Please enter at least one query'); return; }
+            if(!currentUser){ showMessage('Authentication Required', 'Please sign in first.'); return; }
 
-            // Log the search action to Firestore
-            const usageRef = doc(db, 'users', currentUser.uid, 'usage', new Date().toISOString());
-            await setDoc(usageRef, {
-              query: queryRaw,
-              timestamp: new Date().toISOString()
-            });
+            // Call the logSearch Cloud Function to record the search action
+            try {
+              await logSearchCallable({ query: queryRaw });
+            } catch (error) {
+              console.error('Failed to log search:', error);
+            }
 
             resetResults();
             lastSearch = { queryRaw, queries, perPage, pages, filters:{order,duration,upload,region,definition,safe} };
@@ -551,18 +596,17 @@
                     if(region) url.searchParams.set('regionCode', region);
                     if(duration) url.searchParams.set('videoDuration', duration);
                     if(definition) url.searchParams.set('videoDefinition', definition);
-                    if(safe) url.searchParams.set('safeSearch', safe);
                     if(upload) url.searchParams.set('publishedAfter', getPublishedAfterISO(upload));
                     if(pageToken) url.searchParams.set('pageToken', pageToken);
                     url.searchParams.set('key', apiKey);
                     
                     let resp;
                     try { resp = await fetch(url.toString()); }
-                    catch(e){ console.error(e); return alert('Network error during search'); }
+                    catch(e){ console.error(e); showMessage('Network Error', 'A network error occurred during the search. Please check your connection.'); return; }
                     
                     if(!resp.ok){
                         const t = await resp.text();
-                        alert('Search API error: '+resp.status+'\n'+t);
+                        showMessage('Search API Error', `YouTube API returned an error: ${resp.status}\n${t}`);
                         return;
                     }
                     
@@ -599,11 +643,11 @@
                 
                 let resp;
                 try { resp = await fetch(chURL.toString()); }
-                catch(e){ console.error(e); return alert('Network error fetching channels'); }
+                catch(e){ console.error(e); showMessage('Network Error', 'A network error occurred while fetching channel details.'); return; }
                 
                 if(!resp.ok){
                     const t = await resp.text();
-                    alert('Channels API error: '+resp.status+'\n'+t);
+                    showMessage('Channels API Error', `YouTube API returned an error: ${resp.status}\n${t}`);
                     return;
                 }
                 
@@ -859,27 +903,34 @@
             frame.setAttribute('allow','accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture');
             $('detailContent').appendChild(frame);
         }
+        
+        // Helper for copying text to clipboard
+        function copyText(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+        }
 
         /* ========================= EXPORTING ========================= */
         $('btnExportCSV').addEventListener('click', () => {
             const rows = lastExport;
-            if(!rows.length) return alert('No results to export');
+            if(!rows.length) return showMessage('Export Failed', 'No results to export');
             downloadText(toCSV(rows), 'lead_studio_pro.csv', 'text/csv');
         });
         $('btnExportJSON').addEventListener('click', () => {
             const rows = lastExport.map(cToSafe);
-            if(!rows.length) return alert('No results to export');
+            if(!rows.length) return showMessage('Export Failed', 'No results to export');
             downloadText(JSON.stringify(rows,null,2), 'lead_studio_pro.json', 'application/json');
         });
-        $('btnCopyIDs').addEventListener('click', async () => {
+        $('btnCopyIDs').addEventListener('click', () => {
             const rows = lastExport;
-            if(!rows.length) return alert('No results to export');
-            try{
-                await navigator.clipboard.writeText(rows.map(r=>r.channelId).join('\n'));
-                alert('Channel IDs copied');
-            } catch(e){
-                alert('Copy failed');
-            }
+            if(!rows.length) return showMessage('Copy Failed', 'No results to copy');
+            const ids = rows.map(r=>r.channelId).join('\n');
+            copyText(ids);
+            showMessage('Copy Success', 'Channel IDs copied to clipboard.');
         });
         $('btnSelectAll').addEventListener('click', () => {
             document.querySelectorAll('.sel').forEach(cb => cb.checked=true);
@@ -889,19 +940,15 @@
         });
         $('btnExportSelected').addEventListener('click', () => {
             const rows = getSelected();
-            if(!rows.length) return alert('Select some rows first');
+            if(!rows.length) return showMessage('Export Failed', 'Select some rows first');
             downloadText(toCSV(rows), 'lead_studio_pro_selected.csv', 'text/csv');
         });
-        $('btnCopySelected').addEventListener('click', async () => {
+        $('btnCopySelected').addEventListener('click', () => {
             const rows = getSelected();
-            if(!rows.length) return alert('Select some rows first');
+            if(!rows.length) return showMessage('Copy Failed', 'Select some rows first');
             const csv = toCSV(rows);
-            try{
-                await navigator.clipboard.writeText(csv);
-                alert('Selected CSV copied');
-            } catch(e){
-                alert('Copy failed');
-            }
+            copyText(csv);
+            showMessage('Copy Success', 'Selected CSV copied to clipboard.');
         });
 
         function getSelected(){
@@ -910,7 +957,7 @@
 
         function toCSV(arr){
             const fields = ['channel','subs','videos','views','verified','channelId','country','createdAt'];
-            let out = fields.join(',')+'\n';
+            let out = fields.map(f=>`"${f}"`).join(',')+'\n';
             arr.forEach(r => {
                 out += `"${esc(r.title)}","${r.hidden?'Hidden':r.subs}","${r.videos}","${r.views}","${r.verified}","${r.channelId}","${esc(r.country)}","${r.createdAt}"\n`;
             });
@@ -941,25 +988,25 @@
 
         // Handle local storage for library
         $('btnSaveLib').addEventListener('click', () => {
-            if(!LIB.length) return alert('No channels to save');
+            if(!LIB.length) return showMessage('Save Failed', 'No channels to save.');
             try {
                 localStorage.setItem(savedLibraryKey, JSON.stringify(LIB));
-                alert(`Saved ${LIB.length} channels to local storage.`);
+                showMessage('Save Success', `Saved ${LIB.length} channels to local storage.`);
             } catch(e){
-                alert('Failed to save library. Local storage might be full.');
+                showMessage('Save Failed', 'Failed to save library. Local storage might be full.');
             }
         });
 
         $('btnLoadLib').addEventListener('click', () => {
             const data = localStorage.getItem(savedLibraryKey);
-            if(!data) return alert('No saved library found.');
+            if(!data) return showMessage('Load Failed', 'No saved library found.');
             try{
                 const loaded = JSON.parse(data);
                 LIB = loaded;
                 applyClientFiltersAndRender();
-                alert(`Loaded ${LIB.length} channels from local storage.`);
+                showMessage('Load Success', `Loaded ${LIB.length} channels from local storage.`);
             } catch(e){
-                alert('Failed to load library. Data may be corrupted.');
+                showMessage('Load Failed', 'Failed to load library. Data may be corrupted.');
             }
         });
     </script>
