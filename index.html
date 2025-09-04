@@ -562,13 +562,15 @@
 
             // Call the logSearch Cloud Function to record the search action
             try {
+              // The CORS issue means we need to handle the error, but the app should still work.
+              // We will continue the search process even if logging fails.
               await logSearchCallable({ query: queryRaw });
             } catch (error) {
               console.error('Failed to log search:', error);
             }
 
             resetResults();
-            lastSearch = { queryRaw, queries, perPage, pages, filters:{order,duration,upload,region,definition,safe} };
+            lastSearch = { queryRaw, queries, perPage, pages };
             
             setStatus('Searching for channels...');
             const apiKey = $('apiKey').value.trim();
@@ -905,13 +907,18 @@
         }
         
         // Helper for copying text to clipboard
-        function copyText(text) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
+        async function copyText(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+            } catch (err) {
+                // Fallback for older browsers or restricted environments
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            }
         }
 
         /* ========================= EXPORTING ========================= */
@@ -925,11 +932,11 @@
             if(!rows.length) return showMessage('Export Failed', 'No results to export');
             downloadText(JSON.stringify(rows,null,2), 'lead_studio_pro.json', 'application/json');
         });
-        $('btnCopyIDs').addEventListener('click', () => {
+        $('btnCopyIDs').addEventListener('click', async () => {
             const rows = lastExport;
             if(!rows.length) return showMessage('Copy Failed', 'No results to copy');
             const ids = rows.map(r=>r.channelId).join('\n');
-            copyText(ids);
+            await copyText(ids);
             showMessage('Copy Success', 'Channel IDs copied to clipboard.');
         });
         $('btnSelectAll').addEventListener('click', () => {
@@ -943,11 +950,11 @@
             if(!rows.length) return showMessage('Export Failed', 'Select some rows first');
             downloadText(toCSV(rows), 'lead_studio_pro_selected.csv', 'text/csv');
         });
-        $('btnCopySelected').addEventListener('click', () => {
+        $('btnCopySelected').addEventListener('click', async () => {
             const rows = getSelected();
             if(!rows.length) return showMessage('Copy Failed', 'Select some rows first');
             const csv = toCSV(rows);
-            copyText(csv);
+            await copyText(csv);
             showMessage('Copy Success', 'Selected CSV copied to clipboard.');
         });
 
