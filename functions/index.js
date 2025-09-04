@@ -10,7 +10,7 @@ const db = admin.firestore();
 const { initializeAppCheck, getAppCheck } = require('firebase-admin/app-check');
 const appCheck = initializeAppCheck({
   appId: process.env.1:710806971072:web:ced903befe8693f886c325, // Replace with your actual appId
-  serviceAccountId: 'your-service-account-id', // Replace with your service account ID
+  serviceAccountId: 'firebase-adminsdk-fbsvc@youleadmax.iam.gserviceaccount.com', // Replace with your service account ID
 });
 
 // Admin UID to grant special permissions. MUST BE SET SECURELY.
