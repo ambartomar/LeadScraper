@@ -391,44 +391,6 @@
     box-shadow: 0 4px 12px rgba(124,58,237,.12);
     transform: translateY(-1px);
   }
-  
-  /* NEW: Video Detail Panel Styles */
-  .video-detail-panel {
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background-color:rgba(0,0,0,.8);
-    z-index:1000;
-    display: none; /* This is a key fix, it's hidden by default */
-    justify-content:center;
-    align-items:center;
-  }
-  .video-detail-panel.visible {
-    display: flex;
-  }
-  .video-detail-content {
-    background-color:var(--bg-1);
-    padding:20px;
-    border-radius:var(--radius);
-    max-width:800px;
-    width:90%;
-    position:relative;
-  }
-  .video-container {
-    position:relative;
-    padding-bottom:56.25%; /* 16:9 Aspect Ratio */
-    height:0;
-    overflow:hidden;
-  }
-  .video-container iframe {
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-  }
 </style>
 </head>
 <body>
@@ -531,7 +493,6 @@
                                 <th>Videos</th>
                                 <th>Views</th>
                                 <th>Verified</th>
-                                <th>Preview</th>
                             </tr>
                         </thead>
                         <tbody id="resultsTbody"></tbody>
@@ -572,17 +533,6 @@
         </div>
     </div>
     
-    <div id="videoDetailPanel" class="video-detail-panel">
-      <div class="video-detail-content">
-        <button id="closeBtn" style="position:absolute; top:10px; right:10px; background:none; border:none; color:var(--muted); font-size:1.5rem; cursor:pointer;">×</button>
-        <h3 id="videoTitle" style="margin-bottom:10px;"></h3>
-        <div class="video-container">
-          <iframe id="videoPlayer" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <p id="videoDescription" style="margin-top:20px; font-size:.9rem;"></p>
-      </div>
-    </div>
-
     <div id="messageBoxOverlay" class="message-box-overlay">
         <div id="messageBox" class="message-box">
             <h4 id="messageTitle"></h4>
@@ -603,43 +553,52 @@
         const $ = id => document.getElementById(id);
         const sleep = ms => new Promise(r => setTimeout(r, ms));
         const esc = s => String(s ?? '').replace(/"/g,'""');
+
         const savedLibraryKey = 'lead_studio_pro_lib_v1';
         let currentUser = null;
+        
         function setStatus(t){ $('status').innerText = t; }
         function setProgress(p){ $('progressBar').style.width = Math.min(100, Math.round(p*100)) + '%'; }
+
         let LIB = []; // enriched channels
         let VIEW = []; // filtered/sorted view
         let lastExport = [];
         let lastSearch = {};
+        
         // Custom message box to replace alert()
         function showMessage(title, message) {
             $('messageTitle').innerText = title;
             $('messageText').innerText = message;
+            
             const messageBox = $('messageBox');
             // Remove any existing dynamic buttons
             const dynamicButtons = messageBox.querySelectorAll('.btn:not(#messageBoxOk)');
             dynamicButtons.forEach(btn => btn.remove());
             $('messageBoxOk').style.display = 'block';
+
             $('messageBoxOverlay').style.display = 'flex';
         }
         $('messageBoxOk').addEventListener('click', () => {
             $('messageBoxOverlay').style.display = 'none';
         });
+
         // === FIREBASE CONFIGURATION ===
         const firebaseConfig = {
-            apiKey: "AIzaSyBvU3_Njbi1JQr_wD1a16h5coTW2ifaRDU",
-            authDomain: "youleadmax.firebaseapp.com",
-            projectId: "youleadmax",
-            storageBucket: "youleadmax.firebasestorage.app",
-            messagingSenderId: "710806971072",
-            appId: "1:710806971072:web:ced903befe8693f886c325",
-            measurementId: "G-JW9W20C1LQ"
+          apiKey: "AIzaSyBvU3_Njbi1JQr_wD1a16h5coTW2ifaRDU",
+          authDomain: "youleadmax.firebaseapp.com",
+          projectId: "youleadmax",
+          storageBucket: "youleadmax.firebasestorage.app",
+          messagingSenderId: "710806971072",
+          appId: "1:710806971072:web:ced903befe8693f886c325",
+          measurementId: "G-JW9W20C1LQ"
         };
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const functions = getFunctions(app);
         const logSearchCallable = httpsCallable(functions, 'logSearch');
+
         /* ========================= AUTHENTICATION ========================= */
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -647,15 +606,20 @@
                 $('app-view').style.display = 'grid';
                 $('auth-view').style.display = 'none';
                 $('userEmail').innerText = `Logged in as: ${user.email}`;
+
                 // Log user usage for tracking purposes
                 const userRef = doc(db, 'users', user.uid);
-                await setDoc(userRef, { lastLogin: new Date().toISOString() }, { merge: true });
+                await setDoc(userRef, {
+                    lastLogin: new Date().toISOString()
+                }, { merge: true });
+
             } else {
                 currentUser = null;
                 $('app-view').style.display = 'none';
                 $('auth-view').style.display = 'flex';
             }
         });
+
         $('btnSignIn').addEventListener('click', async () => {
             const email = $('authEmail').value;
             const pass = $('authPass').value;
@@ -665,6 +629,7 @@
                 $('authStatus').innerText = 'Sign-in failed: ' + error.message;
             }
         });
+
         $('btnSignUp').addEventListener('click', async () => {
             const email = $('authEmail').value;
             const pass = $('authPass').value;
@@ -674,169 +639,509 @@
                 $('authStatus').innerText = 'Sign-up failed: ' + error.message;
             }
         });
+
         $('btnSignOut').addEventListener('click', async () => {
             await signOut(auth);
             resetResults();
         });
+
         /* ========================= SEARCH / FETCH ========================= */
         $('btnSearch').addEventListener('click', () => searchAll(false));
         $('btnDeepSearch').addEventListener('click', () => {
-            const queryRaw = $('query').value.trim();
-            if (!queryRaw.length) {
-                showMessage('Search Error', 'Please enter at least one query.');
-                return;
-            }
-            if (!currentUser) {
-                showMessage('Authentication Required', 'Please sign in first.');
-                return;
-            }
-            // Display a confirmation message box
-            $('messageTitle').innerText = 'Deep Search Confirmation';
-            $('messageText').innerText = 'Deep Search will consume more API credits by searching more pages. Do you want to continue?';
-            const messageBox = $('messageBox');
-            const oldOkBtn = $('messageBoxOk');
-            const confirmButton = document.createElement('button');
-            confirmButton.className = 'btn btn-primary';
-            confirmButton.innerText = 'Yes, Continue';
-            confirmButton.addEventListener('click', () => {
-                $('messageBoxOverlay').style.display = 'none';
-                searchAll(true);
-            });
-            const cancelButton = document.createElement('button');
-            cancelButton.className = 'btn';
-            cancelButton.innerText = 'Cancel';
-            cancelButton.addEventListener('click', () => {
-                $('messageBoxOverlay').style.display = 'none';
-            });
-            oldOkBtn.style.display = 'none';
-            messageBox.appendChild(confirmButton);
-            messageBox.appendChild(cancelButton);
-            $('messageBoxOverlay').style.display = 'flex';
+          const queryRaw = $('query').value.trim();
+          if (!queryRaw.length) {
+            showMessage('Search Error', 'Please enter at least one query');
+            return;
+          }
+          
+          if (!currentUser) {
+            showMessage('Authentication Required', 'Please sign in first.');
+            return;
+          }
+          
+          // Display a confirmation message box
+          $('messageTitle').innerText = 'Deep Search Confirmation';
+          $('messageText').innerText = 'Deep Search will consume more API credits by searching more pages. Do you want to continue?';
+          
+          const messageBox = $('messageBox');
+          const oldOkBtn = $('messageBoxOk');
+          
+          const confirmButton = document.createElement('button');
+          confirmButton.className = 'btn btn-primary';
+          confirmButton.innerText = 'Yes, Continue';
+          confirmButton.addEventListener('click', () => {
+            $('messageBoxOverlay').style.display = 'none';
+            searchAll(true);
+          });
+          
+          const cancelButton = document.createElement('button');
+          cancelButton.className = 'btn';
+          cancelButton.innerText = 'Cancel';
+          cancelButton.addEventListener('click', () => {
+            $('messageBoxOverlay').style.display = 'none';
+          });
+          
+          oldOkBtn.style.display = 'none';
+          messageBox.appendChild(confirmButton);
+          messageBox.appendChild(cancelButton);
+          $('messageBoxOverlay').style.display = 'flex';
         });
-        async function searchAll(isDeepSearch = false) {
-            const queries = $('query').value.split(/,?\n/).map(q => q.trim()).filter(q => q.length > 0);
-            const apiKey = $('apiKey').value;
-            const pagesToFetch = isDeepSearch ? parseInt($('pages').value) : 1;
-            if (!queries.length) return showMessage('Search Error', 'Please enter at least one query.');
-            if (!apiKey) return showMessage('API Key Missing', 'Please enter your YouTube API key.');
+        
+        $('btnClear').addEventListener('click', () => { $('query').value=''; resetResults(); });
+        $('query').addEventListener('keydown', e => { if(e.key==='Enter') searchAll(); });
+
+        async function searchAll(isDeepSearch = false){
+            const queryRaw = $('query').value.trim();
+            const queries = queryRaw.split(/[,\\n]/).map(q=>q.trim()).filter(Boolean);
+            const perPage = clamp(Number($('perPage').value||25), 1, 50);
+            const pages = isDeepSearch ? 20 : clamp(Number($('pages').value||2), 1, 10);
+
+            if(!queries.length){ showMessage('Search Error', 'Please enter at least one query'); return; }
+            if(!currentUser){ showMessage('Authentication Required', 'Please sign in first.'); return; }
+
+            // Call the logSearch Cloud Function to record the search action
+            try {
+              // The CORS issue means we need to handle the error, but the app should still work.
+              // We will continue the search process even if logging fails.
+              await logSearchCallable({ query: queryRaw });
+            } catch (error) {
+              console.error('Failed to log search:', error);
+            }
 
             resetResults();
-            setStatus('Searching...');
-            const startTime = performance.now();
-            let allChannelIds = new Set();
-            try {
-                for (const [i, query] of queries.entries()) {
-                    await fetchAndEnrich(query, apiKey, pagesToFetch);
-                    setProgress((i + 1) / queries.length);
-                }
-                setStatus(`Search complete! Fetched ${allChannelIds.size} channels in ${((performance.now() - startTime) / 1000).toFixed(2)}s.`);
-            } catch (error) {
-                console.error('Search failed:', error);
-                setStatus('Search failed');
-                showMessage('Search Failed', `An error occurred: ${error.message}`);
-            }
-            logSearchCallable({
-                query: queries.join(', '),
-                deepSearch: isDeepSearch,
-                results: VIEW.length,
-                duration: ((performance.now() - startTime) / 1000).toFixed(2)
-            });
-        }
-        async function fetchAndEnrich(query, apiKey, pagesToFetch) {
-            let nextPageToken = null;
-            let fetchedCount = 0;
-            const perPage = $('perPage').value;
+            lastSearch = { queryRaw, queries, perPage, pages };
+            
+            setStatus('Searching for channels...');
+            const apiKey = $('apiKey').value.trim();
             const order = $('order').value;
             const duration = $('duration').value;
             const upload = $('upload').value;
+            const region = $('region').value;
             const definition = $('definition').value;
             const safe = $('safe').value;
-            for (let i = 0; i < pagesToFetch; i++) {
-                let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=channel&maxResults=${perPage}&order=${order}&videoDuration=${duration}&uploadTime=${upload}&videoDefinition=${definition}&safeSearch=${safe}&key=${apiKey}`;
-                if (nextPageToken) url += `&pageToken=${nextPageToken}`;
-
-                const response = await fetch(url);
-                const data = await response.json();
-
-                if (data.error) throw new Error(data.error.message);
-                if (!data.items || data.items.length === 0) break;
-
-                const channelIds = data.items.map(item => item.snippet.channelId);
-                const enrichedChannels = await getChannelDetails(channelIds);
-                
-                enrichedChannels.forEach(c => {
-                    const isNew = !LIB.some(libC => libC.id === c.id);
-                    if (isNew) {
-                        LIB.push(c);
+            let totalSteps = queries.length * pages;
+            let done = 0;
+            let chanIds = new Set();
+            
+            for(const q of queries){
+                let pageToken = '';
+                for(let i=0;i<pages;i++){
+                    if(!pageToken && i>0) break;
+                    
+                    const url = new URL('https://www.googleapis.com/youtube/v3/search');
+                    url.searchParams.set('part','snippet');
+                    url.searchParams.set('type','video');
+                    url.searchParams.set('q', q);
+                    url.searchParams.set('maxResults', String(perPage));
+                    url.searchParams.set('order', order);
+                    if(region) url.searchParams.set('regionCode', region);
+                    if(duration) url.searchParams.set('videoDuration', duration);
+                    if(definition) url.searchParams.set('videoDefinition', definition);
+                    if(upload) url.searchParams.set('publishedAfter', getPublishedAfterISO(upload));
+                    if(pageToken) url.searchParams.set('pageToken', pageToken);
+                    url.searchParams.set('key', apiKey);
+                    
+                    let resp;
+                    try { resp = await fetch(url.toString()); }
+                    catch(e){ console.error(e); showMessage('Network Error', 'A network error occurred during the search. Please check your connection.'); return; }
+                    
+                    if(!resp.ok){
+                        const t = await resp.text();
+                        showMessage('Search API Error', `YouTube API returned an error: ${resp.status}\n${t}`);
+                        return;
                     }
-                });
-
-                fetchedCount += data.items.length;
-                nextPageToken = data.nextPageToken;
-
-                updateMetrics();
-                renderResults(LIB);
-                
-                if (!nextPageToken) break;
-            }
-            return fetchedCount;
-        }
-
-        async function getChannelDetails(channelIds) {
-            const apiKey = $('apiKey').value;
-            const joinedIds = channelIds.join(',');
-            const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics,brandingSettings&id=${joinedIds}&key=${apiKey}`;
-            const response = await fetch(url);
-            const data = await response.json();
-            if (data.error) throw new Error(data.error.message);
-            const details = data.items.map(item => ({
-                id: item.id,
-                title: item.snippet.title,
-                subscribers: parseInt(item.statistics.subscriberCount),
-                videoCount: parseInt(item.statistics.videoCount),
-                viewCount: parseInt(item.statistics.viewCount),
-                thumbnail: item.snippet.thumbnails.default.url,
-                banner: item.brandingSettings?.image?.bannerExternalUrl,
-                description: item.snippet.description
-            }));
-            if ($('doVerify').checked) {
-                for (let channel of details) {
-                    channel.isVerified = await isVerified(channel.id);
+                    
+                    const data = await resp.json();
+                    
+                    (data.items || []).forEach(item => {
+                        // Shorts filtering (multi-heuristic)
+                        const t = (item.snippet.title||'').toLowerCase();
+                        const d = (item.snippet.description||'').toLowerCase();
+                        if(t.includes('#shorts') || t.includes('shorts ') || t.endsWith('shorts') || d.includes('#shorts') || d.includes('shorts ')) return;
+                        const cid = item.snippet.channelId;
+                        if(cid) chanIds.add(cid);
+                    });
+                    
+                    pageToken = data.nextPageToken || '';
+                    done++;
+                    setProgress(done/totalSteps * 0.65);
+                    await sleep(180);
                 }
             }
-            return details;
-        }
-        
-        // NEW: Function to get the latest video for a channel
-        async function getLatestVideo(channelId) {
-            const apiKey = $('apiKey').value;
-            const url = `https://www.googleapis.com/youtube/v3/search?part=id,snippet&channelId=${channelId}&order=date&maxResults=1&key=${apiKey}`;
-            const response = await fetch(url);
-            const data = await response.json();
-            if (data.items.length > 0) {
-                const item = data.items[0];
-                return {
-                    id: item.id.videoId,
-                    title: item.snippet.title,
-                    description: item.snippet.description
-                };
+            
+            if(chanIds.size===0){ setStatus('No channels found'); setProgress(1); return; }
+            
+            setStatus(`Found ${chanIds.size} channels — fetching details…`);
+            
+            // fetch channels in batches of 50
+            const ids = Array.from(chanIds);
+            for(let i=0;i<ids.length;i+=50){
+                const batch = ids.slice(i,i+50);
+                const chURL = new URL('https://www.googleapis.com/youtube/v3/channels');
+                chURL.searchParams.set('part','snippet,statistics,brandingSettings');
+                chURL.searchParams.set('id', batch.join(','));
+                chURL.searchParams.set('key', apiKey);
+                
+                let resp;
+                try { resp = await fetch(chURL.toString()); }
+                catch(e){ console.error(e); showMessage('Network Error', 'A network error occurred while fetching channel details.'); return; }
+                
+                if(!resp.ok){
+                    const t = await resp.text();
+                    showMessage('Channels API Error', `YouTube API returned an error: ${resp.status}\n${t}`);
+                    return;
+                }
+                
+                const data = await resp.json();
+                
+                (data.items||[]).forEach(ch => {
+                    if(!ch.snippet || !ch.snippet.title) return; // junk
+                    const stats = ch.statistics || {};
+                    const title = ch.snippet.title;
+                    
+                    let country = ch.snippet.country || '';
+                    if(!country && ch.brandingSettings?.channel?.country){
+                        country = ch.brandingSettings.channel.country;
+                    }
+                    
+                    LIB.push({
+                        title: title,
+                        description: ch.snippet.description,
+                        channelId: ch.id,
+                        subs: Number(stats.subscriberCount||0),
+                        views: Number(stats.viewCount||0),
+                        videos: Number(stats.videoCount||0),
+                        verified: (ch.snippet.customUrl||'').includes('channel') ? 'No' : 'Yes',
+                        avatar: ch.snippet.thumbnails?.high?.url || ch.snippet.thumbnails?.default?.url || '',
+                        banner: ch.brandingSettings?.image?.bannerExternalUrl || '',
+                        country: country,
+                        createdAt: ch.snippet.publishedAt.split('T')[0]
+                    });
+                    
+                    done++;
+                    setProgress(0.65 + (done/totalSteps * 0.35));
+                });
+                await sleep(180);
             }
-            return null;
+
+            if(LIB.length===0){
+                setStatus('No channels found');
+            } else {
+                applyClientFiltersAndRender();
+                setStatus(`Found ${LIB.length} channels.`);
+            }
+            setProgress(1);
         }
 
-        async function isVerified(channelId) {
-            const proxy = $('corsProxy').value || 'https://corsproxy.io/?';
-            const url = `${proxy}https://www.youtube.com/channel/${channelId}`;
-            try {
-                const response = await fetch(url);
-                const html = await response.text();
-                return html.includes('aria-label="Verified"');
-            } catch (error) {
-                console.error(`CORS proxy failed or channel not found: ${channelId}`, error);
-                return 'N/A';
+        function getPublishedAfterISO(timeframe){
+            const d = new Date();
+            if(timeframe==='hour') d.setHours(d.getHours() - 1);
+            if(timeframe==='today') d.setDate(d.getDate() - 1);
+            if(timeframe==='week') d.setDate(d.getDate() - 7);
+            if(timeframe==='month') d.setMonth(d.getMonth() - 1);
+            return d.toISOString();
+        }
+
+        function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
+
+        function applyClientFiltersAndRender(){
+            const min = Number($('minSubs').value||0);
+            const maxRaw = Number($('maxSubs').value||0);
+            const max = maxRaw>0? maxRaw : Infinity;
+            const needle = $('searchInResults').value.trim().toLowerCase();
+
+            VIEW = LIB.filter(c => {
+                if(c.subs < min) return false;
+                if(c.subs > max) return false;
+                if(needle){
+                    const hit = (c.title?.toLowerCase().includes(needle)) || (c.channelId?.toLowerCase().includes(needle));
+                    if(!hit) return false;
+                }
+                return true;
+            });
+
+            // client sort
+            const sort = $('clientSort').value;
+            VIEW.sort((a,b) => {
+                if(sort==='subs-desc') return (b.subs||0) - (a.subs||0);
+                if(sort==='subs-asc') return (a.subs||0) - (b.subs||0);
+                if(sort==='views-desc')return (b.views||0) - (a.views||0);
+                if(sort==='views-asc') return (a.views||0) - (b.views||0);
+                if(sort==='title-asc') return (a.title||'').localeCompare(b.title||'');
+                if(sort==='title-desc')return (b.title||'').localeCompare(a.title||'');
+                return 0;
+            });
+
+            renderResults(VIEW);
+            lastExport = VIEW.slice();
+            $('count').innerText = VIEW.length + ' channels';
+        }
+
+        /* ========================= RENDER RESULTS + DETAILS ========================= */
+        $('clientSort').addEventListener('change', applyClientFiltersAndRender);
+        $('minSubs').addEventListener('input', applyClientFiltersAndRender);
+        $('maxSubs').addEventListener('input', applyClientFiltersAndRender);
+        $('searchInResults').addEventListener('input', applyClientFiltersAndRender);
+
+        function renderResults(list){
+            const tbody = $('resultsTbody');
+            tbody.innerHTML = '';
+            if(!list.length){
+                tbody.innerHTML = `<tr><td colspan="6" class="meta">No channels match your filters.</td></tr>`;
+                return;
+            }
+            list.forEach((c, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><input type="checkbox" class="sel" data-idx="${idx}"/></td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:10px">
+                            <img class="avatar" src="${sanitize(c.avatar)}" alt="">
+                            <div>
+                                <div style="font-weight:700">${sanitize(c.title)}</div>
+                                <div class="meta">${sanitize(c.channelId)}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${c.hidden ? 'Hidden' : (c.subs||0).toLocaleString()}</td>
+                    <td>${(c.videos||0).toLocaleString()}</td>
+                    <td>${(c.views||0).toLocaleString()}</td>
+                    <td>${c.verified}</td>
+                `;
+                tr.addEventListener('click', e => {
+                    if(e.target.type !== 'checkbox'){
+                        renderDetails(c);
+                    }
+                });
+                tbody.appendChild(tr);
+            });
+        }
+        
+        async function renderDetails(c){
+            $('detailTitle').innerText = c.title;
+            const socialLinks = await getSocialLinksFromAboutPage(c.channelId);
+
+            $('detailContent').innerHTML = `
+                <div class="meta">Channel ID: ${c.channelId} • ${c.country} • Created: ${c.createdAt}</div>
+                <p style="margin-top:10px;line-height:1.5;font-size:14px;color:var(--muted)">${sanitize(c.description)}</p>
+                <div class="stats" style="margin-top:14px">
+                    <div class="stat"><b>${c.subs.toLocaleString()}</b><div class="meta">Subscribers</div></div>
+                    <div class="stat"><b>${c.views.toLocaleString()}</b><div class="meta">Total Views</div></div>
+                    <div class="stat"><b>${c.videos.toLocaleString()}</b><div class="meta">Total Videos</div></div>
+                </div>
+                
+                <h4 style="margin:20px 0 8px">Social Links</h4>
+                <div class="row" style="flex-wrap:nowrap;justify-content:space-between">
+                    <div class="row button-group" id="socialLinksContainer">
+                        ${socialLinks.website?`<a href="${sanitize(socialLinks.website)}" target="_blank" class="btn">Website</a>`:''}
+                        ${socialLinks.twitter?`<a href="${sanitize(socialLinks.twitter)}" target="_blank" class="btn">Twitter</a>`:''}
+                        ${socialLinks.instagram?`<a href="${sanitize(socialLinks.instagram)}" target="_blank" class="btn">Instagram</a>`:''}
+                        ${socialLinks.facebook?`<a href="${sanitize(socialLinks.facebook)}" target="_blank" class="btn">Facebook</a>`:''}
+                        ${socialLinks.tiktok?`<a href="${sanitize(socialLinks.tiktok)}" target="_blank" class="btn">TikTok</a>`:''}
+                        ${socialLinks.linkedin?`<a href="${sanitize(socialLinks.linkedin)}" target="_blank" class="btn">LinkedIn</a>`:''}
+                    </div>
+                </div>
+                <h4 style="margin:20px 0 8px">Latest Videos <small class="meta">(up to 6)</small></h4>
+                <div class="videos-grid" id="latestVideos">
+                    <div class="meta">Loading...</div>
+                </div>
+            `;
+            if(c.banner){
+                $('banner').style.display = 'block';
+                $('banner').style.backgroundImage = `url(${sanitize(c.banner)})`;
+            } else {
+                $('banner').style.display = 'none';
+            }
+            
+            loadLatestVideos(c.channelId);
+        }
+
+        /* ========================= UTIL ========================= */
+        function resetResults(){
+            LIB = []; VIEW = []; lastExport = [];
+            $('resultsTbody').innerHTML=''; $('count').innerText='0 channels';
+            $('detailTitle').innerText = 'Select a channel';
+            $('detailContent').innerHTML = '<div class="meta">No channel selected.</div>';
+            $('banner').style.display='none'; $('banner').style.backgroundImage='none';
+            setProgress(0); setStatus('Idle');
+        }
+
+        function sanitize(s){ try{ return s.replace(/</g,'<'); } catch(e){return '';} }
+
+        async function loadLatestVideos(channelId){
+            const apiKey = $('apiKey').value.trim();
+            const box = $('latestVideos');
+            try{
+                const u = new URL('https://www.googleapis.com/youtube/v3/search');
+                u.searchParams.set('part','snippet');
+                u.searchParams.set('channelId', channelId);
+                u.searchParams.set('order','date');
+                u.searchParams.set('maxResults','6');
+                u.searchParams.set('type','video');
+                u.searchParams.set('key', apiKey);
+                const r = await fetch(u.toString());
+                if(!r.ok){
+                    box.innerHTML = '<div class="meta">Cannot load videos.</div>';
+                    return;
+                }
+                const data = await r.json();
+                if(!data.items?.length){
+                    box.innerHTML = '<div class="meta">No recent videos.</div>';
+                    return;
+                }
+                box.innerHTML='';
+                data.items.forEach(it => {
+                    const vid = it.id.videoId;
+                    const thumb = it.snippet.thumbnails?.medium?.url || it.snippet.thumbnails?.default?.url || '';
+                    const title = it.snippet.title || '';
+                    const card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                        <img src="${sanitize(thumb)}" alt="">
+                        <h4>${sanitize(title)}</h4>
+                        <div class="row" style="margin-top:6px">
+                            <button class="btn btn-primary" onclick="window.open('https://www.youtube.com/watch?v=${vid}')">Open</button>
+                            <button class="btn" onclick="embed('${vid}')">Preview</button>
+                        </div>
+                    `;
+                    box.appendChild(card);
+                });
+            }catch(e){
+                console.error(e);
+                box.innerHTML = '<div class="meta">Error loading videos.</div>';
             }
         }
         
+        function embed(videoId){
+            // add/replace a small embed at bottom-right of results panel
+            let frame = document.getElementById('previewFrame');
+            if(frame){ frame.remove(); }
+            frame = document.createElement('iframe');
+            frame.id='previewFrame';
+            frame.width='100%';
+            frame.height='220px';
+            frame.style.marginTop='10px';
+            frame.src=`https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            frame.setAttribute('allow','accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture');
+            $('detailContent').appendChild(frame);
+        }
+        
+        // Helper for copying text to clipboard
+        async function copyText(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+            } catch (err) {
+                // Fallback for older browsers or restricted environments
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            }
+        }
+
+        /* ========================= EXPORTING ========================= */
+        $('btnExportCSV').addEventListener('click', () => {
+            const rows = lastExport;
+            if(!rows.length) return showMessage('Export Failed', 'No results to export');
+            downloadText(toCSV(rows), 'lead_studio_pro.csv', 'text/csv');
+        });
+        $('btnExportJSON').addEventListener('click', () => {
+            const rows = lastExport.map(cToSafe);
+            if(!rows.length) return showMessage('Export Failed', 'No results to export');
+            downloadText(JSON.stringify(rows,null,2), 'lead_studio_pro.json', 'application/json');
+        });
+        $('btnCopyIDs').addEventListener('click', async () => {
+            const rows = lastExport;
+            if(!rows.length) return showMessage('Copy Failed', 'No results to copy');
+            const ids = rows.map(r=>r.channelId).join('\n');
+            await copyText(ids);
+            showMessage('Copy Success', 'Channel IDs copied to clipboard.');
+        });
+        $('btnSelectAll').addEventListener('click', () => {
+            document.querySelectorAll('.sel').forEach(cb => cb.checked=true);
+        });
+        $('btnDeselectAll').addEventListener('click', () => {
+            document.querySelectorAll('.sel').forEach(cb => cb.checked=false);
+        });
+        $('btnExportSelected').addEventListener('click', () => {
+            const rows = getSelected();
+            if(!rows.length) return showMessage('Export Failed', 'Select some rows first');
+            downloadText(toCSV(rows), 'lead_studio_pro_selected.csv', 'text/csv');
+        });
+        $('btnCopySelected').addEventListener('click', async () => {
+            const rows = getSelected();
+            if(!rows.length) return showMessage('Copy Failed', 'Select some rows first');
+            const csv = toCSV(rows);
+            await copyText(csv);
+            showMessage('Copy Success', 'Selected CSV copied to clipboard.');
+        });
+        $('btnClearResults').addEventListener('click', () => {
+          resetResults();
+          showMessage('Results Cleared', 'All search results have been cleared.');
+        });
+
+        function getSelected(){
+            return Array.from(document.querySelectorAll('.sel:checked')).map(cb => VIEW[Number(cb.dataset.idx)]).filter(Boolean);
+        }
+
+        function toCSV(arr){
+            const fields = ['channel','subs','videos','views','verified','channelId','country','createdAt'];
+            let out = fields.map(f=>`"${f}"`).join(',')+'\n';
+            arr.forEach(r => {
+                out += `"${esc(r.title)}","${r.hidden?'Hidden':r.subs}","${r.videos}","${r.views}","${r.verified}","${r.channelId}","${esc(r.country)}","${r.createdAt}"\n`;
+            });
+            return out;
+        }
+
+        function downloadText(text, filename, type){
+            const blob = new Blob([text], {type: type});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+        }
+
+        function cToSafe(c){
+            // strip big strings that might break inline JSON calls
+            return {
+                channelId:c.channelId,
+                title:c.title,
+                subs:c.subs,
+                views:c.views,
+                videos:c.videos,
+                verified:c.verified,
+                country:c.country,
+                createdAt:c.createdAt
+            };
+        }
+
+        // Handle local storage for library
+        $('btnSaveLib').addEventListener('click', () => {
+            if(!LIB.length) return showMessage('Save Failed', 'No channels to save.');
+            try {
+                localStorage.setItem(savedLibraryKey, JSON.stringify(LIB));
+                showMessage('Save Success', `Saved ${LIB.length} channels to local storage.`);
+            } catch(e){
+                showMessage('Save Failed', 'Failed to save library. Local storage might be full.');
+            }
+        });
+
+        $('btnLoadLib').addEventListener('click', () => {
+            const data = localStorage.getItem(savedLibraryKey);
+            if(!data) return showMessage('Load Failed', 'No saved library found.');
+            try{
+                const loaded = JSON.parse(data);
+                LIB = loaded;
+                applyClientFiltersAndRender();
+                showMessage('Load Success', `Loaded ${LIB.length} channels from local storage.`);
+            } catch(e){
+                showMessage('Load Failed', 'Failed to load library. Data may be corrupted.');
+            }
+        });
+
+        // Function to reliably retrieve social links from the channel's About page
         async function getSocialLinksFromAboutPage(channelId) {
             const proxyUrl = $('corsProxy').value || '';
             const aboutUrl = `${proxyUrl}https://www.youtube.com/channel/${channelId}/about`;
@@ -866,276 +1171,6 @@
                 return {};
             }
         }
-        
-        /* ========================= RENDER / UI ========================= */
-        function renderResults(channels) {
-            VIEW = filterAndSort(channels);
-            const tbody = $('resultsTbody');
-            tbody.innerHTML = '';
-            if (VIEW.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px; color:var(--muted)">No results found.</td></tr>`;
-                return;
-            }
-            VIEW.forEach(channel => {
-                const tr = document.createElement('tr');
-                tr.dataset.channelId = channel.id;
-                tr.innerHTML = `
-                    <td class="select-cell"><input type="checkbox" class="channel-select"/></td>
-                    <td>
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <img src="${channel.thumbnail}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
-                            <a href="https://www.youtube.com/channel/${channel.id}" target="_blank" style="color:var(--text); text-decoration:none;">${channel.title}</a>
-                        </div>
-                    </td>
-                    <td>${formatNumber(channel.subscribers)}</td>
-                    <td>${formatNumber(channel.videoCount)}</td>
-                    <td>${formatNumber(channel.viewCount)}</td>
-                    <td>${channel.isVerified === true ? '✅' : channel.isVerified === false ? '❌' : 'N/A'}</td>
-                    <td>
-                        <button class="btn preview-btn" data-channel-id="${channel.id}">Preview Video</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-            updateMetrics();
-        }
-        
-        // NEW: Function to display the video preview panel
-        async function showVideoPreview(channelId) {
-            const video = await getLatestVideo(channelId);
-            if (video) {
-                $('videoTitle').innerText = video.title;
-                $('videoDescription').innerText = video.description;
-                $('videoPlayer').src = `https://www.youtube.com/embed/${video.id}?autoplay=1`;
-                $('videoDetailPanel').classList.add('visible'); // Show the panel
-            } else {
-                showMessage('Video Not Found', 'Could not find a recent video for this channel.');
-            }
-        }
-        
-        // NEW: Function to hide the video preview panel
-        function hideVideoPreview() {
-            $('videoDetailPanel').classList.remove('visible'); // Hide the panel
-            $('videoPlayer').src = ''; // Stop the video
-        }
-
-        function filterAndSort(channels) {
-            let filtered = channels;
-            const minSubs = parseInt($('minSubs').value) || 0;
-            const maxSubs = parseInt($('maxSubs').value) || Infinity;
-            const searchInResults = $('searchInResults').value.toLowerCase();
-
-            filtered = filtered.filter(c => {
-                const titleMatch = c.title.toLowerCase().includes(searchInResults);
-                const idMatch = c.id.toLowerCase().includes(searchInResults);
-                const subsMatch = c.subscribers >= minSubs && c.subscribers <= maxSubs;
-                return (titleMatch || idMatch) && subsMatch;
-            });
-            
-            const sortKey = $('clientSort').value;
-            filtered.sort((a, b) => {
-                switch (sortKey) {
-                    case 'subs-desc': return b.subscribers - a.subscribers;
-                    case 'subs-asc': return a.subscribers - b.subscribers;
-                    case 'views-desc': return b.viewCount - a.viewCount;
-                    case 'views-asc': return a.viewCount - b.viewCount;
-                    case 'title-asc': return a.title.localeCompare(b.title);
-                    case 'title-desc': return b.title.localeCompare(a.title);
-                }
-            });
-            return filtered;
-        }
-
-        function updateMetrics() {
-            $('count').innerText = `${VIEW.length} channels (${LIB.length} total)`;
-        }
-        function resetResults() {
-            LIB = [];
-            VIEW = [];
-            $('resultsTbody').innerHTML = '';
-            updateMetrics();
-        }
-
-        function formatNumber(num) {
-            if (num >= 1000000000) return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
-            if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-            if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
-            return num;
-        }
-        
-        function downloadFile(filename, mimeType, content) {
-            const blob = new Blob([content], { type: mimeType });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        function getSelectedChannels() {
-            const selectedRows = Array.from($('resultsTbody').querySelectorAll('.channel-select:checked'));
-            const selectedIds = selectedRows.map(input => input.closest('tr').dataset.channelId);
-            return LIB.filter(c => selectedIds.includes(c.id));
-        }
-
-        // === EVENT LISTENERS ===
-        
-        // NEW: Event listeners for the new functionality
-        $('resultsTbody').addEventListener('click', (e) => {
-            const btn = e.target.closest('.preview-btn');
-            if (btn) {
-                const channelId = btn.dataset.channelId;
-                showVideoPreview(channelId);
-            }
-        });
-
-        $('closeBtn').addEventListener('click', () => {
-            hideVideoPreview();
-        });
-
-        $('btnClear').addEventListener('click', resetResults);
-        $('btnClearResults').addEventListener('click', resetResults);
-        $('clientSort').addEventListener('change', () => renderResults(LIB));
-        $('minSubs').addEventListener('input', () => renderResults(LIB));
-        $('maxSubs').addEventListener('input', () => renderResults(LIB));
-        $('searchInResults').addEventListener('input', () => renderResults(LIB));
-        
-        $('btnExportCSV').addEventListener('click', () => {
-            lastExport = LIB;
-            const rows = lastExport.map(c => `"${esc(c.title)}","${c.id}","${c.subscribers}","${c.videoCount}","${c.viewCount}","${c.isVerified}"`);
-            const csvContent = "data:text/csv;charset=utf-8," + "Channel,ID,Subscribers,Videos,Views,Verified\n" + rows.join('\n');
-            downloadFile('channels.csv', 'text/csv', csvContent);
-        });
-
-        $('btnExportJSON').addEventListener('click', () => {
-            lastExport = LIB;
-            const jsonContent = JSON.stringify(lastExport, null, 2);
-            downloadFile('channels.json', 'application/json', jsonContent);
-        });
-
-        $('btnCopyIDs').addEventListener('click', () => {
-            const ids = LIB.map(c => c.id).join('\n');
-            navigator.clipboard.writeText(ids).then(() => {
-                showMessage('Success', 'Copied all channel IDs to clipboard!');
-            }).catch(e => {
-                showMessage('Failed', 'Could not copy IDs. Please try again.');
-            });
-        });
-        
-        $('btnExportSelected').addEventListener('click', () => {
-            const selected = getSelectedChannels();
-            const rows = selected.map(c => `"${esc(c.title)}","${c.id}","${c.subscribers}","${c.videoCount}","${c.viewCount}","${c.isVerified}"`);
-            const csvContent = "data:text/csv;charset=utf-8," + "Channel,ID,Subscribers,Videos,Views,Verified\n" + rows.join('\n');
-            downloadFile('selected_channels.csv', 'text/csv', csvContent);
-        });
-        
-        $('btnCopySelected').addEventListener('click', () => {
-            const selected = getSelectedChannels();
-            const rows = selected.map(c => `"${esc(c.title)}","${c.id}","${c.subscribers}","${c.videoCount}","${c.viewCount}","${c.isVerified}"`);
-            const csvContent = "Channel,ID,Subscribers,Videos,Views,Verified\n" + rows.join('\n');
-            navigator.clipboard.writeText(csvContent).then(() => {
-                showMessage('Success', 'Copied selected channels as CSV to clipboard!');
-            }).catch(e => {
-                showMessage('Failed', 'Could not copy. Please try again.');
-            });
-        });
-        
-        $('resultsTbody').addEventListener('click', async (e) => {
-            const row = e.target.closest('tr');
-            if (row && !e.target.closest('.preview-btn')) {
-                const channelId = row.dataset.channelId;
-                const channel = LIB.find(c => c.id === channelId);
-                if (channel) {
-                    renderDetailPanel(channel);
-                }
-            }
-        });
-        
-        function renderDetailPanel(channel) {
-            $('detailTitle').innerText = channel.title;
-            
-            const aboutContent = $('detailContent');
-            aboutContent.innerHTML = '';
-            
-            if (channel.banner) {
-                $('banner').style.backgroundImage = `url(${channel.banner})`;
-                $('banner').style.display = 'block';
-            } else {
-                $('banner').style.display = 'none';
-            }
-            
-            const statsHtml = `
-                <div class="stats">
-                    <div class="stat"><b>${formatNumber(channel.subscribers)}</b><small>Subs</small></div>
-                    <div class="stat"><b>${formatNumber(channel.videoCount)}</b><small>Videos</small></div>
-                    <div class="stat"><b>${formatNumber(channel.viewCount)}</b><small>Views</small></div>
-                </div>
-            `;
-            
-            const descriptionHtml = `
-                <div style="margin-top: 12px;">
-                    <small class="meta">Description</small>
-                    <p>${channel.description || 'No description provided.'}</p>
-                </div>
-            `;
-            
-            aboutContent.innerHTML = statsHtml + descriptionHtml;
-        }
-
-        $('btnSelectAll').addEventListener('click', () => {
-            document.querySelectorAll('.channel-select').forEach(checkbox => checkbox.checked = true);
-        });
-
-        $('btnDeselectAll').addEventListener('click', () => {
-            document.querySelectorAll('.channel-select').forEach(checkbox => checkbox.checked = false);
-        });
-        
-        // Firestore Public Library Save/Load
-        const PUBLIC_LIBRARIES_COLLECTION = 'userLibraries';
-        import { getDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-        
-        $('btnSaveLib').addEventListener('click', async () => {
-            if (!currentUser) {
-                return showMessage('Save Failed', 'Please sign in to save your library.');
-            }
-            if (LIB.length === 0) {
-                return showMessage('Save Failed', 'No channels to save.');
-            }
-            try {
-                const userDocRef = doc(db, PUBLIC_LIBRARIES_COLLECTION, currentUser.uid);
-                await setDoc(userDocRef, {
-                    library: LIB,
-                    timestamp: new Date().toISOString()
-                }, { merge: true });
-                showMessage('Save Success', `Saved ${LIB.length} channels to your library.`);
-            } catch (e) {
-                console.error(e);
-                showMessage('Save Failed', 'Failed to save library to Firestore. Check console for details.');
-            }
-        });
-
-        $('btnLoadLib').addEventListener('click', async () => {
-            if (!currentUser) {
-                return showMessage('Load Failed', 'Please sign in to load your library.');
-            }
-            try {
-                const userDocRef = doc(db, PUBLIC_LIBRARIES_COLLECTION, currentUser.uid);
-                const docSnap = await getDoc(userDocRef);
-
-                if (docSnap.exists() && docSnap.data().library) {
-                    LIB = docSnap.data().library;
-                    renderResults(LIB);
-                    updateMetrics();
-                    showMessage('Load Success', `Loaded ${LIB.length} channels from your library.`);
-                } else {
-                    showMessage('Load Failed', 'No saved library found.');
-                }
-            } catch (e) {
-                console.error(e);
-                showMessage('Load Failed', 'Failed to load library from Firestore. Data may be corrupted or permission denied.');
-            }
-        });
     </script>
 </body>
 </html>
