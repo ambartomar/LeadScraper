@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Lead Studio Pro MAX Advanced — YouTube Scraper</title>
+    <title>Lead Studio Pro Advanced — YouTube Scraper</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js" type="module"></script>
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js" type="module"></script>
@@ -129,57 +129,91 @@
         <h1 class="text-3xl md:text-4xl font-bold text-center text-accent-purple mb-2">Lead Studio Pro MAX Advanced</h1>
         <p class="text-center text-text-secondary mb-8">Harness the power of server-side scraping to find your next lead.</p>
 
-        <!-- Search Section -->
-        <div class="flex flex-col md:flex-row items-center gap-4 mb-8">
-            <input type="text" id="searchInput" placeholder="Enter YouTube channel name or keyword..."
-                   class="flex-grow w-full md:w-auto px-4 py-3 bg-bg-input border border-text-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple text-text-primary placeholder-text-secondary">
-            <button id="searchButton"
-                    class="w-full md:w-auto px-6 py-3 font-semibold text-white custom-btn">
-                <span id="searchBtnText">Search Channels</span>
-            </button>
+        <!-- Login and Signup Section -->
+        <div id="authContainer" class="max-w-md mx-auto p-6 bg-bg-input rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold text-center mb-6" id="authHeader">Sign In</h2>
+            <form id="authForm" class="space-y-4">
+                <div>
+                    <label for="email" class="sr-only">Email address</label>
+                    <input id="email" name="email" type="email" autocomplete="email" required
+                           class="w-full px-4 py-3 rounded-lg bg-bg-card border border-text-secondary placeholder-text-secondary text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-purple"
+                           placeholder="Email address">
+                </div>
+                <div>
+                    <label for="password" class="sr-only">Password</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required
+                           class="w-full px-4 py-3 rounded-lg bg-bg-card border border-text-secondary placeholder-text-secondary text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-purple"
+                           placeholder="Password">
+                </div>
+                <button type="submit" id="authButton" class="w-full py-3 font-semibold text-white custom-btn">
+                    Sign In
+                </button>
+            </form>
+            <div class="text-center mt-4">
+                <button id="toggleAuthMode" class="text-sm text-accent-purple hover:underline focus:outline-none">
+                    Don't have an account? Sign Up
+                </button>
+            </div>
         </div>
 
-        <!-- Status and User Info -->
-        <div class="flex flex-col sm:flex-row justify-between items-center text-sm text-text-secondary mb-6">
-            <div id="authStatus" class="flex items-center gap-2 mb-2 sm:mb-0">
-                <div id="authIcon" class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></div>
-                <span id="authMessage">Connecting to Firebase...</span>
+        <!-- Main Application Section (Hidden by default) -->
+        <div id="mainApp" class="hidden">
+            <!-- Search Section -->
+            <div class="flex flex-col md:flex-row items-center gap-4 mb-8">
+                <input type="text" id="searchInput" placeholder="Enter YouTube channel name or keyword..."
+                       class="flex-grow w-full md:w-auto px-4 py-3 bg-bg-input border border-text-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple text-text-primary placeholder-text-secondary">
+                <button id="searchButton"
+                        class="w-full md:w-auto px-6 py-3 font-semibold text-white custom-btn">
+                    <span id="searchBtnText">Search Channels</span>
+                </button>
             </div>
-            <div id="userIdDisplay" class="truncate hidden">
-                <span class="font-bold">Your User ID:</span> <span id="userIdValue" class="text-accent-purple-dark break-all"></span>
-            </div>
-        </div>
 
-        <!-- Results Section -->
-        <div id="resultsContainer" class="hidden">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold">Search Results</h2>
-                <button id="exportButton" class="custom-btn px-4 py-2 text-sm hidden">Download Results</button>
+            <!-- Status and User Info -->
+            <div class="flex flex-col sm:flex-row justify-between items-center text-sm text-text-secondary mb-6">
+                <div id="authStatus" class="flex items-center gap-2 mb-2 sm:mb-0">
+                    <div id="authIcon" class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                    <span id="authMessage">Signed in as <span id="userEmailDisplay" class="text-accent-purple"></span></span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div id="adminBadge" class="hidden text-xs font-bold text-green-500 bg-green-900 bg-opacity-30 rounded-full px-2 py-1">ADMIN</div>
+                    <div id="userIdDisplay" class="truncate hidden">
+                        <span class="font-bold">User ID:</span> <span id="userIdValue" class="text-accent-purple-dark break-all"></span>
+                    </div>
+                </div>
+                <button id="logoutButton" class="text-sm text-text-secondary hover:text-red-400">Log Out</button>
             </div>
-            <div class="overflow-x-auto bg-bg-input rounded-lg">
-                <table class="w-full text-left table-auto">
-                    <thead>
-                        <tr class="bg-gray-800">
-                            <th class="px-4 py-3 text-text-secondary">Channel Name</th>
-                            <th id="subscribersHeader" class="px-4 py-3 text-text-secondary sortable-header">
-                                Subscribers <span class="sort-icon"></span>
-                            </th>
-                            <th class="px-4 py-3 text-text-secondary">Videos</th>
-                            <th class="px-4 py-3 text-text-secondary">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="resultsTableBody"></tbody>
-                </table>
+
+            <!-- Results Section -->
+            <div id="resultsContainer" class="hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold">Search Results</h2>
+                    <button id="exportButton" class="custom-btn px-4 py-2 text-sm hidden">Download Results</button>
+                </div>
+                <div class="overflow-x-auto bg-bg-input rounded-lg">
+                    <table class="w-full text-left table-auto">
+                        <thead>
+                            <tr class="bg-gray-800">
+                                <th class="px-4 py-3 text-text-secondary">Channel Name</th>
+                                <th id="subscribersHeader" class="px-4 py-3 text-text-secondary sortable-header">
+                                    Subscribers <span class="sort-icon"></span>
+                                </th>
+                                <th class="px-4 py-3 text-text-secondary">Videos</th>
+                                <th class="px-4 py-3 text-text-secondary">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTableBody"></tbody>
+                    </table>
+                </div>
+                <p id="noResultsMessage" class="hidden text-center text-text-secondary mt-4">No channels found. Try a different search.</p>
             </div>
-            <p id="noResultsMessage" class="hidden text-center text-text-secondary mt-4">No channels found. Try a different search.</p>
-        </div>
-        
-        <!-- Search History Section -->
-        <div id="historyContainer" class="mt-8 hidden">
-            <h2 class="text-xl font-bold mb-4">Your Search History</h2>
-            <div class="bg-bg-input rounded-lg p-4 max-h-64 overflow-y-auto">
-                <ul id="historyList"></ul>
-                <p id="noHistoryMessage" class="hidden text-center text-text-secondary mt-2">No search history yet.</p>
+            
+            <!-- Search History Section -->
+            <div id="historyContainer" class="mt-8 hidden">
+                <h2 class="text-xl font-bold mb-4">Your Search History</h2>
+                <div class="bg-bg-input rounded-lg p-4 max-h-64 overflow-y-auto">
+                    <ul id="historyList"></ul>
+                    <p id="noHistoryMessage" class="hidden text-center text-text-secondary mt-2">No search history yet.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -208,8 +242,16 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, query, limit, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { 
+            getAuth, 
+            signInAnonymously, 
+            onAuthStateChanged, 
+            signInWithCustomToken,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, query, limit, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-functions.js";
 
         // =========================================================================
@@ -220,7 +262,11 @@
         let userId = null;
         let functions;
         let currentSearchResults = [];
-        let sortDirection = 'asc'; // 'asc' or 'desc'
+        let sortDirection = 'asc';
+        let isSigningUp = false;
+
+        // Hardcoded UID from the provided Cloud Functions code.
+        const ADMIN_UID = 'DhD6XzfVq2fEJSvrHvws2KTKZlu1';
 
         // Access dynamic variables provided by the platform
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -228,6 +274,14 @@
         const authToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
         // UI element references
+        const authContainer = document.getElementById('authContainer');
+        const mainApp = document.getElementById('mainApp');
+        const authForm = document.getElementById('authForm');
+        const authHeader = document.getElementById('authHeader');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const authButton = document.getElementById('authButton');
+        const toggleAuthModeButton = document.getElementById('toggleAuthMode');
         const searchInput = document.getElementById('searchInput');
         const searchButton = document.getElementById('searchButton');
         const resultsTableBody = document.getElementById('resultsTableBody');
@@ -235,8 +289,8 @@
         const noResultsMessage = document.getElementById('noResultsMessage');
         const loadingIndicator = document.getElementById('loadingIndicator');
         const detailsModal = document.getElementById('detailsModal');
-        const modalTitle = document.getElementById('modalTitle');
         const closeModalButton = document.getElementById('closeModalButton');
+        const modalTitle = document.getElementById('modalTitle');
         const modalContent = document.getElementById('modalContent');
         const alertModal = document.getElementById('alertModal');
         const alertTitle = document.getElementById('alertTitle');
@@ -247,10 +301,13 @@
         const noHistoryMessage = document.getElementById('noHistoryMessage');
         const authStatusIcon = document.getElementById('authIcon');
         const authStatusMessage = document.getElementById('authMessage');
+        const userEmailDisplay = document.getElementById('userEmailDisplay');
         const userIdDisplay = document.getElementById('userIdDisplay');
         const userIdValue = document.getElementById('userIdValue');
+        const logoutButton = document.getElementById('logoutButton');
         const exportButton = document.getElementById('exportButton');
         const subscribersHeader = document.getElementById('subscribersHeader');
+        const adminBadge = document.getElementById('adminBadge');
 
         // =========================================================================
         // === UI UTILITY FUNCTIONS
@@ -284,6 +341,20 @@
             searchButton.disabled = false;
             searchButton.classList.remove('opacity-50', 'cursor-not-allowed');
         }
+        
+        // Toggles between login and signup forms
+        function toggleAuthMode() {
+            isSigningUp = !isSigningUp;
+            if (isSigningUp) {
+                authHeader.textContent = 'Sign Up';
+                authButton.textContent = 'Sign Up';
+                toggleAuthModeButton.textContent = 'Already have an account? Sign In';
+            } else {
+                authHeader.textContent = 'Sign In';
+                authButton.textContent = 'Sign In';
+                toggleAuthModeButton.textContent = 'Don\'t have an account? Sign Up';
+            }
+        }
 
         // =========================================================================
         // === FIREBASE INITIALIZATION & AUTHENTICATION
@@ -291,48 +362,51 @@
 
         /**
          * Initializes Firebase services and handles authentication.
-         * This function is crucial for the app's functionality. It first attempts to
-         * authenticate the user with the provided custom token. If that's not
-         * available, it falls back to anonymous sign-in.
          */
         async function initializeFirebase() {
             try {
-                // Check if Firebase config is available. This is the fix for the previous error.
                 if (!firebaseConfig.apiKey) {
                     throw new Error("Firebase configuration is missing the API key. Please check the environment configuration.");
                 }
 
-                // Initialize services
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
                 functions = getFunctions(app, 'us-central1');
                 setLogLevel('debug');
 
-                // Set up authentication state listener
                 onAuthStateChanged(auth, async (user) => {
                     if (user) {
                         userId = user.uid;
-                        authStatusIcon.classList.remove('bg-red-500', 'animate-pulse');
-                        authStatusIcon.classList.add('bg-green-500');
-                        authStatusMessage.textContent = 'Connected!';
+                        authContainer.classList.add('hidden');
+                        mainApp.classList.remove('hidden');
+                        userEmailDisplay.textContent = user.email || 'Anonymous';
                         userIdValue.textContent = userId;
                         userIdDisplay.classList.remove('hidden');
+                        
+                        // Check if the user is an admin
+                        if (userId === ADMIN_UID) {
+                            adminBadge.classList.remove('hidden');
+                            authStatusMessage.textContent = 'Admin Mode';
+                        } else {
+                            adminBadge.classList.add('hidden');
+                            authStatusMessage.textContent = `Signed in as ${user.email || 'Anonymous'}`;
+                        }
+
                         startHistoryListener();
                     } else {
-                        authStatusIcon.classList.remove('bg-green-500');
-                        authStatusIcon.classList.add('bg-red-500', 'animate-pulse');
-                        authStatusMessage.textContent = 'Connecting...';
+                        // User is not signed in
                         userId = null;
-                        userIdDisplay.classList.add('hidden');
+                        authContainer.classList.remove('hidden');
+                        mainApp.classList.add('hidden');
+                        // No need to sign in anonymously with a full login system
                     }
                 });
 
-                // Authenticate with the custom token or anonymously
+                // Attempt to sign in with the custom token provided by the platform.
+                // This is still needed for initial page load in the Canvas environment.
                 if (authToken) {
                     await signInWithCustomToken(auth, authToken);
-                } else {
-                    await signInAnonymously(auth);
                 }
 
             } catch (error) {
@@ -342,13 +416,55 @@
             }
         }
 
+        // Handles user sign in and sign up attempts
+        async function handleAuth(event) {
+            event.preventDefault();
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            
+            showLoading();
+
+            try {
+                if (isSigningUp) {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    showAlert('Success', 'Account created successfully! You are now signed in.');
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    showAlert('Success', 'Signed in successfully!');
+                }
+            } catch (error) {
+                console.error("Authentication Error:", error);
+                let message = 'An unknown error occurred.';
+                switch (error.code) {
+                    case 'auth/invalid-email':
+                        message = 'The email address is not valid.';
+                        break;
+                    case 'auth/user-disabled':
+                        message = 'This user has been disabled.';
+                        break;
+                    case 'auth/user-not-found':
+                    case 'auth/wrong-password':
+                        message = 'Invalid email or password.';
+                        break;
+                    case 'auth/email-already-in-use':
+                        message = 'This email is already in use. Try signing in or use a different email.';
+                        break;
+                    default:
+                        message = `Authentication failed: ${error.message}`;
+                        break;
+                }
+                showAlert('Authentication Failed', message);
+            } finally {
+                hideLoading();
+            }
+        }
+        
         // =========================================================================
         // === FIRESTORE DATA HANDLING
         // =========================================================================
 
         /**
          * Listens for real-time updates to the user's search history in Firestore.
-         * The `onSnapshot` listener ensures the UI is always in sync with the database.
          */
         function startHistoryListener() {
             if (!db || !userId) {
@@ -445,7 +561,7 @@
                 
                 row.innerHTML = `
                     <td class="px-4 py-3 flex items-center gap-2">
-                        <img src="${channel.thumbnailUrl}" alt="Channel Thumbnail" class="w-8 h-8 rounded-full">
+                        <img src="${channel.thumbnailUrl}" onerror="this.src='https://placehold.co/40x40/5a2d8a/ffffff?text=C'" alt="Channel Thumbnail" class="w-8 h-8 rounded-full">
                         <span class="text-ellipsis-1" title="${channel.channelName}">${channel.channelName}</span>${verifiedIcon}
                     </td>
                     <td class="px-4 py-3">${channel.subscribers || 'N/A'}</td>
@@ -458,7 +574,6 @@
                 resultsTableBody.appendChild(row);
             });
 
-            // Add event listeners for the newly created buttons
             document.querySelectorAll('.view-details-btn').forEach(button => {
                 button.addEventListener('click', () => {
                     viewChannelDetails(button.getAttribute('data-channel-id'), button.getAttribute('data-channel-name'));
@@ -498,7 +613,6 @@
                     `;
                 }
 
-                // Enhanced email scraping check
                 const emailMatch = data.description && data.description.match(/[\w.-]+@[\w.-]+\.[\w.-]+/i);
                 const emailHtml = emailMatch ? `
                     <div class="flex items-center gap-2 mt-4 bg-bg-input rounded-lg p-3">
@@ -524,21 +638,15 @@
                     </div>
                 `;
 
-                // Add clipboard copy function
                 window.copyEmail = () => {
                     const email = document.getElementById('scrapedEmail').textContent;
-                    navigator.clipboard.writeText(email).then(() => {
-                        showAlert('Success', 'Email address copied to clipboard!');
-                    }).catch(err => {
-                        // Fallback for browsers that don't support navigator.clipboard
-                        const el = document.createElement('textarea');
-                        el.value = email;
-                        document.body.appendChild(el);
-                        el.select();
-                        document.execCommand('copy');
-                        document.body.removeChild(el);
-                        showAlert('Success', 'Email address copied to clipboard!');
-                    });
+                    const el = document.createElement('textarea');
+                    el.value = email;
+                    document.body.appendChild(el);
+                    el.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(el);
+                    showAlert('Success', 'Email address copied to clipboard!');
                 };
 
                 detailsModal.classList.remove('hidden');
@@ -567,8 +675,8 @@
                     videosHtml = `
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             ${videos.map(video => `
-                                <div class="bg-bg-input channel-card p-4 cursor-pointer">
-                                    <img src="${video.thumbnailUrl}" alt="Video Thumbnail" class="w-full h-auto rounded-lg mb-2">
+                                <div class="bg-bg-input channel-card p-4">
+                                    <img src="${video.thumbnailUrl}" onerror="this.src='https://placehold.co/400x225/5a2d8a/ffffff?text=Video'" alt="Video Thumbnail" class="w-full h-auto rounded-lg mb-2">
                                     <h5 class="text-sm font-semibold text-ellipsis-2" title="${video.title}">${video.title}</h5>
                                     <p class="text-xs text-text-secondary mt-1">
                                         Views: ${video.viewCount || 'N/A'}
@@ -607,16 +715,10 @@
         function sortResultsBySubscribers() {
             if (currentSearchResults.length === 0) return;
 
-            // Clear sort icons
             subscribersHeader.classList.remove('sort-asc', 'sort-desc');
-
-            // Toggle sort direction
             sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-
-            // Add new sort icon
             subscribersHeader.classList.add(`sort-${sortDirection}`);
             
-            // Sort the array
             const sortedResults = [...currentSearchResults].sort((a, b) => {
                 const subsA = parseInt(a.subscribers?.replace(/,/g, '') || '0');
                 const subsB = parseInt(b.subscribers?.replace(/,/g, '') || '0');
@@ -628,7 +730,6 @@
                 }
             });
 
-            // Re-render the sorted results
             renderResults(sortedResults);
         }
 
@@ -648,11 +749,22 @@
             linkElement.setAttribute('download', exportFileDefaultName);
             linkElement.click();
         }
-
+        
         // =========================================================================
         // === EVENT LISTENERS
         // =========================================================================
         window.addEventListener('load', initializeFirebase);
+        authForm.addEventListener('submit', handleAuth);
+        toggleAuthModeButton.addEventListener('click', toggleAuthMode);
+        logoutButton.addEventListener('click', () => {
+            signOut(auth).then(() => {
+                showAlert('Logged Out', 'You have been successfully logged out.');
+            }).catch((error) => {
+                console.error('Logout error:', error);
+                showAlert('Logout Failed', 'An error occurred during logout. Please try again.');
+            });
+        });
+
         searchButton.addEventListener('click', searchChannels);
         searchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
