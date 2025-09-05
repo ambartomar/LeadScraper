@@ -3,51 +3,41 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Lead Studio Pro — YouTube Channel Finder</title>
+    <title>Lead Studio Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* =========================
-           Custom CSS & Animations
-           ========================= */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        :root {
+            --bg-dark: #07090D;
+            --panel-bg: rgba(255, 255, 255, 0.04);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --purple-accent: #8b5cf6; /* Tailwind's purple-500 */
+            --purple-hover: #7c3aed; /* Tailwind's purple-600 */
+            --text-light: #e2e8f0;
+            --text-muted: #94a3b8;
         }
-        @keyframes ripple {
-            0% { transform: scale(0); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-        @keyframes pulse-ring {
-            0% { transform: scale(0.33); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-        @keyframes skeleton-loading {
-            0% { background-position: -200px 0; }
-            100% { background-position: 200px 0; }
-        }
-
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0d121c;
-            color: #d1d5db;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
             height: 100vh;
             width: 100vw;
-            overflow: hidden; /* Prevents scrolling */
+            overflow: hidden;
+            background: radial-gradient(circle at 15% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 40%), radial-gradient(circle at 85% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 40%), var(--bg-dark);
         }
-        
-        /* Glassmorphism Panels */
         .glass-panel {
-            background-color: rgba(255, 255, 255, 0.05);
+            background-color: var(--panel-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 1.5rem; /* 24px */
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            animation: fadeIn 0.8s ease-out;
+            border: 1px solid var(--border-color);
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
         }
-
-        /* Custom scrollbar for glassmorphism */
+        .glass-panel:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+        }
         .custom-scroll::-webkit-scrollbar {
             width: 8px;
         }
@@ -56,278 +46,221 @@
             border-radius: 10px;
         }
         .custom-scroll::-webkit-scrollbar-thumb {
-            background: rgba(139, 92, 246, 0.5);
+            background: var(--purple-accent);
             border-radius: 10px;
         }
         .custom-scroll::-webkit-scrollbar-thumb:hover {
-            background: rgba(139, 92, 246, 0.7);
+            background: var(--purple-hover);
         }
-
-        /* Status LED */
-        .status-led-container {
-            position: relative;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            width: 1rem;
-            height: 1rem;
-        }
-        .status-led {
-            width: 0.5rem;
-            height: 0.5rem;
-            background-color: #f59e0b; /* amber for idle */
-            border-radius: 50%;
-            transition: background-color 0.3s;
-        }
-        .status-led-pulse {
-            position: absolute;
-            background-color: #f59e0b;
-            border-radius: 50%;
-            animation: pulse-ring 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
-        }
-        .status-led-active {
-            background-color: #22c55e; /* green for active */
-        }
-        .status-led-error {
-            background-color: #ef4444; /* red for error */
-        }
-        
-        /* Button Ripple Effect */
         .btn {
             position: relative;
             overflow: hidden;
-            transition-transform transform hover:scale-105 active:scale-95 duration-200;
+            transition-property: transform;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 200ms;
         }
-        .btn .ripple-effect {
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn:active {
+            transform: translateY(1px);
+        }
+        .ripple-effect {
             position: absolute;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.3);
             animation: ripple 0.6s linear;
             transform: scale(0);
         }
-        
-        /* Loading Skeleton */
+        @keyframes ripple {
+            to { transform: scale(2.5); opacity: 0; }
+        }
         .skeleton {
             animation: skeleton-loading 1.5s infinite linear;
-            background: linear-gradient(90deg, #1f2937 25%, #2a3442 50%, #1f2937 75%);
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
             background-size: 200% 100%;
+        }
+        @keyframes skeleton-loading {
+            from { background-position: -200px 0; }
+            to { background-position: 200px 0; }
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="p-8 flex items-center justify-center">
-
-    <!-- Authentication View -->
-    <div id="auth-view" class="glass-panel p-10 flex flex-col gap-6 text-center max-w-lg w-full" style="display: none;">
-        <h2 class="text-3xl font-bold text-white">Welcome to Lead Studio Pro</h2>
-        <input id="authEmail" type="email" placeholder="Email" autocomplete="username" class="bg-white/5 rounded-lg border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors duration-200">
-        <input id="authPass" type="password" placeholder="Password" autocomplete="current-password" class="bg-white/5 rounded-lg border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors duration-200">
-        <div class="flex gap-4">
-            <button class="btn flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg" id="btnSignIn">Sign In</button>
-            <button class="btn flex-1 bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-3 rounded-lg border border-gray-600" id="btnSignUp">Sign Up</button>
-        </div>
-        <div id="authStatus" class="text-sm text-red-400"></div>
-    </div>
-
+<body class="flex">
     <!-- Main App Dashboard View -->
-    <div id="app-view" class="h-full w-full flex flex-col gap-6" style="display: none;">
-        <!-- Header -->
-        <header class="glass-panel p-6 flex items-center justify-between animate-fadeIn">
-            <div class="flex items-center gap-4">
-                <div class="status-led-container">
-                    <span class="status-led-pulse" id="statusPulse"></span>
-                    <span class="status-led" id="statusLed"></span>
-                </div>
-                <div>
-                    <h1 class="text-2xl font-bold text-white">Lead Studio Pro</h1>
-                    <p class="text-sm text-gray-400">Advanced YouTube Channel Finder</p>
-                </div>
+    <div id="app-view" class="h-full w-full flex" style="display: none;">
+        <!-- Left Sidebar -->
+        <aside class="glass-panel w-20 flex flex-col items-center py-6 mx-4 my-4 fade-in" style="animation-delay: 0.1s;">
+            <div class="mb-8 p-3 bg-purple-600 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 20c0 .55.45 1 1 1s1-.45 1-1-.45-1-1-1-1 .45-1 1zm8-18c0-.55-.45-1-1-1s-1 .45-1 1 .45 1 1 1 1-.45 1-1zm-6 2c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1zm6 17c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1zm-4-4c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-3 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM9 2v4h4V2H9zm2 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+                </svg>
             </div>
-            <div class="flex items-center gap-4">
-                <div id="status" class="text-sm font-medium text-gray-300">Idle</div>
-                <input id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA" class="w-72 bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                <button class="btn bg-gray-700 hover:bg-gray-600 text-white font-semibold px-6 py-2 rounded-lg" id="btnSignOut">Sign Out</button>
+            <nav class="flex-1 flex flex-col gap-4">
+                <div class="group relative cursor-pointer flex items-center justify-center p-3 rounded-xl hover:bg-white/10 transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-400" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-1.6.53-3.08 1.4-4.28L19.43 18.6c-1.2.87-2.68 1.4-4.28 1.4-1.62 0-3.13-.53-4.32-1.47zM4.07 12c.49 3.95 3.85 7 7.93 7 1.6 0 3.08-.53 4.28-1.4L4.57 5.4c-.87 1.2-1.4 2.68-1.4 4.28 0 1.62.53 3.13 1.47 4.32z"/>
+                    </svg>
+                    <span class="absolute left-full ml-4 whitespace-nowrap px-3 py-1 bg-gray-700 text-sm text-white rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">Dashboard</span>
+                </div>
+                <div class="group relative cursor-pointer flex items-center justify-center p-3 rounded-xl hover:bg-white/10 transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15c0 .55.45 1 1 1s1-.45 1-1V9c0-.55-.45-1-1-1s-1 .45-1 1v8zm-1-9c0-.55.45-1 1-1h1c.55 0 1 .45 1 1v1c0 .55-.45 1-1 1h-1c-.55 0-1-.45-1-1V8z"/>
+                    </svg>
+                    <span class="absolute left-full ml-4 whitespace-nowrap px-3 py-1 bg-gray-700 text-sm text-white rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">Analytics</span>
+                </div>
+            </nav>
+            <div class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center text-sm font-semibold">
+                <span id="initials"></span>
             </div>
-        </header>
+        </aside>
 
-        <!-- Main Content Grid -->
-        <main class="flex-1 grid grid-cols-3 gap-6">
-            <!-- Left Panel: Search & Filters -->
-            <div class="col-span-1 glass-panel p-6 flex flex-col gap-6 overflow-hidden animate-fadeIn" style="animation-delay: 0.1s;">
-                <h3 class="text-xl font-bold text-white">Search Filters</h3>
-                <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)" class="flex-1 min-h-24 bg-white/5 rounded-lg border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors duration-200"></textarea>
-                <div class="grid grid-cols-2 gap-3">
-                    <button class="btn flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg col-span-1" id="btnSearch">Search</button>
-                    <button class="btn flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg col-span-1" id="btnDeepSearch">Deep Search</button>
-                    <button class="btn flex-1 bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-3 rounded-lg border border-gray-600 col-span-2" id="btnClear">Clear Search</button>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-4 items-center">
-                    <select id="order" class="bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                        <option value="relevance">Order: Relevance</option>
-                        <option value="date">Order: Date</option>
-                        <option value="viewCount">Order: Views</option>
-                        <option value="rating">Order: Rating</option>
-                    </select>
-                    <select id="duration" class="bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                        <option value="">Duration: Any</option>
-                        <option value="short">Short (&lt;4m)</option>
-                        <option value="medium">Medium (4–20m)</option>
-                        <option value="long">Long (&gt;20m)</option>
-                    </select>
-                    <select id="upload" class="bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                        <option value="">Upload Time: Any</option>
-                        <option value="hour">Last hour</option>
-                        <option value="today">Today</option>
-                        <option value="week">This week</option>
-                        <option value="month">This month</option>
-                    </select>
-                    <select id="region" class="bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                        <option value="">Region: Any</option>
-                        <option>US</option>
-                        <option>IN</option>
-                        <option>GB</option>
-                        <option>CA</option>
-                        <option>AU</option>
-                        <option>DE</option>
-                    </select>
-                    <select id="definition" class="bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                        <option value="">Definition: Any</option>
-                        <option value="high">HD</option>
-                        <option value="standard">SD</option>
-                    </select>
-                    <select id="safe" class="bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                        <option value="">Safe: Any</option>
-                        <option value="none">None</option>
-                        <option value="moderate">Moderate</option>
-                        <option value="strict">Strict</option>
-                    </select>
-                    <input class="col-span-2 bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500" id="perPage" type="number" min="1" max="50" value="25" placeholder="Results per page (1–50)"/>
-                    <input class="col-span-2 bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500" id="pages" type="number" min="1" max="10" value="2" placeholder="Pages per query (1–10)"/>
-                    <div class="col-span-2 flex gap-4">
-                        <input id="minSubs" type="number" placeholder="Min subs" class="flex-1 bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"/>
-                        <input id="maxSubs" type="number" placeholder="Max subs" class="flex-1 bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"/>
-                    </div>
-                    <input class="col-span-2 bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500" id="searchInResults" type="text" placeholder="Search within results (title / ID)"/>
-                    <div class="col-span-2">
-                        <input id="corsProxy" type="url" placeholder="Optional CORS proxy for verification" class="w-full bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"/>
-                    </div>
-                    <div class="col-span-2 flex justify-between items-center text-sm">
-                        <span>Attempt verify check</span>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input id="doVerify" type="checkbox" value="" class="sr-only peer">
-                            <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
-                        </label>
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-auto p-4 flex flex-col">
+            <!-- Top Bar -->
+            <header class="h-16 flex items-center justify-between px-6 mb-4">
+                <div class="flex items-center gap-4">
+                    <h1 class="text-3xl font-bold text-white">Dashboard</h1>
+                    <div class="flex items-center gap-2 text-sm text-gray-400">
+                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span id="status">Online</span>
                     </div>
                 </div>
+                <div class="flex items-center gap-4">
+                    <span id="userEmail" class="text-sm text-gray-400"></span>
+                    <button class="btn bg-gray-700 text-gray-200 px-4 py-2 rounded-xl text-sm font-medium hover:bg-gray-600" id="btnSignOut">Sign Out</button>
+                </div>
+            </header>
 
-                <!-- Progress Bar -->
-                <div class="pt-2">
-                    <div class="relative pt-1">
+            <!-- Main Content Grid -->
+            <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Search & Filters Panel -->
+                <div class="col-span-1 glass-panel p-6 flex flex-col gap-6 fade-in" style="animation-delay: 0.2s;">
+                    <h2 class="text-xl font-bold">Search Filters</h2>
+                    <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)" class="w-full bg-white/5 rounded-xl border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors duration-200 resize-none min-h-[120px]"></textarea>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <button class="btn col-span-1 bg-purple-600 text-white font-medium py-3 rounded-xl hover:bg-purple-700" id="btnSearch">Search</button>
+                        <button class="btn col-span-1 bg-purple-600 text-white font-medium py-3 rounded-xl hover:bg-purple-700" id="btnDeepSearch">Deep Search</button>
+                        <button class="btn col-span-2 bg-gray-700 text-gray-200 font-medium py-3 rounded-xl hover:bg-gray-600" id="btnClear">Clear Search</button>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 text-sm mt-4">
+                        <input class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500" id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA"/>
+                        <input class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500" id="perPage" type="number" min="1" max="50" value="25" placeholder="Results per page"/>
+                        <select id="order" class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <option value="relevance">Order: Relevance</option>
+                            <option value="date">Order: Date</option>
+                            <option value="viewCount">Order: Views</option>
+                        </select>
+                        <select id="duration" class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <option value="">Duration: Any</option>
+                            <option value="short">Short</option>
+                            <option value="medium">Medium</option>
+                            <option value="long">Long</option>
+                        </select>
+                        <input id="minSubs" type="number" placeholder="Min Subs" class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"/>
+                        <input id="maxSubs" type="number" placeholder="Max Subs" class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"/>
+                        <div class="col-span-2 text-center text-sm mt-2 text-gray-500">
+                            <span id="count">0 channels</span>
+                        </div>
+                    </div>
+                    
+                    <div class="relative pt-1 mt-4">
                         <div class="flex mb-2 items-center justify-between text-xs">
                             <div class="text-gray-400">Progress</div>
-                            <div id="count" class="text-gray-400">0 channels</div>
                         </div>
                         <div class="flex h-2 mb-4 overflow-hidden text-xs bg-gray-700 rounded-lg">
-                            <div id="progressBar" class="flex flex-col justify-center text-center text-white shadow-none whitespace-nowrap bg-purple-600 transition-all duration-300 ease-in-out" style="width: 0%;"></div>
+                            <div id="progressBar" class="flex flex-col justify-center shadow-none whitespace-nowrap bg-purple-600 transition-all duration-300 ease-in-out" style="width: 0%;"></div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Middle Panel: Results Table -->
-            <div class="col-span-2 glass-panel p-6 flex flex-col gap-6 overflow-hidden animate-fadeIn" style="animation-delay: 0.2s;">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-xl font-bold text-white">Search Results</h2>
-                    <div class="flex gap-4 items-center">
-                        <select id="clientSort" class="bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                            <option value="subs-desc">Sort: Subs ↓</option>
-                            <option value="subs-asc">Sort: Subs ↑</option>
-                            <option value="views-desc">Sort: Views ↓</option>
-                            <option value="views-asc">Sort: Views ↑</option>
-                            <option value="title-asc">Sort: Title A→Z</option>
-                            <option value="title-desc">Sort: Title Z→A</option>
-                        </select>
-                        <button class="btn bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold px-4 py-2 rounded-lg" id="btnExportCSV">Export CSV</button>
-                        <button class="btn bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold px-4 py-2 rounded-lg" id="btnExportJSON">Export JSON</button>
-                        <button class="btn bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold px-4 py-2 rounded-lg" id="btnCopyIDs">Copy IDs</button>
-                    </div>
-                </div>
-                <div class="flex-1 overflow-y-auto custom-scroll">
-                    <table class="w-full text-sm">
-                        <thead class="sticky top-0 bg-[#0d121c]/90 backdrop-blur-sm z-10">
-                            <tr class="text-left text-gray-400 font-semibold border-b border-gray-700">
-                                <th class="p-4 rounded-tl-xl">
-                                    <input type="checkbox" id="selectAllCheckbox" class="rounded-sm bg-gray-700 border-gray-500 text-purple-600 focus:ring-purple-500">
-                                </th>
-                                <th class="p-4">Channel</th>
-                                <th class="p-4">Subs</th>
-                                <th class="p-4">Videos</th>
-                                <th class="p-4">Views</th>
-                                <th class="p-4 rounded-tr-xl">Verified</th>
-                            </tr>
-                        </thead>
-                        <tbody id="resultsTbody">
-                            <!-- Loading Skeleton -->
-                            <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-full"></div></td></tr>
-                            <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-4/5"></div></td></tr>
-                            <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-3/4"></div></td></tr>
-                            <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-full"></div></td></tr>
-                            <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-1/2"></div></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="flex gap-4">
-                    <button class="btn flex-1 bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-3 rounded-lg border border-gray-600" id="btnSaveLib">Save Library</button>
-                    <button class="btn flex-1 bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-3 rounded-lg border border-gray-600" id="btnLoadLib">Load Library</button>
-                    <button class="btn flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg" id="btnClearResults">Clear All</button>
-                </div>
-            </div>
-            
-            <!-- Right Panel: Channel Details -->
-            <div class="col-span-1 glass-panel p-6 flex flex-col gap-6 animate-fadeIn" style="animation-delay: 0.3s;">
-                <div class="flex items-center justify-between">
-                    <h3 id="detailTitle" class="text-xl font-bold text-white">Select a channel</h3>
                     <div class="flex gap-4">
-                        <button class="btn bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 rounded-lg" id="btnExportSelected">Export Selected</button>
-                        <button class="btn bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold px-4 py-2 rounded-lg" id="btnCopySelected">Copy CSV</button>
+                        <button class="btn flex-1 bg-gray-700 text-gray-200 font-medium py-3 rounded-xl hover:bg-gray-600" id="btnSaveLib">Save Library</button>
+                        <button class="btn flex-1 bg-gray-700 text-gray-200 font-medium py-3 rounded-xl hover:bg-gray-600" id="btnLoadLib">Load Library</button>
                     </div>
                 </div>
-                
-                <div id="banner" class="w-full h-32 bg-gray-800 rounded-xl bg-center bg-cover overflow-hidden" style="display:none;"></div>
-                
-                <div id="detailContent" class="flex-1 overflow-y-auto custom-scroll text-sm flex flex-col gap-4">
-                    <p class="text-gray-400">No channel selected. Click a channel from the search results to see details here.</p>
+
+                <!-- Results Table Panel -->
+                <div class="col-span-2 glass-panel p-6 flex flex-col fade-in" style="animation-delay: 0.3s;">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold">Search Results</h2>
+                        <div class="flex gap-2">
+                            <button class="btn bg-gray-700 text-gray-200 px-4 py-2 rounded-xl text-sm font-medium hover:bg-gray-600" id="btnExportCSV">Export CSV</button>
+                            <button class="btn bg-gray-700 text-gray-200 px-4 py-2 rounded-xl text-sm font-medium hover:bg-gray-600" id="btnExportJSON">Export JSON</button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 overflow-y-auto custom-scroll">
+                        <table class="w-full text-sm text-left">
+                            <thead class="sticky top-0 bg-gray-800/80 backdrop-blur-sm z-10">
+                                <tr class="text-gray-400 font-semibold border-b border-gray-700">
+                                    <th class="p-4 rounded-tl-xl">
+                                        <input type="checkbox" id="selectAllCheckbox" class="rounded-sm bg-gray-700 border-gray-500 text-purple-600 focus:ring-purple-500">
+                                    </th>
+                                    <th class="p-4">Channel</th>
+                                    <th class="p-4">Subs</th>
+                                    <th class="p-4 rounded-tr-xl">Videos</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultsTbody">
+                                <tr><td colspan="4" class="p-4"><div class="h-4 skeleton rounded-full w-full"></div></td></tr>
+                                <tr><td colspan="4" class="p-4"><div class="h-4 skeleton rounded-full w-4/5"></div></td></tr>
+                                <tr><td colspan="4" class="p-4"><div class="h-4 skeleton rounded-full w-3/4"></div></td></tr>
+                                <tr><td colspan="4" class="p-4"><div class="h-4 skeleton rounded-full w-full"></div></td></tr>
+                                <tr><td colspan="4" class="p-4"><div class="h-4 skeleton rounded-full w-1/2"></div></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </main>
-        
-        <div id="user-footer" class="fixed bottom-0 left-0 right-0 p-4 bg-gray-900/50 backdrop-blur-sm z-50 flex items-center justify-between">
-            <span id="userIdDisplay" class="text-gray-400 text-sm"></span>
-            <span id="userEmail" class="text-gray-400 text-sm"></span>
-        </div>
     </div>
 
-    <!-- Message Box Overlay -->
-    <div id="messageBoxOverlay" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 transition-opacity duration-300 opacity-0 pointer-events-none">
-        <div id="messageBox" class="bg-gray-800 rounded-2xl p-8 max-w-lg text-center flex flex-col gap-6 transform scale-95 transition-transform duration-300">
-            <h4 id="messageTitle" class="text-xl font-semibold text-white"></h4>
-            <p id="messageText" class="text-gray-400"></p>
-            <button class="btn bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg" id="messageBoxOk">OK</button>
+    <!-- Authentication View -->
+    <div id="auth-view" class="h-screen w-screen flex items-center justify-center fade-in" style="display: none;">
+        <div class="glass-panel p-10 flex flex-col gap-6 text-center max-w-lg w-full">
+            <h2 class="text-3xl font-bold text-white">Lead Studio Pro</h2>
+            <p class="text-gray-400">Sign in to find and manage your YouTube channel leads.</p>
+            <input id="authEmail" type="email" placeholder="Email" autocomplete="username" class="bg-white/5 rounded-xl border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors duration-200">
+            <input id="authPass" type="password" placeholder="Password" autocomplete="current-password" class="bg-white/5 rounded-xl border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors duration-200">
+            <div class="flex gap-4">
+                <button class="btn flex-1 bg-purple-600 text-white font-semibold py-3 rounded-xl" id="btnSignIn">Sign In</button>
+                <button class="btn flex-1 bg-gray-700 text-gray-200 font-semibold py-3 rounded-xl hover:bg-gray-600" id="btnSignUp">Sign Up</button>
+            </div>
+            <div id="authStatus" class="text-sm text-red-400"></div>
         </div>
     </div>
     
+    <!-- Message Box Overlay -->
+    <div id="messageBoxOverlay" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 transition-opacity duration-300 opacity-0 pointer-events-none">
+        <div id="messageBox" class="glass-panel p-8 max-w-lg text-center flex flex-col gap-6 transform scale-95 transition-transform duration-300">
+            <h4 id="messageTitle" class="text-xl font-semibold text-white"></h4>
+            <p id="messageText" class="text-gray-400"></p>
+            <button class="btn bg-purple-600 text-white font-semibold py-3 rounded-xl" id="messageBoxOk">OK</button>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDocs, collection, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-functions.js";
-        
-        /* =========================
-           STATE + HELPERS
-           ========================= */
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // =========================
+        // STATE + HELPERS
+        // =========================
         const $ = id => document.getElementById(id);
         const sleep = ms => new Promise(r => setTimeout(r, ms));
         const esc = s => String(s ?? '').replace(/"/g,'""');
+        const clamp = (n,min,max) => Math.max(min, Math.min(max, n));
         
         // Provided by the hosting environment
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -335,6 +268,7 @@
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
         let currentUser = null;
+        let LIB = [];
         
         // Add ripple effect listener to all buttons
         document.querySelectorAll('.btn').forEach(button => {
@@ -348,78 +282,38 @@
                 ripple.style.left = `${x}px`;
                 ripple.style.top = `${y}px`;
                 
-                button.appendChild(ripple);
+                this.appendChild(ripple);
                 
-                // Remove the ripple element after the animation
                 ripple.addEventListener('animationend', () => {
                     ripple.remove();
                 });
             });
         });
-        
-        function setStatus(t){ 
-            $('status').innerText = t; 
-            $('statusLed').classList.remove('status-led-active', 'status-led-error');
-            $('statusPulse').classList.remove('status-led-pulse');
 
-            if (t === 'Idle') {
-                $('statusLed').style.backgroundColor = '#f59e0b';
-            } else if (t.includes('Error')) {
-                $('statusLed').style.backgroundColor = '#ef4444';
-            } else {
-                $('statusLed').style.backgroundColor = '#22c55e';
-                $('statusPulse').classList.add('status-led-pulse');
-            }
-        }
-
-        function setProgress(p){ $('progressBar').style.width = Math.min(100, Math.round(p*100)) + '%'; }
-
-        let LIB = []; // enriched channels
-        let VIEW = []; // filtered/sorted view
-        let lastExport = [];
-        let lastSearch = {};
-        
-        function showMessage(title, message, isHtml=false) {
-            $('messageTitle').innerText = title;
-            if (isHtml) {
-                $('messageText').innerHTML = message;
-            } else {
-                $('messageText').innerText = message;
-            }
-            $('messageBoxOverlay').classList.remove('opacity-0', 'pointer-events-none');
-            $('messageBox').classList.remove('scale-95');
-            $('messageBox').classList.add('scale-100');
-        }
-        $('messageBoxOk').addEventListener('click', () => {
-            $('messageBoxOverlay').classList.add('opacity-0', 'pointer-events-none');
-            $('messageBox').classList.remove('scale-100');
-            $('messageBox').classList.add('scale-95');
-        });
-
-        // === FIREBASE CONFIGURATION ===
+        // =========================
+        // FIREBASE CONFIGURATION
+        // =========================
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const functions = getFunctions(app);
-        const logSearchCallable = httpsCallable(functions, 'logSearch');
         
-        // --- Firestore Paths ---
         const PUBLIC_LIBRARIES_COLLECTION = `artifacts/${appId}/public/data/libraries`;
-
-        /* ========================= AUTHENTICATION ========================= */
+        
+        // Initial authentication check
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
                 $('app-view').style.display = 'flex';
                 $('auth-view').style.display = 'none';
-                $('userEmail').innerText = `Logged in as: ${user.email}`;
-                $('userIdDisplay').innerText = `User ID: ${user.uid}`;
-
-                // Log user usage for tracking purposes
+                $('userEmail').innerText = user.email || user.uid;
+                
+                // Set initials for the avatar
+                const initials = user.email ? user.email.charAt(0).toUpperCase() : user.uid.charAt(0).toUpperCase();
+                $('initials').innerText = initials;
+                
+                // Update Firestore with last login timestamp
                 const userRef = doc(db, `users`, user.uid);
-                await setDoc(userRef, {
-                    lastLogin: new Date().toISOString()
-                }, { merge: true });
+                await setDoc(userRef, { lastLogin: new Date().toISOString() }, { merge: true });
 
             } else {
                 currentUser = null;
@@ -428,7 +322,6 @@
             }
         });
         
-        // Initial anonymous login
         if (initialAuthToken) {
              signInWithCustomToken(auth, initialAuthToken).catch(e => {
                 console.error("Custom token sign-in failed. Attempting anonymous.", e);
@@ -464,13 +357,39 @@
             await signOut(auth);
             resetResults();
         });
+
+        // =========================
+        // UI & MESSAGE BOX
+        // =========================
+        function setStatus(t){ $('status').innerText = t; }
+        function setProgress(p){ $('progressBar').style.width = Math.min(100, Math.round(p*100)) + '%'; }
+
+        function showMessage(title, message, isHtml=false) {
+            $('messageTitle').innerText = title;
+            if (isHtml) {
+                $('messageText').innerHTML = message;
+            } else {
+                $('messageText').innerText = message;
+            }
+            $('messageBoxOverlay').classList.remove('opacity-0', 'pointer-events-none');
+            $('messageBox').classList.remove('scale-95');
+            $('messageBox').classList.add('scale-100');
+        }
+
+        $('messageBoxOk').addEventListener('click', () => {
+            $('messageBoxOverlay').classList.add('opacity-0', 'pointer-events-none');
+            $('messageBox').classList.remove('scale-100');
+            $('messageBox').classList.add('scale-95');
+        });
         
         $('selectAllCheckbox').addEventListener('change', (e) => {
             const isChecked = e.target.checked;
             document.querySelectorAll('.sel').forEach(cb => cb.checked = isChecked);
         });
 
-        /* ========================= SEARCH / FETCH ========================= */
+        // =========================
+        // SEARCH & FETCH LOGIC
+        // =========================
         $('btnSearch').addEventListener('click', () => searchAll(false));
         $('btnDeepSearch').addEventListener('click', () => {
           const queryRaw = $('query').value.trim();
@@ -478,7 +397,6 @@
             showMessage('Search Error', 'Please enter at least one query');
             return;
           }
-          
           if (!currentUser) {
             showMessage('Authentication Required', 'Please sign in first.');
             return;
@@ -492,9 +410,8 @@
             $('messageBox').classList.add('scale-95');
           };
         });
-        
+
         $('btnClear').addEventListener('click', () => { $('query').value=''; resetResults(); });
-        $('query').addEventListener('keydown', e => { if(e.key==='Enter') searchAll(); });
 
         async function searchAll(isDeepSearch = false){
             const queryRaw = $('query').value.trim();
@@ -506,25 +423,13 @@
             if(!currentUser){ showMessage('Authentication Required', 'Please sign in first.'); return; }
             
             resetResults();
-            lastSearch = { queryRaw, queries, perPage, pages };
-            
             setStatus('Searching...');
             const apiKey = $('apiKey').value.trim();
             const order = $('order').value;
             const duration = $('duration').value;
-            const upload = $('upload').value;
-            const region = $('region').value;
-            const definition = $('definition').value;
-            const safe = $('safe').value;
             let totalSteps = queries.length * pages;
             let done = 0;
             let chanIds = new Set();
-            
-            try {
-              await logSearchCallable({ query: queryRaw });
-            } catch (error) {
-              console.error('Failed to log search:', error);
-            }
             
             for(const q of queries){
                 let pageToken = '';
@@ -537,10 +442,7 @@
                     url.searchParams.set('q', q);
                     url.searchParams.set('maxResults', String(perPage));
                     url.searchParams.set('order', order);
-                    if(region) url.searchParams.set('regionCode', region);
                     if(duration) url.searchParams.set('videoDuration', duration);
-                    if(definition) url.searchParams.set('videoDefinition', definition);
-                    if(upload) url.searchParams.set('publishedAfter', getPublishedAfterISO(upload));
                     if(pageToken) url.searchParams.set('pageToken', pageToken);
                     url.searchParams.set('key', apiKey);
                     
@@ -576,10 +478,14 @@
             setStatus(`Found ${chanIds.size} channels – fetching details...`);
             
             const ids = Array.from(chanIds);
+            const minSubs = Number($('minSubs').value||0);
+            const maxSubsRaw = Number($('maxSubs').value||0);
+            const maxSubs = maxSubsRaw > 0 ? maxSubsRaw : Infinity;
+
             for(let i=0;i<ids.length;i+=50){
                 const batch = ids.slice(i,i+50);
                 const chURL = new URL('https://www.googleapis.com/youtube/v3/channels');
-                chURL.searchParams.set('part','snippet,statistics,brandingSettings');
+                chURL.searchParams.set('part','snippet,statistics');
                 chURL.searchParams.set('id', batch.join(','));
                 chURL.searchParams.set('key', apiKey);
                 
@@ -596,28 +502,19 @@
                 const data = await resp.json();
                 
                 (data.items||[]).forEach(ch => {
-                    if(!ch.snippet || !ch.snippet.title) return;
                     const stats = ch.statistics || {};
-                    const title = ch.snippet.title;
+                    const subs = Number(stats.subscriberCount||0);
                     
-                    let country = ch.snippet.country || '';
-                    if(!country && ch.brandingSettings?.channel?.country){
-                        country = ch.brandingSettings.channel.country;
+                    if(subs >= minSubs && subs <= maxSubs) {
+                        LIB.push({
+                            title: ch.snippet.title,
+                            channelId: ch.id,
+                            subs: subs,
+                            views: Number(stats.viewCount||0),
+                            videos: Number(stats.videoCount||0),
+                            avatar: ch.snippet.thumbnails?.high?.url || ''
+                        });
                     }
-                    
-                    LIB.push({
-                        title: title,
-                        description: ch.snippet.description,
-                        channelId: ch.id,
-                        subs: Number(stats.subscriberCount||0),
-                        views: Number(stats.viewCount||0),
-                        videos: Number(stats.videoCount||0),
-                        verified: (ch.snippet.customUrl||'').includes('channel') ? 'No' : 'Yes',
-                        avatar: ch.snippet.thumbnails?.high?.url || ch.snippet.thumbnails?.default?.url || '',
-                        banner: ch.brandingSettings?.image?.bannerExternalUrl || '',
-                        country: country,
-                        createdAt: ch.snippet.publishedAt.split('T')[0]
-                    });
                     
                     done++;
                     setProgress(0.65 + (done/totalSteps * 0.35));
@@ -626,280 +523,68 @@
             }
 
             if(LIB.length===0){
-                setStatus('No channels found');
+                setStatus('No channels found matching filters.');
             } else {
-                applyClientFiltersAndRender();
+                renderResults(LIB);
                 setStatus(`Found ${LIB.length} channels.`);
             }
             setProgress(1);
         }
 
-        function getPublishedAfterISO(timeframe){
-            const d = new Date();
-            if(timeframe==='hour') d.setHours(d.getHours() - 1);
-            if(timeframe==='today') d.setDate(d.getDate() - 1);
-            if(timeframe==='week') d.setDate(d.getDate() - 7);
-            if(timeframe==='month') d.setMonth(d.getMonth() - 1);
-            return d.toISOString();
+        function resetResults(){
+            LIB = [];
+            $('resultsTbody').innerHTML=`
+                <tr><td colspan="4" class="p-4"><div class="h-4 skeleton rounded-full w-full"></div></td></tr>
+                <tr><td colspan="4" class="p-4"><div class="h-4 skeleton rounded-full w-4/5"></div></td></tr>
+                <tr><td colspan="4" class="p-4"><div class="h-4 skeleton rounded-full w-3/4"></div></td></tr>
+                <tr><td colspan="4" class="p-4"><div class="h-4 skeleton rounded-full w-full"></div></td></tr>
+                <tr><td colspan="4" class="p-4"><div class="h-4 skeleton rounded-full w-1/2"></div></td></tr>
+            `; 
+            $('count').innerText='0 channels';
+            setProgress(0);
+            setStatus('Online');
         }
 
-        function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
-
-        function applyClientFiltersAndRender(){
-            const min = Number($('minSubs').value||0);
-            const maxRaw = Number($('maxSubs').value||0);
-            const max = maxRaw>0? maxRaw : Infinity;
-            const needle = $('searchInResults').value.trim().toLowerCase();
-
-            VIEW = LIB.filter(c => {
-                if(c.subs < min) return false;
-                if(c.subs > max) return false;
-                if(needle){
-                    const hit = (c.title?.toLowerCase().includes(needle)) || (c.channelId?.toLowerCase().includes(needle));
-                    if(!hit) return false;
-                }
-                return true;
-            });
-
-            const sort = $('clientSort').value;
-            VIEW.sort((a,b) => {
-                if(sort==='subs-desc') return (b.subs||0) - (a.subs||0);
-                if(sort==='subs-asc') return (a.subs||0) - (b.subs||0);
-                if(sort==='views-desc')return (b.views||0) - (a.views||0);
-                if(sort==='views-asc') return (a.views||0) - (b.views||0);
-                if(sort==='title-asc') return (a.title||'').localeCompare(b.title||'');
-                if(sort==='title-desc')return (b.title||'').localeCompare(a.title||'');
-                return 0;
-            });
-
-            renderResults(VIEW);
-            lastExport = VIEW.slice();
-            $('count').innerText = VIEW.length + ' channels';
-        }
-
-        /* ========================= RENDER RESULTS + DETAILS ========================= */
-        $('clientSort').addEventListener('change', applyClientFiltersAndRender);
-        $('minSubs').addEventListener('input', applyClientFiltersAndRender);
-        $('maxSubs').addEventListener('input', applyClientFiltersAndRender);
-        $('searchInResults').addEventListener('input', applyClientFiltersAndRender);
-
+        // =========================
+        // RENDER RESULTS
+        // =========================
         function renderResults(list){
             const tbody = $('resultsTbody');
             tbody.innerHTML = '';
             if(!list.length){
-                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-500">No channels match your filters.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">No channels match your filters.</td></tr>`;
                 return;
             }
             list.forEach((c, idx) => {
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-white/5 transition-colors duration-200 cursor-pointer border-b border-gray-700 last:border-b-0";
                 tr.innerHTML = `
-                    <td class="p-4 rounded-l-xl"><input type="checkbox" class="sel rounded-sm bg-gray-700 border-gray-500 text-purple-600 focus:ring-purple-500"></td>
+                    <td class="p-4 rounded-l-xl"><input type="checkbox" class="sel rounded-sm bg-gray-700 border-gray-500 text-purple-600 focus:ring-purple-500" data-idx="${idx}"></td>
                     <td class="p-4">
                         <div class="flex items-center gap-3">
-                            <img src="${sanitize(c.avatar)}" class="w-12 h-12 rounded-lg object-cover" alt="">
+                            <img src="${c.avatar}" class="w-12 h-12 rounded-lg object-cover" alt="">
                             <div>
-                                <strong class="text-white">${sanitize(c.title)}</strong>
-                                <span class="block text-xs text-gray-400">${sanitize(c.channelId)}</span>
+                                <strong class="text-white">${c.title}</strong>
+                                <span class="block text-xs text-gray-400">${c.channelId}</span>
                             </div>
                         </div>
                     </td>
-                    <td class="p-4">${c.hidden ? 'Hidden' : (c.subs||0).toLocaleString()}</td>
-                    <td class="p-4">${(c.videos||0).toLocaleString()}</td>
-                    <td class="p-4">${(c.views||0).toLocaleString()}</td>
-                    <td class="p-4 rounded-r-xl">${c.verified}</td>
+                    <td class="p-4">${c.subs.toLocaleString()}</td>
+                    <td class="p-4 rounded-r-xl">${c.videos.toLocaleString()}</td>
                 `;
-                tr.addEventListener('click', e => {
-                    if(e.target.type !== 'checkbox'){
-                        renderDetails(c);
-                    }
-                });
                 tbody.appendChild(tr);
             });
-        }
-        
-        async function renderDetails(c){
-            $('detailTitle').innerText = c.title;
-            const socialLinks = await getSocialLinksFromAboutPage(c.channelId);
-
-            $('detailContent').innerHTML = `
-                <div class="flex flex-col gap-4">
-                    <p class="text-gray-400 text-sm">Channel ID: ${c.channelId} • ${c.country} • Created: ${c.createdAt}</p>
-                    <p class="text-gray-300 leading-relaxed">${sanitize(c.description)}</p>
-                </div>
-                
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
-                        <strong class="text-white text-lg block">${c.subs.toLocaleString()}</strong>
-                        <span class="text-gray-400 text-sm">Subscribers</span>
-                    </div>
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
-                        <strong class="text-white text-lg block">${c.views.toLocaleString()}</strong>
-                        <span class="text-gray-400 text-sm">Total Views</span>
-                    </div>
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
-                        <strong class="text-white text-lg block">${c.videos.toLocaleString()}</strong>
-                        <span class="text-gray-400 text-sm">Total Videos</span>
-                    </div>
-                </div>
-                
-                <h4 class="text-lg font-semibold text-white mt-4">Social Links</h4>
-                <div class="flex flex-wrap gap-2">
-                    ${socialLinks.website?`<a href="${sanitize(socialLinks.website)}" target="_blank" class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-lg transition-colors">Website</a>`:''}
-                    ${socialLinks.twitter?`<a href="${sanitize(socialLinks.twitter)}" target="_blank" class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-lg transition-colors">Twitter</a>`:''}
-                    ${socialLinks.instagram?`<a href="${sanitize(socialLinks.instagram)}" target="_blank" class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-lg transition-colors">Instagram</a>`:''}
-                    ${socialLinks.facebook?`<a href="${sanitize(socialLinks.facebook)}" target="_blank" class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-lg transition-colors">Facebook</a>`:''}
-                    ${socialLinks.tiktok?`<a href="${sanitize(socialLinks.tiktok)}" target="_blank" class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-lg transition-colors">TikTok</a>`:''}
-                    ${socialLinks.linkedin?`<a href="${sanitize(socialLinks.linkedin)}" target="_blank" class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-lg transition-colors">LinkedIn</a>`:''}
-                </div>
-                
-                <h4 class="text-lg font-semibold text-white mt-4">Latest Videos <span class="text-gray-500 text-xs">(up to 6)</span></h4>
-                <div class="grid grid-cols-2 gap-4" id="latestVideos">
-                    <p class="text-gray-400">Loading...</p>
-                </div>
-            `;
-            if(c.banner){
-                $('banner').style.display = 'block';
-                $('banner').style.backgroundImage = `url(${sanitize(c.banner)})`;
-            } else {
-                $('banner').style.display = 'none';
-            }
-            
-            loadLatestVideos(c.channelId);
+            $('count').innerText = `${list.length} channels`;
         }
 
-        /* ========================= UTIL ========================= */
-        function resetResults(){
-            LIB = []; VIEW = []; lastExport = [];
-            $('resultsTbody').innerHTML=`
-                <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-full"></div></td></tr>
-                <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-4/5"></div></td></tr>
-                <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-3/4"></div></td></tr>
-                <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-full"></div></td></tr>
-                <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-1/2"></div></td></tr>
-            `; 
-            $('count').innerText='0 channels';
-            $('detailTitle').innerText = 'Select a channel';
-            $('detailContent').innerHTML = '<p class="text-gray-400">No channel selected. Click a channel from the search results to see details here.</p>';
-            $('banner').style.display='none'; $('banner').style.backgroundImage='none';
-            setProgress(0); setStatus('Idle');
-        }
-
-        function sanitize(s){ try{ return s.replace(/</g,'<'); } catch(e){return '';} }
-
-        async function loadLatestVideos(channelId){
-            const apiKey = $('apiKey').value.trim();
-            const box = $('latestVideos');
-            try{
-                const u = new URL('https://www.googleapis.com/youtube/v3/search');
-                u.searchParams.set('part','snippet');
-                u.searchParams.set('channelId', channelId);
-                u.searchParams.set('order','date');
-                u.searchParams.set('maxResults','6');
-                u.searchParams.set('type','video');
-                u.searchParams.set('key', apiKey);
-                const r = await fetch(u.toString());
-                if(!r.ok){
-                    box.innerHTML = '<p class="text-gray-400">Cannot load videos.</p>';
-                    return;
-                }
-                const data = await r.json();
-                if(!data.items?.length){
-                    box.innerHTML = '<p class="text-gray-400">No recent videos.</p>';
-                    return;
-                }
-                box.innerHTML='';
-                data.items.forEach(it => {
-                    const vid = it.id.videoId;
-                    const thumb = it.snippet.thumbnails?.medium?.url || it.snippet.thumbnails?.default?.url || '';
-                    const title = it.snippet.title || '';
-                    const card = document.createElement('div');
-                    card.className = 'bg-white/5 border border-white/10 rounded-xl p-3';
-                    card.innerHTML = `
-                        <img src="${sanitize(thumb)}" class="w-full h-24 object-cover rounded-lg" alt="">
-                        <h4 class="text-white font-semibold mt-2 text-sm">${sanitize(title)}</h4>
-                        <div class="flex gap-2 mt-2">
-                            <button class="btn flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded-lg text-xs" onclick="window.open('https://www.youtube.com/watch?v=${vid}')">Open</button>
-                            <button class="btn flex-1 bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-2 rounded-lg text-xs" onclick="embed('${vid}')">Preview</button>
-                        </div>
-                    `;
-                    box.appendChild(card);
-                });
-            }catch(e){
-                console.error(e);
-                box.innerHTML = '<p class="text-gray-400">Error loading videos.</p>';
-            }
-        }
-        
-        function embed(videoId){
-            let frame = document.getElementById('previewFrame');
-            if(frame){ frame.remove(); }
-            frame = document.createElement('iframe');
-            frame.id='previewFrame';
-            frame.className = "w-full h-60 rounded-xl mt-4";
-            frame.src=`https://www.youtube.com/embed/${videoId}?autoplay=1`;
-            frame.setAttribute('allow','accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture');
-            $('detailContent').appendChild(frame);
-        }
-        
-        async function copyText(text) {
-            try {
-                await navigator.clipboard.writeText(text);
-            } catch (err) {
-                const textarea = document.createElement('textarea');
-                textarea.value = text;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-            }
-        }
-
-        /* ========================= EXPORTING ========================= */
-        $('btnExportCSV').addEventListener('click', () => {
-            const rows = lastExport;
-            if(!rows.length) return showMessage('Export Failed', 'No results to export');
-            downloadText(toCSV(rows), 'lead_studio_pro.csv', 'text/csv');
-        });
-        $('btnExportJSON').addEventListener('click', () => {
-            const rows = lastExport.map(cToSafe);
-            if(!rows.length) return showMessage('Export Failed', 'No results to export');
-            downloadText(JSON.stringify(rows,null,2), 'lead_studio_pro.json', 'application/json');
-        });
-        $('btnCopyIDs').addEventListener('click', async () => {
-            const rows = lastExport;
-            if(!rows.length) return showMessage('Copy Failed', 'No results to copy');
-            const ids = rows.map(r=>r.channelId).join('\n');
-            await copyText(ids);
-            showMessage('Copy Success', 'Channel IDs copied to clipboard.');
-        });
-        
-        $('btnExportSelected').addEventListener('click', () => {
-            const rows = getSelected();
-            if(!rows.length) return showMessage('Export Failed', 'Select some rows first');
-            downloadText(toCSV(rows), 'lead_studio_pro_selected.csv', 'text/csv');
-        });
-        $('btnCopySelected').addEventListener('click', async () => {
-            const rows = getSelected();
-            if(!rows.length) return showMessage('Copy Failed', 'Select some rows first');
-            const csv = toCSV(rows);
-            await copyText(csv);
-            showMessage('Copy Success', 'Selected CSV copied to clipboard.');
-        });
-        $('btnClearResults').addEventListener('click', () => {
-          resetResults();
-          showMessage('Results Cleared', 'All search results have been cleared.');
-        });
-
-        function getSelected(){
-            return Array.from(document.querySelectorAll('.sel:checked')).map(cb => VIEW[Number(cb.dataset.idx)]).filter(Boolean);
-        }
-
+        // =========================
+        // DATA PERSISTENCE & EXPORT
+        // =========================
         function toCSV(arr){
-            const fields = ['channel','subs','videos','views','verified','channelId','country','createdAt'];
+            const fields = ['title', 'subs', 'videos', 'views', 'channelId'];
             let out = fields.map(f=>`"${f}"`).join(',')+'\n';
             arr.forEach(r => {
-                out += `"${esc(r.title)}","${r.hidden?'Hidden':r.subs}","${r.videos}","${r.views}","${r.verified}","${r.channelId}","${esc(r.country)}","${r.createdAt}"\n`;
+                out += `"${esc(r.title)}",${r.subs},${r.videos},${r.views},"${r.channelId}"\n`;
             });
             return out;
         }
@@ -912,18 +597,15 @@
             link.click();
         }
 
-        function cToSafe(c){
-            return {
-                channelId:c.channelId,
-                title:c.title,
-                subs:c.subs,
-                views:c.views,
-                videos:c.videos,
-                verified:c.verified,
-                country:c.country,
-                createdAt:c.createdAt
-            };
-        }
+        $('btnExportCSV').addEventListener('click', () => {
+            if(!LIB.length) return showMessage('Export Failed', 'No results to export');
+            downloadText(toCSV(LIB), 'channels.csv', 'text/csv');
+        });
+
+        $('btnExportJSON').addEventListener('click', () => {
+            if(!LIB.length) return showMessage('Export Failed', 'No results to export');
+            downloadText(JSON.stringify(LIB, null, 2), 'channels.json', 'application/json');
+        });
 
         $('btnSaveLib').addEventListener('click', async () => {
             if(!LIB.length) return showMessage('Save Failed', 'No channels to save.');
@@ -933,7 +615,7 @@
                     library: LIB,
                     timestamp: new Date().toISOString()
                 }, { merge: true });
-                showMessage('Save Success', `Saved ${LIB.length} channels to your library in Firestore.`);
+                showMessage('Save Success', `Saved ${LIB.length} channels to your library.`);
             } catch(e){
                 console.error(e);
                 showMessage('Save Failed', 'Failed to save library to Firestore. Check console for details.');
@@ -950,46 +632,16 @@
                 
                 if (docSnap.exists() && docSnap.data().library) {
                     LIB = docSnap.data().library;
-                    applyClientFiltersAndRender();
-                    showMessage('Load Success', `Loaded ${LIB.length} channels from your Firestore library.`);
+                    renderResults(LIB);
+                    showMessage('Load Success', `Loaded ${LIB.length} channels from your library.`);
                 } else {
-                    showMessage('Load Failed', 'No saved library found in Firestore.');
+                    showMessage('Load Failed', 'No saved library found.');
                 }
             } catch(e){
                 console.error(e);
                 showMessage('Load Failed', 'Failed to load library from Firestore. Data may be corrupted or permission denied.');
             }
         });
-
-        async function getSocialLinksFromAboutPage(channelId) {
-            const proxyUrl = $('corsProxy').value || '';
-            const aboutUrl = `${proxyUrl}https://www.youtube.com/channel/${channelId}/about`;
-            
-            try {
-                const response = await fetch(aboutUrl);
-                const html = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                
-                const socialLinks = {};
-                const linkElements = doc.querySelectorAll('.yt-formatted-string a');
-                
-                linkElements.forEach(link => {
-                    const url = link.href;
-                    if (url.includes('twitter.com')) socialLinks.twitter = url;
-                    else if (url.includes('instagram.com')) socialLinks.instagram = url;
-                    else if (url.includes('facebook.com')) socialLinks.facebook = url;
-                    else if (url.includes('tiktok.com')) socialLinks.tiktok = url;
-                    else if (url.includes('linkedin.com')) socialLinks.linkedin = url;
-                    else if (!socialLinks.website) socialLinks.website = url;
-                });
-                
-                return socialLinks;
-            } catch (error) {
-                console.error('Failed to retrieve social links:', error);
-                return {};
-            }
-        }
     </script>
 </body>
 </html>
