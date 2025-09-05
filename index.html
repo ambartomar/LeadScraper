@@ -1,855 +1,1176 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Lead Studio Pro — Blue Overhaul</title>
-<meta name="description" content="YouTube channel lead extractor — blue theme, preview, exports, filters." />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Lead Studio Pro — YouTube Channel Finder</title>
 <style>
-/* =======================
-   BLUE THEME — UI OVERHAUL
-   ======================= */
-:root{
-  --bg-0: #041025;
-  --bg-1: #071733;
-  --bg-2: #0b2a45;
-  --glass: rgba(255,255,255,0.03);
-  --glass-2: rgba(255,255,255,0.04);
-  --muted: #9fb7d6;
-  --text: #eaf6ff;
-  --accent: #0ea5ff;      /* cyan-blue */
-  --accent-2: #60a5fa;
-  --ok: #22c55e;
-  --warn: #f59e0b;
-  --danger: #ef4444;
-  --radius: 14px;
-  --radius-sm: 10px;
-  --shadow-lg: 0 30px 60px rgba(2,10,30,0.6);
-  --focus: 0 8px 30px rgba(14,165,255,0.15);
-  --max-width: 1400px;
-  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
-}
+  /* =========================
+     THEME — Apple-ish + Purple
+     ========================= */
+  :root{
+    --bg-0:#07080c;            /* page base */
+    --bg-1:#0b0d14;            /* panels */
+    --bg-2:#0f1320;            /* deeper */
+    --glass: rgba(255,255,255,.06);
+    --glass-2: rgba(255,255,255,.08);
+    --muted:#a6b0c3;
+    --text:#f5f7ff;
+    --accent:#7c3aed;          /* purple */
+    --accent-2:#a78bfa;        /* light purple */
+    --ok:#22c55e;              /* green */
+    --warn:#f59e0b;            /* amber */
+    --danger:#ef4444;
+    --radius:14px;
+    --radius-sm:10px;
+    --shadow: 0 30px 70px rgba(0,0,0,.45);
+  }
 
-/* Reset */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue";
-  margin:0; color:var(--text); background:
-    radial-gradient(800px 500px at 10% -20%, rgba(8,44,64,0.9) 0%, transparent 50%),
-    linear-gradient(180deg, var(--bg-0), var(--bg-1) 40%, var(--bg-2));
-  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-  overflow:hidden;
-}
+  /* Base reset */
+  * { box-sizing:border-box; }
+  html,body { height:100%; }
+  body {
+    margin:0;
+    font-family: ui-sans-serif, -apple-system, system-ui, "Segoe UI", Roboto, Inter, Arial;
+    color: var(--text);
+    background:
+      radial-gradient(1200px 800px at 10% -20%, #24103e 0%, transparent 60%),
+      radial-gradient(1200px 800px at 110% 120%, #1f1440 0%, transparent 60%),
+      linear-gradient(180deg, #080910, #0a0c14 60%, #090b12);
+    overflow:hidden; /* prevent random page scrollbars */
+    overscroll-behavior:none;
+  }
 
-/* Base link */
-a{color:var(--accent-2);text-decoration:none}
-a:hover{text-decoration:underline}
+  a { color: var(--accent-2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
 
-/* App container */
-.app {
-  max-width: var(--max-width);
-  margin: 18px auto;
-  padding: 18px;
-  display:grid;
-  grid-template-rows: auto 1fr;
-  gap: 14px;
-  height: calc(100vh - 36px);
-}
+  /* ===== App shell ===== */
+  .app {
+    max-width: 1350px;
+    margin: 0 auto;
+    padding: 18px;
+    display: grid;
+    gap: 14px;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+  }
 
-/* Topbar */
-.topbar {
-  display:flex; gap:12px; align-items:center;
-  padding: 14px; border-radius: var(--radius);
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border: 1px solid rgba(255,255,255,0.04);
-  box-shadow: var(--shadow-lg);
-}
-.brand { min-width: 240px; display:flex; flex-direction:column; gap:4px; }
-.brand h1{ margin:0; font-size:18px; color:#e9f8ff; }
-.brand p{ margin:0; font-size:12px; color:var(--muted) }
+  /* ===== Topbar ===== */
+  .topbar {
+    display:flex; gap:12px; align-items:center;
+    padding: 14px;
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: var(--radius);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+  }
+  .brand { display:flex; gap:2px; flex-direction:column; min-width: 230px; }
+  .brand h1 { margin:0; font-size:18px; letter-spacing:.2px; color:#e9e8ff; }
+  .brand p { margin:0; color: var(--muted); font-size:12px; }
 
-/* Controls stack */
-.controls { display:flex; gap:10px; align-items:center; width:100%; }
-.input, textarea, select { background:var(--glass); border:1px solid rgba(255,255,255,0.05); color:var(--text); padding:10px 12px; border-radius:var(--radius-sm); outline:none; transition:box-shadow .14s ease, transform .12s ease }
-.textarea { min-height:48px; resize:vertical; }
-.input::placeholder, textarea::placeholder { color:#8ea9c6; }
+  .bar-controls { display:flex; gap:8px; align-items:center; flex:1; }
 
-.input:focus, textarea:focus, select:focus { box-shadow: var(--focus); transform: translateY(-1px); border-color: rgba(14,165,255,0.4) }
+  input[type="text"], input[type="number"], input[type="url"], select, textarea {
+    background: var(--glass);
+    border: 1px solid rgba(255,255,255,.07);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: box-shadow .18s ease, transform .12s ease, border-color .18s ease;
+  }
+  textarea { min-height: 44px; resize: vertical; }
+  input::placeholder, textarea::placeholder { color: #8f9ab2; }
 
-/* Buttons */
-.btn { padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); color:var(--text); font-weight:700; cursor:pointer; transition:transform .12s ease, box-shadow .18s ease; }
-.btn:hover{ transform: translateY(-2px) }
-.btn-primary { background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-color:transparent; color:#00202b; box-shadow: 0 12px 30px rgba(14,165,255,0.18) }
-.btn-ghost { background: transparent; border:1px solid rgba(255,255,255,0.04) }
-.kbd { background: rgba(0,0,0,0.2); padding:6px 8px; border-radius:8px; font-family:var(--mono); font-size:12px }
+  input:focus, select:focus, textarea:focus {
+    box-shadow: 0 10px 26px rgba(124,58,237,.18);
+    border-color: rgba(124,58,237,.35);
+    transform: translateY(-1px);
+  }
 
-/* Layout main grid */
-.main {
-  display:grid;
-  grid-template-columns: 360px 1fr 460px;
-  gap: 14px;
-  min-height:0;
-}
+  .btn {
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255,255,255,.08);
+    background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
+    color: var(--text);
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn-primary {
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    border-color: transparent;
+    color:#0b0d14;
+    box-shadow: 0 12px 28px rgba(124,58,237,.25);
+  }
+  .btn-danger {
+    background: linear-gradient(90deg, #d83a56, #ef4444);
+    border-color: transparent;
+  }
+  
+  /* =========================
+     CUSTOM BUTTON ALIGNMENT
+     ========================= */
+  .button-group {
+      display: flex;
+      gap: 8px;
+  }
+  .button-group .btn {
+      flex: 1;
+      text-align: center;
+  }
 
-/* Panel base */
-.panel {
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border-radius: var(--radius); border:1px solid rgba(255,255,255,0.04);
-  padding:14px; box-shadow: var(--shadow-lg); min-height:0; overflow:hidden;
-}
+  /* ===== Main layout (3 columns) ===== */
+  .main {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: 350px 1fr 420px;
+    grid-template-rows: 1fr;
+    min-height: 0; /* enable child overflow scrolling */
+  }
 
-/* Accordion */
-.accordion { display:flex; flex-direction:column; gap:10px; }
-.acc { border-radius:12px; border:1px solid rgba(255,255,255,0.04); overflow:hidden; background: rgba(0,0,0,0.02) }
-.acc-head { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; cursor:pointer; background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00)); }
-.acc-body { max-height:0; overflow:hidden; transition: max-height .28s ease, padding .18s ease; padding:0 12px; }
-.acc.open .acc-body { max-height:520px; padding:12px; }
-.acc.open .acc-head { background: rgba(14,165,255,0.06); }
+  .panel {
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: var(--radius);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+    padding: 14px;
+    min-height: 0; /* important for overflow children */
+    overflow: hidden; /* contain */
+  }
 
-/* Filters */
-.filters { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
-.filters .full { grid-column: 1 / -1; }
-.small { font-size:13px; color:var(--muted) }
+  /* Filters panel (left) */
+  .filters { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
+  .filters .full { grid-column: 1/-1; }
+  .filters small { color: var(--muted); }
+  .switch { display:flex; gap:8px; align-items:center; }
+  .row { display:flex; gap:8px; align-items:center; flex-wrap: wrap; }
 
-/* Results */
-.results-wrap { display:flex; flex-direction:column; gap:10px; height:100%; min-height:0; }
-.toolbar { display:flex; justify-content:space-between; gap:10px; align-items:center; flex-wrap:wrap }
-.toolbar .left, .toolbar .right { display:flex; gap:8px; align-items:center; flex-wrap:wrap }
+  /* Results panel (center) */
+  .results-wrap {
+    height: 100%;
+    display:grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 10px;
+    min-height:0;
+  }
+  .results-toolbar { display:flex; gap:8px; align-items:center; justify-content:space-between; }
+  .results-toolbar .left { display:flex; gap:8px; align-items:center; }
+  .results-toolbar .right{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
 
-/* Table */
-.table-wrap { overflow:auto; border-radius:12px; border:1px solid rgba(255,255,255,0.04); min-height:0; }
-table { width:100%; border-collapse:collapse; background:transparent; min-width:900px; }
-thead th { position:sticky; top:0; background: rgba(6,22,36,0.6); color:var(--muted); padding:12px; font-weight:700; font-size:13px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.04); }
-tbody td { padding:12px; border-bottom:1px solid rgba(255,255,255,0.03); vertical-align:middle; font-size:14px; }
-tbody tr:hover { background: rgba(14,165,255,0.06); transform: translateY(-2px); cursor:pointer; transition: all .12s ease; }
-.avatar { width:48px; height:48px; border-radius:12px; object-fit:cover; margin-right:12px }
+  .progress {
+    width:180px; height:9px; border-radius: 999px;
+    background: rgba(255,255,255,.07);
+    overflow:hidden;
+  }
+  .progress > i {
+    display:block; height:100%; width:0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width .25s ease;
+  }
 
-/* Details */
-.details { display:grid; grid-template-rows:auto auto 1fr auto; gap:10px; min-height:0; overflow:auto; }
-.banner { height:140px; border-radius:12px; background-size:cover; background-position:center; border:1px solid rgba(255,255,255,0.04); }
-.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-.stat { background: rgba(255,255,255,0.03); padding:12px; border-radius:12px; text-align:center; border:1px solid rgba(255,255,255,0.04) }
-.stat b { display:block; font-size:16px; color:#e9f7ff; }
+  .table-wrap {
+    overflow:auto;
+    border-radius: calc(var(--radius) - 6px);
+    border: 1px solid rgba(255,255,255,.06);
+  }
+  table {
+    width:100%;
+    border-collapse: collapse;
+    background: transparent;
+  }
+  thead th {
+    position: sticky; top: 0; backdrop-filter: blur(10px);
+    background: rgba(16,18,30,.6);
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 13px;
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  tbody td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    vertical-align: middle;
+    font-size: 14px;
+  }
+  tbody tr {
+    transition: background .18s ease, transform .14s ease;
+  }
+  tbody tr:hover {
+    background: rgba(124,58,237,.12);
+    transform: translateY(-1px);
+    cursor: pointer;
+  }
+  .avatar { width:42px; height:42px; border-radius: 12px; object-fit: cover; margin-right:10px; }
 
-/* Video cards */
-.videos-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px }
-.video-card { background: rgba(255,255,255,0.02); border-radius:10px; padding:8px; border:1px solid rgba(255,255,255,0.03) }
-.video-card img{ width:100%; height:110px; object-fit:cover; border-radius:8px }
-.video-card h4{ margin:8px 0 4px; font-size:13px }
+  /* Details panel (right) */
+  .details {
+    height: 100%;
+    display:grid;
+    grid-template-rows: auto auto 1fr;
+    gap:10px; min-height:0;
+  }
+  .banner {
+    height: 120px; border-radius: 12px; background-size: cover; background-position: center;
+    border:1px solid rgba(255,255,255,.06);
+  }
+  .about { overflow:auto; }
+  .meta { color: var(--muted); font-size: 13px; }
+  .stats { display:grid; grid-template-columns: repeat(3,1fr); gap:10px; }
+  .stat {
+    text-align:center; padding:10px; border-radius:12px; background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.08);
+  }
+  .stat b { display:block; font-size: 16px; color: #eef; }
 
-/* Social chips */
-.socials { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px }
-.chip { padding:6px 10px; border-radius:999px; background: linear-gradient(90deg, rgba(14,165,255,0.08), rgba(96,165,250,0.04)); border:1px solid rgba(14,165,255,0.08); color:var(--text); cursor:pointer; font-size:13px }
+  .videos-grid { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+  .video-card { background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:8px; }
+  .video-card img { width:100%; height:110px; object-fit:cover; border-radius:10px; }
+  .video-card h4 { font-size: 13px; margin:8px 0 4px; }
 
-/* Select custom UI */
-.select-wrap { position:relative; }
-.select-wrap select { padding-right:36px }
-.select-wrap .caret { position:absolute; right:12px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--muted) }
+  /* Custom selects + scrollbar (subtle) */
+  select {
+    appearance: none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, #cfd6ea 50%),
+      linear-gradient(135deg, #cfd6ea 50%, transparent 50%),
+      linear-gradient(to right, transparent, transparent);
+    background-position:
+      calc(100% - 18px) calc(50% - 3px),
+      calc(100% - 12px) calc(50% - 3px),
+      calc(100% - 2.5em) 0.5em;
+    background-size: 6px 6px, 6px 6px, 1px 1.8em;
+    background-repeat: no-repeat;
+  }
 
-/* Scrollbar */
-::-webkit-scrollbar { width:10px; height:10px }
-::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--accent), var(--accent-2)); border-radius:999px; border:3px solid rgba(0,0,0,0.25) }
-::-webkit-scrollbar-track { background:transparent }
+  ::-webkit-scrollbar { width: 10px; height:10px; }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--accent), var(--accent-2));
+    border-radius: 999px;
+    border: 3px solid rgba(0,0,0,.25);
+  }
+  ::-webkit-scrollbar-track { background: transparent; }
 
-/* Footer small */
-.footer { display:flex; justify-content:space-between; align-items:center; padding-top:6px; border-top:1px dashed rgba(255,255,255,0.04); color:var(--muted); font-size:13px }
+  /* Responsive */
+  @media (max-width: 1200px){
+    .main { grid-template-columns: 1fr; grid-template-rows: 420px 1fr 520px; }
+    .details { grid-template-rows: auto 1fr 1fr; }
+  }
+  
+  /* Additional styles for authentication and admin controls */
+  .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 320px;
+      margin: 10vh auto;
+      padding: 24px;
+      background: var(--bg-1);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+  }
+  .auth-form h2 {
+      text-align: center;
+      margin-bottom: 12px;
+      font-size: 24px;
+  }
+  .auth-form input {
+      width: 100%;
+  }
+  .auth-form button {
+      width: 100%;
+  }
+  .user-info {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+  }
+  
+  /* Message Box Styling */
+  .message-box-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+  }
+  .message-box {
+      background: var(--bg-1);
+      padding: 24px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      max-width: 400px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+  }
 
-/* Responsive */
-@media (max-width:1200px) { .main { grid-template-columns:1fr; grid-template-rows:420px 1fr 520px } .video-card img{ height:90px } }
+  /* =========================
+     CUSTOM CHECKBOX
+     ========================= */
+  .switch input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .switch {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    cursor: pointer;
+  }
+  .switch-visual {
+    width: 28px;
+    height: 16px;
+    background: rgba(255, 255, 255, .1);
+    border-radius: 999px;
+    position: relative;
+    transition: background .2s ease;
+  }
+  .switch-visual::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--text);
+    border-radius: 50%;
+    transition: transform .2s ease;
+  }
+  .switch input[type="checkbox"]:checked + .switch-visual {
+    background: var(--accent);
+  }
+  .switch input[type="checkbox"]:checked + .switch-visual::before {
+    transform: translateX(12px);
+    background-color: #fff;
+  }
+  .switch input[type="checkbox"]:focus + .switch-visual {
+    box-shadow: 0 0 0 2px rgba(124, 58, 237, .5);
+  }
+
+  /* =========================
+     CUSTOM SELECT
+     ========================= */
+  select {
+      appearance: none;
+      background: var(--glass);
+      border: 1px solid rgba(255,255,255,.07);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: box-shadow .18s ease, transform .12s ease, border-color .18s ease;
+      cursor: pointer;
+      background-image:
+          linear-gradient(45deg, transparent 50%, #cfd6ea 50%),
+          linear-gradient(135deg, #cfd6ea 50%, transparent 50%);
+      background-position:
+          calc(100% - 18px) calc(50% + 1px),
+          calc(100% - 12px) calc(50% + 1px);
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+  }
+
+  select:hover {
+    border-color: rgba(124,58,237,.35);
+    box-shadow: 0 4px 12px rgba(124,58,237,.12);
+    transform: translateY(-1px);
+  }
 </style>
 </head>
 <body>
-  <div class="app">
-
-    <!-- TOPBAR -->
-    <div class="topbar">
-      <div class="brand">
-        <h1>Lead Studio Pro</h1>
-        <p>Blue Overhaul — preserves functions, preview fixed</p>
-      </div>
-
-      <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
-        <div class="controls" role="search" aria-label="Search area">
-          <input id="apiKey" class="input" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA" />
-          <textarea id="query" class="textarea input" placeholder="Enter queries (comma or newline separated)"></textarea>
-          <button id="btnSearch" class="btn btn-primary">Search</button>
-          <button id="btnClear" class="btn btn-ghost">Clear</button>
-        </div>
-
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div id="quickSocials" class="socials" aria-live="polite">
-            <!-- quick social chips auto-populated when a channel is selected -->
-            <div class="chip" style="opacity:.7">Select a channel to see socials</div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <div class="small">Hotkeys: <span class="kbd">Ctrl/Cmd+Enter</span></div>
-            <div class="small" id="status" style="margin-left:12px">Ready</div>
-          </div>
-        </div>
-      </div>
+    <div id="auth-view" class="auth-form">
+        <h2>Welcome to Lead Studio Pro</h2>
+        <input id="authEmail" type="email" placeholder="Email" autocomplete="username">
+        <input id="authPass" type="password" placeholder="Password" autocomplete="current-password">
+        <button class="btn btn-primary" id="btnSignIn">Sign In</button>
+        <button class="btn" id="btnSignUp">Sign Up</button>
+        <div id="authStatus" class="meta" style="text-align: center;"></div>
     </div>
 
-    <!-- MAIN GRID -->
-    <div class="main">
-
-      <!-- FILTERS (left) -->
-      <div class="panel" aria-label="Filters panel">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <div class="small">Filters</div>
-          <div class="small" id="count">0 channels</div>
-        </div>
-
-        <div class="accordion">
-          <div class="acc open">
-            <div class="acc-head"><h4>Basic</h4><span class="small">Toggle</span></div>
-            <div class="acc-body">
-              <div class="filters">
-                <div class="select-wrap">
-                  <select id="order" class="input">
-                    <option value="relevance">Order: Relevance</option>
-                    <option value="date">Order: Date</option>
-                    <option value="viewCount">Order: Views</option>
-                    <option value="rating">Order: Rating</option>
-                  </select>
-                  <div class="caret">▾</div>
-                </div>
-
-                <div class="select-wrap">
-                  <select id="duration" class="input"><option value="">Duration: Any</option><option value="short">Short</option><option value="medium">Medium</option><option value="long">Long</option></select>
-                  <div class="caret">▾</div>
-                </div>
-
-                <div class="select-wrap">
-                  <select id="upload" class="input"><option value="">Upload: Any</option><option value="hour">Last hour</option><option value="today">Today</option><option value="week">This week</option><option value="month">This month</option></select>
-                  <div class="caret">▾</div>
-                </div>
-
-                <div class="select-wrap">
-                  <select id="region" class="input"><option value="">Region: Any</option><option value="US">US</option><option value="IN">IN</option><option value="GB">GB</option><option value="CA">CA</option><option value="AU">AU</option><option value="DE">DE</option></select>
-                  <div class="caret">▾</div>
-                </div>
-
-                <div class="select-wrap">
-                  <select id="definition" class="input"><option value="">Definition: Any</option><option value="high">HD</option><option value="standard">SD</option></select>
-                  <div class="caret">▾</div>
-                </div>
-
-                <div class="select-wrap">
-                  <select id="safe" class="input"><option value="">Safe: Any</option><option value="none">None</option><option value="moderate">Moderate</option><option value="strict">Strict</option></select>
-                  <div class="caret">▾</div>
-                </div>
-
-                <input id="perPage" class="input full" type="number" min="1" max="50" value="25" placeholder="Results per page"/>
-                <input id="pages" class="input full" type="number" min="1" max="10" value="2" placeholder="Pages per query"/>
-              </div>
+    <div id="app-view" class="app" style="display:none">
+        <div class="topbar">
+            <div class="brand">
+                <h1>Lead Studio Pro</h1>
+                <p>Apple-grade UI • Advanced YouTube lead extractor</p>
             </div>
-          </div>
-
-          <div class="acc">
-            <div class="acc-head"><h4>Advanced</h4><span class="small">Toggle</span></div>
-            <div class="acc-body">
-              <div style="padding:8px">
-                <div style="display:flex;gap:8px;margin-bottom:8px">
-                  <input id="minSubs" class="input" type="number" placeholder="Min subs"/>
-                  <input id="maxSubs" class="input" type="number" placeholder="Max subs"/>
+            <div class="bar-controls">
+                <input id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA"/>
+                <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)"></textarea>
+                <div class="button-group" style="margin-left:auto;">
+                  <button class="btn btn-primary" id="btnSearch">Search</button>
+                  <button class="btn btn-primary" id="btnDeepSearch" style="background: linear-gradient(90deg, #d946ef, #a855f7);">Deep Search</button>
+                  <button class="btn" id="btnClear">Clear</button>
                 </div>
-
-                <input id="searchInResults" class="input" type="text" placeholder="Search inside results (title / ID)"/>
-                <div style="display:flex;gap:8px;margin-top:8px">
-                  <input id="corsProxy" class="input" type="url" placeholder="Optional CORS proxy (verification)"/>
-                  <label style="display:flex;align-items:center;gap:8px;color:var(--muted)"><input id="doVerify" type="checkbox"/> Attempt verify</label>
-                </div>
-
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px">
-                  <div style="flex:1;margin-right:8px"><div class="progress" style="height:10px;border-radius:999px;background:rgba(255,255,255,0.03);overflow:hidden"><i id="progressBar" style="display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .25s ease"></i></div></div>
-                  <div class="small" id="progressText">0%</div>
-                </div>
-
-              </div>
             </div>
-          </div>
         </div>
-      </div>
 
-      <!-- RESULTS (center) -->
-      <div class="panel results-wrap">
-        <div class="toolbar">
-          <div class="left">
-            <button id="btnSelectAll" class="btn">Select All</button>
-            <button id="btnDeselectAll" class="btn">Deselect</button>
-            <button id="btnSaveLib" class="btn">Save Library</button>
-            <button id="btnLoadLib" class="btn">Load Library</button>
-          </div>
-          <div class="right">
-            <div class="select-wrap">
-              <select id="clientSort" class="input"><option value="subs-desc">Sort: Subs ↓</option><option value="subs-asc">Sort: Subs ↑</option><option value="views-desc">Sort: Views ↓</option><option value="views-asc">Sort: Views ↑</option><option value="title-asc">Title A→Z</option><option value="title-desc">Title Z→A</option></select>
-              <div class="caret">▾</div>
+        <div class="main">
+            <div class="panel">
+                <div class="row" style="justify-content:space-between;margin-bottom:8px">
+                    <div class="meta">Advanced Filters</div>
+                    <div class="meta" id="status">Idle</div>
+                </div>
+                <div class="filters">
+                    <select id="order"><option value="relevance">Order: Relevance</option><option value="date">Order: Date</option><option value="viewCount">Order: Views</option><option value="rating">Order: Rating</option></select>
+                    <select id="duration"><option value="">Duration: Any</option><option value="short">Short (<4m)</option><option value="medium">Medium (4–20m)</option><option value="long">Long (>20m)</option></select>
+                    <select id="upload"><option value="">Upload Time: Any</option><option value="hour">Last hour</option><option value="today">Today</option><option value="week">This week</option><option value="month">This month</option></select>
+                    <select id="region"><option value="">Region: Any</option><option>US</option><option>IN</option><option>GB</option><option>CA</option><option>AU</option><option>DE</option></select>
+                    <select id="definition"><option value="">Definition: Any</option><option value="high">HD</option><option value="standard">SD</option></select>
+                    <select id="safe"><option value="">Safe: Any</option><option value="none">None</option><option value="moderate">Moderate</option><option value="strict">Strict</option></select>
+
+                    <input id="perPage" class="full" type="number" min="1" max="50" value="25" placeholder="Results per page (1–50)"/>
+                    <input id="pages" class="full" type="number" min="1" max="10" value="2" placeholder="Pages per query (1–10)"/>
+
+                    <div class="full row">
+                        <input id="minSubs" type="number" placeholder="Min subs"/>
+                        <input id="maxSubs" type="number" placeholder="Max subs"/>
+                        <input id="searchInResults" type="text" placeholder="Search within results (title / ID)"/>
+                    </div>
+
+                    <div class="full row">
+                        <input id="corsProxy" type="url" placeholder="Optional CORS proxy for verification (best-effort)"/>
+                        <label class="switch">
+                            <input id="doVerify" type="checkbox"/>
+                            <span class="switch-visual"></span>
+                            <small>Attempt verify check</small>
+                        </label>
+                    </div>
+
+                    <div class="full row" style="justify-content:space-between;margin-top:2px">
+                        <div class="progress"><i id="progressBar"></i></div>
+                        <small id="count">0 channels</small>
+                    </div>
+                </div>
             </div>
-            <button id="btnExportCSV" class="btn btn-primary">Export CSV</button>
-            <button id="btnExportJSON" class="btn">Export JSON</button>
-            <button id="btnCopyIDs" class="btn">Copy IDs</button>
-            <button id="btnClearResults" class="btn btn-ghost">Clear</button>
-          </div>
-        </div>
 
-        <div class="table-wrap" id="resultsScroller" style="margin-top:8px">
-          <table aria-label="Channel results">
-            <thead>
-              <tr>
-                <th style="width:48px"></th>
-                <th>Channel</th>
-                <th>Subs</th>
-                <th>Videos</th>
-                <th>Views</th>
-                <th>Verified</th>
-              </tr>
-            </thead>
-            <tbody id="resultsTbody"><tr><td colspan="6" class="small" style="padding:18px">No results yet — run a search</td></tr></tbody>
-          </table>
-        </div>
+            <div class="panel results-wrap">
+                <div class="results-toolbar">
+                    <div class="left button-group">
+                        <button class="btn" id="btnSelectAll">Select All</button>
+                        <button class="btn" id="btnDeselectAll">Deselect</button>
+                        <button class="btn" id="btnSaveLib">Save Library</button>
+                        <button class="btn" id="btnLoadLib">Load Library</button>
+                    </div>
+                    <div class="right button-group">
+                        <select id="clientSort">
+                            <option value="subs-desc">Sort: Subs ↓</option>
+                            <option value="subs-asc">Sort: Subs ↑</option>
+                            <option value="views-desc">Sort: Views ↓</option>
+                            <option value="views-asc">Sort: Views ↑</option>
+                            <option value="title-asc">Sort: Title A→Z</option>
+                            <option value="title-desc">Sort: Title Z→A</option>
+                        </select>
+                        <button class="btn btn-primary" id="btnExportCSV">Export CSV</button>
+                        <button class="btn" id="btnExportJSON">Export JSON</button>
+                        <button class="btn" id="btnCopyIDs">Copy Channel IDs</button>
+                        <button class="btn btn-danger" id="btnClearResults">Clear</button>
+                    </div>
+                </div>
 
-        <div style="display:flex;justify-content:flex-end;margin-top:8px">
-          <div class="small">Tip: Click a row to open full details in the right panel.</div>
-        </div>
-      </div>
+                <div class="table-wrap" id="resultsScroller">
+                    <table aria-label="Channel results">
+                        <thead>
+                            <tr>
+                                <th style="width:42px"></th>
+                                <th>Channel</th>
+                                <th>Subs</th>
+                                <th>Videos</th>
+                                <th>Views</th>
+                                <th>Verified</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTbody"></tbody>
+                    </table>
+                </div>
 
-      <!-- DETAILS (right) -->
-      <div class="panel details">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div>
-            <div class="small">Channel Details</div>
-            <h3 id="detailTitle" style="margin:6px 0 0">Select a channel</h3>
-          </div>
-          <div style="display:flex;gap:8px">
-            <button id="btnExportSelected" class="btn">Export Selected</button>
-            <button id="btnCopySelected" class="btn">Copy Selected CSV</button>
-          </div>
-        </div>
+                <div class="row" style="justify-content:flex-end">
+                    <small class="meta">Tip: Click a row to open full details in the panel on the right.</small>
+                </div>
+            </div>
 
-        <div id="banner" class="banner" style="display:none"></div>
-
-        <div class="about" id="detailContent">
-          <div class="small">No channel selected.</div>
+            <div class="panel details">
+                <div>
+                    <div class="row" style="justify-content:space-between">
+                        <div>
+                            <div class="meta">Channel Details</div>
+                            <h3 id="detailTitle" style="margin:6px 0 0">Select a channel</h3>
+                        </div>
+                        <div class="row button-group">
+                            <button class="btn" id="btnExportSelected">Export Selected</button>
+                            <button class="btn" id="btnCopySelected">Copy Selected CSV</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="banner" class="banner" style="display:none"></div>
+                <div class="about" id="detailContent">
+                    <div class="meta">No channel selected.</div>
+                </div>
+                <div class="meta">
+                    <div class="row" style="justify-content:space-between;align-items:flex-end">
+                        <div class="user-info">
+                            <div id="userEmail"></div>
+                        </div>
+                        <button class="btn" id="btnSignOut">Sign Out</button>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="footer">
-          <div>Hotkeys: <span class="kbd">Ctrl/Cmd + Enter</span> · <span class="kbd">/</span> focus query</div>
-          <div class="small" id="footerInfo">Ready</div>
-        </div>
-      </div>
     </div>
-  </div>
+    
+    <div id="messageBoxOverlay" class="message-box-overlay">
+        <div id="messageBox" class="message-box">
+            <h4 id="messageTitle"></h4>
+            <p id="messageText"></p>
+            <button class="btn btn-primary" id="messageBoxOk">OK</button>
+        </div>
+    </div>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-functions.js";
+        
+        /* =========================
+           STATE + HELPERS
+           ========================= */
+        const $ = id => document.getElementById(id);
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
+        const esc = s => String(s ?? '').replace(/"/g,'""');
 
-<script>
-/* =========================
-   CORE LOGIC — preserved and extended
-   - All original functions are kept; only UI additions and fixes added.
-   - Preview embed fixed via embed(videoId).
-   - Social extraction uses safe regex. No regex flags.
-   ========================= */
+        const savedLibraryKey = 'lead_studio_pro_lib_v1';
+        let currentUser = null;
+        
+        function setStatus(t){ $('status').innerText = t; }
+        function setProgress(p){ $('progressBar').style.width = Math.min(100, Math.round(p*100)) + '%'; }
 
-const $ = id => document.getElementById(id);
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-const esc = s => String(s ?? '').replace(/"/g,'""');
-const savedLibraryKey = 'lead_studio_pro_lib_v1';
+        let LIB = []; // enriched channels
+        let VIEW = []; // filtered/sorted view
+        let lastExport = [];
+        let lastSearch = {};
+        
+        // Custom message box to replace alert()
+        function showMessage(title, message) {
+            $('messageTitle').innerText = title;
+            $('messageText').innerText = message;
+            
+            const messageBox = $('messageBox');
+            // Remove any existing dynamic buttons
+            const dynamicButtons = messageBox.querySelectorAll('.btn:not(#messageBoxOk)');
+            dynamicButtons.forEach(btn => btn.remove());
+            $('messageBoxOk').style.display = 'block';
 
-function setStatus(t){ if($('status')) $('status').innerText = t; if($('footerInfo')) $('footerInfo').innerText = t; }
-function setProgress(p){
-  const pct = Math.round(Math.min(1, Math.max(0, p)) * 100);
-  if($('progressBar')) $('progressBar').style.width = pct + '%';
-  if($('progressText')) $('progressText').innerText = pct + '%';
-}
+            $('messageBoxOverlay').style.display = 'flex';
+        }
+        $('messageBoxOk').addEventListener('click', () => {
+            $('messageBoxOverlay').style.display = 'none';
+        });
 
-let LIB = []; let VIEW = []; let lastExport = []; let lastSearch = {};
+        // === FIREBASE CONFIGURATION ===
+        const firebaseConfig = {
+          apiKey: "AIzaSyBvU3_Njbi1JQr_wD1a16h5coTW2ifaRDU",
+          authDomain: "youleadmax.firebaseapp.com",
+          projectId: "youleadmax",
+          storageBucket: "youleadmax.firebasestorage.app",
+          messagingSenderId: "710806971072",
+          appId: "1:710806971072:web:ced903befe8693f886c325",
+          measurementId: "G-JW9W20C1LQ"
+        };
 
-// ---- Utilities
-function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
-function sanitize(s){ try{ return (s||'').toString().replace(/"/g,'&quot;'); }catch(e){return ''} }
-function jsonInline(obj){ try{ return JSON.stringify(obj).replace(/</g,'\\u003c'); } catch(e){ return '{}'; } }
-function safeForAttr(s){ return String(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
-function deb(fn,ms){ let t; return function(){ clearTimeout(t); const args=arguments; t=setTimeout(()=>fn.apply(null,args), ms); } }
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const functions = getFunctions(app);
+        const logSearchCallable = httpsCallable(functions, 'logSearch');
 
-// ---- Keyboard shortcuts
-window.addEventListener('keydown', (e) => {
-  if(e.key === '/' && !e.ctrlKey && !e.metaKey) { e.preventDefault(); $('query').focus(); }
-  if(e.key === 'Escape') { clearDetails(); }
-});
+        /* ========================= AUTHENTICATION ========================= */
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                $('app-view').style.display = 'grid';
+                $('auth-view').style.display = 'none';
+                $('userEmail').innerText = `Logged in as: ${user.email}`;
 
-// ---- Accordion toggles for UI
-document.querySelectorAll('.acc-head').forEach(head => {
-  head.addEventListener('click', ()=> {
-    const item = head.parentElement;
-    item.classList.toggle('open');
-  });
-  head.addEventListener('keydown', e => { if(e.key==='Enter' || e.key===' ') { e.preventDefault(); head.click(); } });
-});
+                // Log user usage for tracking purposes
+                const userRef = doc(db, 'users', user.uid);
+                await setDoc(userRef, {
+                    lastLogin: new Date().toISOString()
+                }, { merge: true });
 
-// ---- Search flow (based on your working code)
-$('btnSearch').addEventListener('click', searchAll);
-$('btnClear').addEventListener('click', ()=>{ $('query').value=''; resetResults(); });
-$('query').addEventListener('keydown', e => { if(e.key === 'Enter' && (e.ctrlKey || e.metaKey)) searchAll(); });
+            } else {
+                currentUser = null;
+                $('app-view').style.display = 'none';
+                $('auth-view').style.display = 'flex';
+            }
+        });
 
-function getPublishedAfterISO(choice){
-  const d = new Date();
-  if(choice==='hour') d.setHours(d.getHours()-1);
-  else if(choice==='today') d.setHours(0,0,0,0);
-  else if(choice==='week') d.setDate(d.getDate()-7);
-  else if(choice==='month') d.setMonth(d.getMonth()-1);
-  return d.toISOString();
-}
+        $('btnSignIn').addEventListener('click', async () => {
+            const email = $('authEmail').value;
+            const pass = $('authPass').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (error) {
+                $('authStatus').innerText = 'Sign-in failed: ' + error.message;
+            }
+        });
 
-// Helper: endsWithWord (no lookbehind)
-function endsWithWord(text, word){
-  const idx = text.lastIndexOf(word);
-  if(idx === -1) return false;
-  if(idx + word.length !== text.length) return false;
-  if(idx === 0) return true;
-  const prev = text.charAt(idx-1);
-  return !(/[A-Za-z0-9_]/.test(prev));
-}
+        $('btnSignUp').addEventListener('click', async () => {
+            const email = $('authEmail').value;
+            const pass = $('authPass').value;
+            try {
+                await createUserWithEmailAndPassword(auth, email, pass);
+            } catch (error) {
+                $('authStatus').innerText = 'Sign-up failed: ' + error.message;
+            }
+        });
 
-function indexOfAny(hay, arr){ for(let i=0;i<arr.length;i++){ if(hay.indexOf(arr[i])>-1) return i; } return -1; }
+        $('btnSignOut').addEventListener('click', async () => {
+            await signOut(auth);
+            resetResults();
+        });
 
-async function searchAll(){
-  try{
-    const apiKey = $('apiKey').value.trim();
-    if(!apiKey) { alert('Enter your YouTube API key'); return; }
-    const raw = $('query').value.trim();
-    if(!raw) { alert('Enter at least one query'); return; }
-    const queries = raw.split(/[\n,]/).map(s=>s.trim()).filter(Boolean);
-    if(!queries.length) { alert('No valid queries'); return; }
+        /* ========================= SEARCH / FETCH ========================= */
+        $('btnSearch').addEventListener('click', () => searchAll(false));
+        $('btnDeepSearch').addEventListener('click', () => {
+          const queryRaw = $('query').value.trim();
+          if (!queryRaw.length) {
+            showMessage('Search Error', 'Please enter at least one query');
+            return;
+          }
+          
+          if (!currentUser) {
+            showMessage('Authentication Required', 'Please sign in first.');
+            return;
+          }
+          
+          // Display a confirmation message box
+          $('messageTitle').innerText = 'Deep Search Confirmation';
+          $('messageText').innerText = 'Deep Search will consume more API credits by searching more pages. Do you want to continue?';
+          
+          const messageBox = $('messageBox');
+          const oldOkBtn = $('messageBoxOk');
+          
+          const confirmButton = document.createElement('button');
+          confirmButton.className = 'btn btn-primary';
+          confirmButton.innerText = 'Yes, Continue';
+          confirmButton.addEventListener('click', () => {
+            $('messageBoxOverlay').style.display = 'none';
+            searchAll(true);
+          });
+          
+          const cancelButton = document.createElement('button');
+          cancelButton.className = 'btn';
+          cancelButton.innerText = 'Cancel';
+          cancelButton.addEventListener('click', () => {
+            $('messageBoxOverlay').style.display = 'none';
+          });
+          
+          oldOkBtn.style.display = 'none';
+          messageBox.appendChild(confirmButton);
+          messageBox.appendChild(cancelButton);
+          $('messageBoxOverlay').style.display = 'flex';
+        });
+        
+        $('btnClear').addEventListener('click', () => { $('query').value=''; resetResults(); });
+        $('query').addEventListener('keydown', e => { if(e.key==='Enter') searchAll(); });
 
-    // filters
-    const order = $('order').value || 'relevance';
-    const duration = $('duration').value || '';
-    const upload = $('upload').value || '';
-    const region = $('region').value || '';
-    const definition = $('definition').value || '';
-    const safe = $('safe').value || '';
-    const perPage = clamp(Number($('perPage').value)||25, 1, 50);
-    const pages = clamp(Number($('pages').value)||1, 1, 10);
+        async function searchAll(isDeepSearch = false){
+            const queryRaw = $('query').value.trim();
+            const queries = queryRaw.split(/[,\\n]/).map(q=>q.trim()).filter(Boolean);
+            const perPage = clamp(Number($('perPage').value||25), 1, 50);
+            const pages = isDeepSearch ? 20 : clamp(Number($('pages').value||2), 1, 10);
 
-    // reset UI
-    resetResults();
-    setProgress(0); setStatus('Searching…');
+            if(!queries.length){ showMessage('Search Error', 'Please enter at least one query'); return; }
+            if(!currentUser){ showMessage('Authentication Required', 'Please sign in first.'); return; }
 
-    // collect channels
-    const chanIds = new Set();
-    const totalSteps = queries.length * pages;
-    let done = 0;
+            // Call the logSearch Cloud Function to record the search action
+            try {
+              // The CORS issue means we need to handle the error, but the app should still work.
+              // We will continue the search process even if logging fails.
+              await logSearchCallable({ query: queryRaw });
+            } catch (error) {
+              console.error('Failed to log search:', error);
+            }
 
-    for(const q of queries){
-      let pageToken = '';
-      for(let p=0; p<pages; p++){
-        const url = new URL('https://www.googleapis.com/youtube/v3/search');
-        url.searchParams.set('part','snippet');
-        url.searchParams.set('type','video');
-        url.searchParams.set('q', q);
-        url.searchParams.set('maxResults', String(perPage));
-        url.searchParams.set('order', order);
-        if(region) url.searchParams.set('regionCode', region);
-        if(duration) url.searchParams.set('videoDuration', duration);
-        if(definition) url.searchParams.set('videoDefinition', definition);
-        if(safe) url.searchParams.set('safeSearch', safe);
-        if(upload) url.searchParams.set('publishedAfter', getPublishedAfterISO(upload));
-        if(pageToken) url.searchParams.set('pageToken', pageToken);
-        url.searchParams.set('key', apiKey);
+            resetResults();
+            lastSearch = { queryRaw, queries, perPage, pages };
+            
+            setStatus('Searching for channels...');
+            const apiKey = $('apiKey').value.trim();
+            const order = $('order').value;
+            const duration = $('duration').value;
+            const upload = $('upload').value;
+            const region = $('region').value;
+            const definition = $('definition').value;
+            const safe = $('safe').value;
+            let totalSteps = queries.length * pages;
+            let done = 0;
+            let chanIds = new Set();
+            
+            for(const q of queries){
+                let pageToken = '';
+                for(let i=0;i<pages;i++){
+                    if(!pageToken && i>0) break;
+                    
+                    const url = new URL('https://www.googleapis.com/youtube/v3/search');
+                    url.searchParams.set('part','snippet');
+                    url.searchParams.set('type','video');
+                    url.searchParams.set('q', q);
+                    url.searchParams.set('maxResults', String(perPage));
+                    url.searchParams.set('order', order);
+                    if(region) url.searchParams.set('regionCode', region);
+                    if(duration) url.searchParams.set('videoDuration', duration);
+                    if(definition) url.searchParams.set('videoDefinition', definition);
+                    if(upload) url.searchParams.set('publishedAfter', getPublishedAfterISO(upload));
+                    if(pageToken) url.searchParams.set('pageToken', pageToken);
+                    url.searchParams.set('key', apiKey);
+                    
+                    let resp;
+                    try { resp = await fetch(url.toString()); }
+                    catch(e){ console.error(e); showMessage('Network Error', 'A network error occurred during the search. Please check your connection.'); return; }
+                    
+                    if(!resp.ok){
+                        const t = await resp.text();
+                        showMessage('Search API Error', `YouTube API returned an error: ${resp.status}\n${t}`);
+                        return;
+                    }
+                    
+                    const data = await resp.json();
+                    
+                    (data.items || []).forEach(item => {
+                        // Shorts filtering (multi-heuristic)
+                        const t = (item.snippet.title||'').toLowerCase();
+                        const d = (item.snippet.description||'').toLowerCase();
+                        if(t.includes('#shorts') || t.includes('shorts ') || t.endsWith('shorts') || d.includes('#shorts') || d.includes('shorts ')) return;
+                        const cid = item.snippet.channelId;
+                        if(cid) chanIds.add(cid);
+                    });
+                    
+                    pageToken = data.nextPageToken || '';
+                    done++;
+                    setProgress(done/totalSteps * 0.65);
+                    await sleep(180);
+                }
+            }
+            
+            if(chanIds.size===0){ setStatus('No channels found'); setProgress(1); return; }
+            
+            setStatus(`Found ${chanIds.size} channels — fetching details…`);
+            
+            // fetch channels in batches of 50
+            const ids = Array.from(chanIds);
+            for(let i=0;i<ids.length;i+=50){
+                const batch = ids.slice(i,i+50);
+                const chURL = new URL('https://www.googleapis.com/youtube/v3/channels');
+                chURL.searchParams.set('part','snippet,statistics,brandingSettings');
+                chURL.searchParams.set('id', batch.join(','));
+                chURL.searchParams.set('key', apiKey);
+                
+                let resp;
+                try { resp = await fetch(chURL.toString()); }
+                catch(e){ console.error(e); showMessage('Network Error', 'A network error occurred while fetching channel details.'); return; }
+                
+                if(!resp.ok){
+                    const t = await resp.text();
+                    showMessage('Channels API Error', `YouTube API returned an error: ${resp.status}\n${t}`);
+                    return;
+                }
+                
+                const data = await resp.json();
+                
+                (data.items||[]).forEach(ch => {
+                    if(!ch.snippet || !ch.snippet.title) return; // junk
+                    const stats = ch.statistics || {};
+                    const title = ch.snippet.title;
+                    
+                    let country = ch.snippet.country || '';
+                    if(!country && ch.brandingSettings?.channel?.country){
+                        country = ch.brandingSettings.channel.country;
+                    }
+                    
+                    LIB.push({
+                        title: title,
+                        description: ch.snippet.description,
+                        channelId: ch.id,
+                        subs: Number(stats.subscriberCount||0),
+                        views: Number(stats.viewCount||0),
+                        videos: Number(stats.videoCount||0),
+                        verified: (ch.snippet.customUrl||'').includes('channel') ? 'No' : 'Yes',
+                        avatar: ch.snippet.thumbnails?.high?.url || ch.snippet.thumbnails?.default?.url || '',
+                        banner: ch.brandingSettings?.image?.bannerExternalUrl || '',
+                        country: country,
+                        createdAt: ch.snippet.publishedAt.split('T')[0]
+                    });
+                    
+                    done++;
+                    setProgress(0.65 + (done/totalSteps * 0.35));
+                });
+                await sleep(180);
+            }
 
-        let resp;
-        try { resp = await fetch(url.toString()); }
-        catch(e){ console.error(e); alert('Network error during search'); setStatus('Network error'); return; }
-
-        if(!resp.ok){
-          const t = await resp.text();
-          alert('Search API error: '+resp.status+'\\n'+t);
-          setStatus('Search API error'); return;
+            if(LIB.length===0){
+                setStatus('No channels found');
+            } else {
+                applyClientFiltersAndRender();
+                setStatus(`Found ${LIB.length} channels.`);
+            }
+            setProgress(1);
         }
 
-        const data = await resp.json();
-        (data.items || []).forEach(item => {
-          // filter out shorts using heuristics (no dangerous regex)
-          const t = (item.snippet && item.snippet.title ? item.snippet.title : '').toLowerCase();
-          const d = (item.snippet && item.snippet.description ? item.snippet.description : '').toLowerCase();
-          if(t.indexOf('#shorts')>-1 || t.indexOf('shorts ')>-1 || endsWithWord(t,'shorts') || d.indexOf('#shorts')>-1 || d.indexOf('shorts ')>-1) return;
+        function getPublishedAfterISO(timeframe){
+            const d = new Date();
+            if(timeframe==='hour') d.setHours(d.getHours() - 1);
+            if(timeframe==='today') d.setDate(d.getDate() - 1);
+            if(timeframe==='week') d.setDate(d.getDate() - 7);
+            if(timeframe==='month') d.setMonth(d.getMonth() - 1);
+            return d.toISOString();
+        }
 
-          const cid = item.snippet ? item.snippet.channelId : '';
-          if(cid) chanIds.add(cid);
+        function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
+
+        function applyClientFiltersAndRender(){
+            const min = Number($('minSubs').value||0);
+            const maxRaw = Number($('maxSubs').value||0);
+            const max = maxRaw>0? maxRaw : Infinity;
+            const needle = $('searchInResults').value.trim().toLowerCase();
+
+            VIEW = LIB.filter(c => {
+                if(c.subs < min) return false;
+                if(c.subs > max) return false;
+                if(needle){
+                    const hit = (c.title?.toLowerCase().includes(needle)) || (c.channelId?.toLowerCase().includes(needle));
+                    if(!hit) return false;
+                }
+                return true;
+            });
+
+            // client sort
+            const sort = $('clientSort').value;
+            VIEW.sort((a,b) => {
+                if(sort==='subs-desc') return (b.subs||0) - (a.subs||0);
+                if(sort==='subs-asc') return (a.subs||0) - (b.subs||0);
+                if(sort==='views-desc')return (b.views||0) - (a.views||0);
+                if(sort==='views-asc') return (a.views||0) - (b.views||0);
+                if(sort==='title-asc') return (a.title||'').localeCompare(b.title||'');
+                if(sort==='title-desc')return (b.title||'').localeCompare(a.title||'');
+                return 0;
+            });
+
+            renderResults(VIEW);
+            lastExport = VIEW.slice();
+            $('count').innerText = VIEW.length + ' channels';
+        }
+
+        /* ========================= RENDER RESULTS + DETAILS ========================= */
+        $('clientSort').addEventListener('change', applyClientFiltersAndRender);
+        $('minSubs').addEventListener('input', applyClientFiltersAndRender);
+        $('maxSubs').addEventListener('input', applyClientFiltersAndRender);
+        $('searchInResults').addEventListener('input', applyClientFiltersAndRender);
+
+        function renderResults(list){
+            const tbody = $('resultsTbody');
+            tbody.innerHTML = '';
+            if(!list.length){
+                tbody.innerHTML = `<tr><td colspan="6" class="meta">No channels match your filters.</td></tr>`;
+                return;
+            }
+            list.forEach((c, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><input type="checkbox" class="sel" data-idx="${idx}"/></td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:10px">
+                            <img class="avatar" src="${sanitize(c.avatar)}" alt="">
+                            <div>
+                                <div style="font-weight:700">${sanitize(c.title)}</div>
+                                <div class="meta">${sanitize(c.channelId)}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${c.hidden ? 'Hidden' : (c.subs||0).toLocaleString()}</td>
+                    <td>${(c.videos||0).toLocaleString()}</td>
+                    <td>${(c.views||0).toLocaleString()}</td>
+                    <td>${c.verified}</td>
+                `;
+                tr.addEventListener('click', e => {
+                    if(e.target.type !== 'checkbox'){
+                        renderDetails(c);
+                    }
+                });
+                tbody.appendChild(tr);
+            });
+        }
+        
+        async function renderDetails(c){
+            $('detailTitle').innerText = c.title;
+            const socialLinks = await getSocialLinksFromAboutPage(c.channelId);
+
+            $('detailContent').innerHTML = `
+                <div class="meta">Channel ID: ${c.channelId} • ${c.country} • Created: ${c.createdAt}</div>
+                <p style="margin-top:10px;line-height:1.5;font-size:14px;color:var(--muted)">${sanitize(c.description)}</p>
+                <div class="stats" style="margin-top:14px">
+                    <div class="stat"><b>${c.subs.toLocaleString()}</b><div class="meta">Subscribers</div></div>
+                    <div class="stat"><b>${c.views.toLocaleString()}</b><div class="meta">Total Views</div></div>
+                    <div class="stat"><b>${c.videos.toLocaleString()}</b><div class="meta">Total Videos</div></div>
+                </div>
+                
+                <h4 style="margin:20px 0 8px">Social Links</h4>
+                <div class="row" style="flex-wrap:nowrap;justify-content:space-between">
+                    <div class="row button-group" id="socialLinksContainer">
+                        ${socialLinks.website?`<a href="${sanitize(socialLinks.website)}" target="_blank" class="btn">Website</a>`:''}
+                        ${socialLinks.twitter?`<a href="${sanitize(socialLinks.twitter)}" target="_blank" class="btn">Twitter</a>`:''}
+                        ${socialLinks.instagram?`<a href="${sanitize(socialLinks.instagram)}" target="_blank" class="btn">Instagram</a>`:''}
+                        ${socialLinks.facebook?`<a href="${sanitize(socialLinks.facebook)}" target="_blank" class="btn">Facebook</a>`:''}
+                        ${socialLinks.tiktok?`<a href="${sanitize(socialLinks.tiktok)}" target="_blank" class="btn">TikTok</a>`:''}
+                        ${socialLinks.linkedin?`<a href="${sanitize(socialLinks.linkedin)}" target="_blank" class="btn">LinkedIn</a>`:''}
+                    </div>
+                </div>
+                <h4 style="margin:20px 0 8px">Latest Videos <small class="meta">(up to 6)</small></h4>
+                <div class="videos-grid" id="latestVideos">
+                    <div class="meta">Loading...</div>
+                </div>
+            `;
+            if(c.banner){
+                $('banner').style.display = 'block';
+                $('banner').style.backgroundImage = `url(${sanitize(c.banner)})`;
+            } else {
+                $('banner').style.display = 'none';
+            }
+            
+            loadLatestVideos(c.channelId);
+        }
+
+        /* ========================= UTIL ========================= */
+        function resetResults(){
+            LIB = []; VIEW = []; lastExport = [];
+            $('resultsTbody').innerHTML=''; $('count').innerText='0 channels';
+            $('detailTitle').innerText = 'Select a channel';
+            $('detailContent').innerHTML = '<div class="meta">No channel selected.</div>';
+            $('banner').style.display='none'; $('banner').style.backgroundImage='none';
+            setProgress(0); setStatus('Idle');
+        }
+
+        function sanitize(s){ try{ return s.replace(/</g,'<'); } catch(e){return '';} }
+
+        async function loadLatestVideos(channelId){
+            const apiKey = $('apiKey').value.trim();
+            const box = $('latestVideos');
+            try{
+                const u = new URL('https://www.googleapis.com/youtube/v3/search');
+                u.searchParams.set('part','snippet');
+                u.searchParams.set('channelId', channelId);
+                u.searchParams.set('order','date');
+                u.searchParams.set('maxResults','6');
+                u.searchParams.set('type','video');
+                u.searchParams.set('key', apiKey);
+                const r = await fetch(u.toString());
+                if(!r.ok){
+                    box.innerHTML = '<div class="meta">Cannot load videos.</div>';
+                    return;
+                }
+                const data = await r.json();
+                if(!data.items?.length){
+                    box.innerHTML = '<div class="meta">No recent videos.</div>';
+                    return;
+                }
+                box.innerHTML='';
+                data.items.forEach(it => {
+                    const vid = it.id.videoId;
+                    const thumb = it.snippet.thumbnails?.medium?.url || it.snippet.thumbnails?.default?.url || '';
+                    const title = it.snippet.title || '';
+                    const card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                        <img src="${sanitize(thumb)}" alt="">
+                        <h4>${sanitize(title)}</h4>
+                        <div class="row" style="margin-top:6px">
+                            <button class="btn btn-primary" onclick="window.open('https://www.youtube.com/watch?v=${vid}')">Open</button>
+                            <button class="btn" onclick="embed('${vid}')">Preview</button>
+                        </div>
+                    `;
+                    box.appendChild(card);
+                });
+            }catch(e){
+                console.error(e);
+                box.innerHTML = '<div class="meta">Error loading videos.</div>';
+            }
+        }
+        
+        function embed(videoId){
+            // add/replace a small embed at bottom-right of results panel
+            let frame = document.getElementById('previewFrame');
+            if(frame){ frame.remove(); }
+            frame = document.createElement('iframe');
+            frame.id='previewFrame';
+            frame.width='100%';
+            frame.height='220px';
+            frame.style.marginTop='10px';
+            frame.src=`https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            frame.setAttribute('allow','accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture');
+            $('detailContent').appendChild(frame);
+        }
+        
+        // Helper for copying text to clipboard
+        async function copyText(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+            } catch (err) {
+                // Fallback for older browsers or restricted environments
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            }
+        }
+
+        /* ========================= EXPORTING ========================= */
+        $('btnExportCSV').addEventListener('click', () => {
+            const rows = lastExport;
+            if(!rows.length) return showMessage('Export Failed', 'No results to export');
+            downloadText(toCSV(rows), 'lead_studio_pro.csv', 'text/csv');
+        });
+        $('btnExportJSON').addEventListener('click', () => {
+            const rows = lastExport.map(cToSafe);
+            if(!rows.length) return showMessage('Export Failed', 'No results to export');
+            downloadText(JSON.stringify(rows,null,2), 'lead_studio_pro.json', 'application/json');
+        });
+        $('btnCopyIDs').addEventListener('click', async () => {
+            const rows = lastExport;
+            if(!rows.length) return showMessage('Copy Failed', 'No results to copy');
+            const ids = rows.map(r=>r.channelId).join('\n');
+            await copyText(ids);
+            showMessage('Copy Success', 'Channel IDs copied to clipboard.');
+        });
+        $('btnSelectAll').addEventListener('click', () => {
+            document.querySelectorAll('.sel').forEach(cb => cb.checked=true);
+        });
+        $('btnDeselectAll').addEventListener('click', () => {
+            document.querySelectorAll('.sel').forEach(cb => cb.checked=false);
+        });
+        $('btnExportSelected').addEventListener('click', () => {
+            const rows = getSelected();
+            if(!rows.length) return showMessage('Export Failed', 'Select some rows first');
+            downloadText(toCSV(rows), 'lead_studio_pro_selected.csv', 'text/csv');
+        });
+        $('btnCopySelected').addEventListener('click', async () => {
+            const rows = getSelected();
+            if(!rows.length) return showMessage('Copy Failed', 'Select some rows first');
+            const csv = toCSV(rows);
+            await copyText(csv);
+            showMessage('Copy Success', 'Selected CSV copied to clipboard.');
+        });
+        $('btnClearResults').addEventListener('click', () => {
+          resetResults();
+          showMessage('Results Cleared', 'All search results have been cleared.');
         });
 
-        pageToken = data.nextPageToken || '';
-        done++;
-        setProgress( (done/totalSteps) * 0.55 );
-        await sleep(120);
-      }
-    }
+        function getSelected(){
+            return Array.from(document.querySelectorAll('.sel:checked')).map(cb => VIEW[Number(cb.dataset.idx)]).filter(Boolean);
+        }
 
-    if(chanIds.size === 0){ setStatus('No channels found'); setProgress(1); return; }
-    setStatus('Fetching channels…');
+        function toCSV(arr){
+            const fields = ['channel','subs','videos','views','verified','channelId','country','createdAt'];
+            let out = fields.map(f=>`"${f}"`).join(',')+'\n';
+            arr.forEach(r => {
+                out += `"${esc(r.title)}","${r.hidden?'Hidden':r.subs}","${r.videos}","${r.views}","${r.verified}","${r.channelId}","${esc(r.country)}","${r.createdAt}"\n`;
+            });
+            return out;
+        }
 
-    const ids = Array.from(chanIds);
-    for(let i=0;i<ids.length;i+=50){
-      const batch = ids.slice(i,i+50);
-      const chURL = new URL('https://www.googleapis.com/youtube/v3/channels');
-      chURL.searchParams.set('part','snippet,statistics,brandingSettings');
-      chURL.searchParams.set('id', batch.join(','));
-      chURL.searchParams.set('key', $('apiKey').value.trim());
+        function downloadText(text, filename, type){
+            const blob = new Blob([text], {type: type});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+        }
 
-      let resp;
-      try { resp = await fetch(chURL.toString()); }
-      catch(e){ console.error(e); alert('Network error fetching channels'); setStatus('Network error'); return; }
+        function cToSafe(c){
+            // strip big strings that might break inline JSON calls
+            return {
+                channelId:c.channelId,
+                title:c.title,
+                subs:c.subs,
+                views:c.views,
+                videos:c.videos,
+                verified:c.verified,
+                country:c.country,
+                createdAt:c.createdAt
+            };
+        }
 
-      if(!resp.ok){
-        const t = await resp.text();
-        alert('Channels API error: '+resp.status+'\\n'+t);
-        setStatus('Channels API error'); return;
-      }
-
-      const data = await resp.json();
-      (data.items || []).forEach(ch => {
-        if(!ch.snippet || !ch.snippet.title) return;
-        const stats = ch.statistics || {};
-        const subs = Number(stats.subscriberCount||0);
-        const views = Number(stats.viewCount||0);
-        const vids = Number(stats.videoCount||0);
-        if(subs < 10) return; // junk guard
-
-        // safe social extraction
-        const socials = extractSocials(ch);
-
-        LIB.push({
-          channelId: ch.id,
-          title: ch.snippet.title,
-          description: ch.snippet.description || '',
-          avatar: ch.snippet.thumbnails && (ch.snippet.thumbnails.medium || ch.snippet.thumbnails.default) ? (ch.snippet.thumbnails.medium || ch.snippet.thumbnails.default).url : '',
-          banner: ch.brandingSettings && ch.brandingSettings.image ? (ch.brandingSettings.image.bannerExternalUrl || '') : '',
-          subs, views, videos: vids,
-          hidden: !!stats.hiddenSubscriberCount,
-          country: ch.snippet.country || 'N/A',
-          createdAt: ch.snippet.publishedAt || '',
-          verified: 'Unknown',
-          socials: socials
+        // Handle local storage for library
+        $('btnSaveLib').addEventListener('click', () => {
+            if(!LIB.length) return showMessage('Save Failed', 'No channels to save.');
+            try {
+                localStorage.setItem(savedLibraryKey, JSON.stringify(LIB));
+                showMessage('Save Success', `Saved ${LIB.length} channels to local storage.`);
+            } catch(e){
+                showMessage('Save Failed', 'Failed to save library. Local storage might be full.');
+            }
         });
-      });
 
-      setProgress(0.55 + Math.min((i+50)/ids.length, 1) * 0.33);
-      await sleep(90);
-    }
+        $('btnLoadLib').addEventListener('click', () => {
+            const data = localStorage.getItem(savedLibraryKey);
+            if(!data) return showMessage('Load Failed', 'No saved library found.');
+            try{
+                const loaded = JSON.parse(data);
+                LIB = loaded;
+                applyClientFiltersAndRender();
+                showMessage('Load Success', `Loaded ${LIB.length} channels from local storage.`);
+            } catch(e){
+                showMessage('Load Failed', 'Failed to load library. Data may be corrupted.');
+            }
+        });
 
-    // optional verify via proxy (best-effort)
-    if($('doVerify').checked && $('corsProxy').value.trim()){
-      setStatus('Verifying channels…');
-      const proxy = $('corsProxy').value.trim().replace(/\/$/,'');
-      for(let i=0;i<LIB.length;i++){
-        const c = LIB[i];
-        try{
-          const url = proxy + '/' + encodeURIComponent('https://www.youtube.com/channel/' + c.channelId);
-          const r = await fetch(url);
-          if(r && r.ok){
-            const txt = (await r.text()).toLowerCase();
-            if(indexOfAny(txt, ['verified','checkmark','channelbadge'])>-1) c.verified = 'Yes';
-            else c.verified = 'No';
-          }
-        }catch(e){}
-        setProgress(0.9 + (i/LIB.length*0.08));
-      }
-    }
-
-    applyClientFiltersAndRender();
-    setProgress(1); setStatus('Ready');
-    lastSearch = { queries, perPage, pages, filters:{order,duration,upload,region,definition,safe} };
-  }catch(err){
-    console.error(err);
-    alert('Unexpected error: ' + (err && err.message ? err.message : 'Unknown'));
-    setStatus('Error');
-  }
-}
-
-// ---- apply client filters and render
-$('clientSort').addEventListener('change', applyClientFiltersAndRender);
-$('minSubs').addEventListener('input', deb(applyClientFiltersAndRender, 150));
-$('maxSubs').addEventListener('input', deb(applyClientFiltersAndRender, 150));
-$('searchInResults').addEventListener('input', deb(applyClientFiltersAndRender, 150));
-
-function applyClientFiltersAndRender(){
-  const min = Number($('minSubs').value || 0);
-  const maxRaw = Number($('maxSubs').value || 0);
-  const max = maxRaw > 0 ? maxRaw : Infinity;
-  const needle = ($('searchInResults').value || '').trim().toLowerCase();
-
-  VIEW = LIB.filter(c => {
-    if(c.subs < min) return false;
-    if(c.subs > max) return false;
-    if(needle){
-      const t = (c.title || '').toLowerCase();
-      const id = (c.channelId || '').toLowerCase();
-      if(t.indexOf(needle) === -1 && id.indexOf(needle) === -1) return false;
-    }
-    return true;
-  });
-
-  // client-side sort
-  const sort = $('clientSort').value;
-  VIEW.sort((a,b) => {
-    if(sort === 'subs-desc') return (b.subs||0) - (a.subs||0);
-    if(sort === 'subs-asc') return (a.subs||0) - (b.subs||0);
-    if(sort === 'views-desc') return (b.views||0) - (a.views||0);
-    if(sort === 'views-asc') return (a.views||0) - (b.views||0);
-    if(sort === 'title-asc') return (a.title||'').localeCompare(b.title||'');
-    if(sort === 'title-desc') return (b.title||'').localeCompare(a.title||'');
-    return 0;
-  });
-
-  renderResults(VIEW);
-  lastExport = VIEW.slice();
-  $('count').innerText = VIEW.length + ' channels';
-}
-
-// ---- render results
-function renderResults(list){
-  const tbody = $('resultsTbody');
-  tbody.innerHTML = '';
-  if(!list.length){
-    tbody.innerHTML = '<tr><td colspan="6" class="small" style="padding:18px">No channels match your filters.</td></tr>';
-    return;
-  }
-
-  list.forEach((c, idx) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = ''
-      + '<td style="width:48px"><input type="checkbox" class="sel" data-idx="'+idx+'"/></td>'
-      + '<td><div style="display:flex;align-items:center;gap:10px"><img class="avatar" src="'+sanitize(c.avatar)+'" alt=""><div><div style="font-weight:700">'+sanitize(c.title)+'</div><div class="small">'+sanitize(c.channelId)+'</div></div></div></td>'
-      + '<td>'+(c.hidden ? 'Hidden' : (c.subs||0).toLocaleString())+'</td>'
-      + '<td>'+(c.videos||0).toLocaleString()+'</td>'
-      + '<td>'+(c.views||0).toLocaleString()+'</td>'
-      + '<td>'+(c.verified || 'Unknown')+'</td>';
-    tr.addEventListener('click', e => {
-      if(e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.tagName === 'A')) return;
-      openDetails(c);
-    });
-    tbody.appendChild(tr);
-  });
-}
-
-// ---- details panel
-function clearDetails(){
-  $('detailTitle').innerText = 'Select a channel';
-  $('detailContent').innerHTML = '<div class="small">No channel selected.</div>';
-  $('banner').style.display = 'none';
-  $('quickSocials').innerHTML = '<div class="chip" style="opacity:.7">Select a channel to see socials</div>';
-  const pf = document.getElementById('previewFrame'); if(pf) pf.remove();
-}
-
-function openDetails(c){
-  $('detailTitle').innerText = c.title;
-  const banner = $('banner');
-  if(c.banner){ banner.style.display='block'; banner.style.backgroundImage = "url('"+sanitize(c.banner)+"')"; }
-  else { banner.style.display='none'; banner.style.backgroundImage = 'none' }
-
-  // build details content
-  const html = []
-  html.push('<div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:8px">')
-  html.push(' <img src="'+sanitize(c.avatar)+'" style="width:72px;height:72px;border-radius:14px;object-fit:cover;border:1px solid rgba(255,255,255,.04)"/>')
-  html.push(' <div style="flex:1"><div class="small">'+sanitize(c.channelId)+'</div>')
-  html.push('  <div style="display:flex;gap:8px;margin-top:6px">')
-  html.push('   <button class="btn btn-primary" onclick="openNew(\'https://www.youtube.com/channel/'+c.channelId+'\')">Open Channel</button>')
-  html.push('   <button class="btn" onclick="copyText(\''+safeForAttr(c.channelId)+'\')">Copy Channel ID</button>')
-  html.push('   <button class="btn" onclick=\'exportOne('+jsonInline(cToSafe(c))+')\'>Export</button>')
-  html.push('   <button class="btn" onclick=\'saveOne('+jsonInline(cToSafe(c))+')\'>Save</button>')
-  html.push('  </div></div></div>')
-
-  html.push('<div class="stats">')
-  html.push(' <div class="stat"><b>'+(c.hidden? 'Hidden' : (c.subs||0).toLocaleString())+'</b><span class="small">Subscribers</span></div>')
-  html.push(' <div class="stat"><b>'+((c.views||0).toLocaleString())+'</b><span class="small">Total Views</span></div>')
-  html.push(' <div class="stat"><b>'+((c.videos||0).toLocaleString())+'</b><span class="small">Videos</span></div>')
-  html.push('</div>')
-
-  html.push('<div style="margin-top:12px"><b>Description</b></div>')
-  html.push('<div class="small" style="white-space:pre-wrap;margin-top:6px">'+sanitize(c.description || '—')+'</div>')
-
-  html.push('<div style="margin-top:12px"><b>Social Handles</b></div>')
-  html.push('<div id="socialLinks" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px"></div>')
-
-  html.push('<div style="margin-top:12px"><b>Latest Videos</b></div>')
-  html.push('<div id="latestVideos" class="videos-grid" style="margin-top:8px"><div class="small">Loading…</div></div>')
-
-  $('detailContent').innerHTML = html.join('')
-
-  // render socials inside details and top quick chips
-  const socialMap = c.socials || {};
-  const socialEl = $('socialLinks'); socialEl.innerHTML = '';
-  const keys = ['website','twitter','instagram','facebook','tiktok','linkedin'];
-  let any=false;
-  keys.forEach(k => {
-    const u = socialMap[k];
-    if(u){
-      any=true;
-      const b = document.createElement('button');
-      b.className = 'btn';
-      b.style.padding = '8px 10px';
-      b.innerText = k[0].toUpperCase()+k.slice(1);
-      b.onclick = ()=> openNew(u);
-      socialEl.appendChild(b);
-    }
-  });
-  if(!any){ socialEl.innerHTML = '<div class="small">No socials detected.</div>'; }
-
-  renderQuickSocials(socialMap);
-  loadLatestVideos(c.channelId);
-}
-
-// keep safe minimal object to embed inline
-function cToSafe(c){ return { channelId:c.channelId, title:c.title, subs:c.subs, views:c.views, videos:c.videos, verified:c.verified, country:c.country, createdAt:c.createdAt } }
-
-// quick top chips
-function renderQuickSocials(socials){
-  const box = $('quickSocials'); box.innerHTML = '';
-  const keys = ['website','twitter','instagram','facebook','tiktok','linkedin'];
-  let count=0;
-  keys.forEach(k => {
-    const u = socials[k];
-    if(u){
-      count++;
-      const chip = document.createElement('div');
-      chip.className = 'chip';
-      chip.innerText = k[0].toUpperCase() + k.slice(1);
-      chip.title = u;
-      chip.onclick = ()=> openNew(u);
-      box.appendChild(chip);
-    }
-  });
-  if(count===0){
-    const hint = document.createElement('div'); hint.className='chip'; hint.style.opacity='.7'; hint.innerText='No socials';
-    box.appendChild(hint);
-  }
-}
-
-// ---- load latest videos
-async function loadLatestVideos(channelId){
-  const apiKey = $('apiKey').value.trim();
-  const box = $('latestVideos');
-  try{
-    const u = new URL('https://www.googleapis.com/youtube/v3/search');
-    u.searchParams.set('part','snippet');
-    u.searchParams.set('channelId', channelId);
-    u.searchParams.set('order','date');
-    u.searchParams.set('maxResults','6');
-    u.searchParams.set('type','video');
-    u.searchParams.set('key', apiKey);
-
-    const r = await fetch(u.toString());
-    if(!r.ok){ box.innerHTML = '<div class="small">Cannot load videos.</div>'; return; }
-    const data = await r.json();
-    if(!data.items || !data.items.length){ box.innerHTML = '<div class="small">No recent videos.</div>'; return; }
-    box.innerHTML = '';
-    data.items.forEach(it => {
-      const vid = it.id && it.id.videoId ? it.id.videoId : '';
-      const thumb = it.snippet && it.snippet.thumbnails && (it.snippet.thumbnails.medium || it.snippet.thumbnails.default) ? (it.snippet.thumbnails.medium || it.snippet.thumbnails.default).url : '';
-      const title = it.snippet && it.snippet.title ? it.snippet.title : '';
-      const card = document.createElement('div'); card.className='video-card';
-      card.innerHTML = '<img src="'+sanitize(thumb)+'" alt=""><h4>'+sanitize(title)+'</h4><div style="display:flex;gap:8px;margin-top:6px"><button class="btn btn-primary" onclick="openNew(\\'https://www.youtube.com/watch?v='+vid+'\\')">Open</button><button class="btn" onclick="embed(\\''+safeForAttr(vid)+'\\')">Preview</button></div>';
-      // careful: onclick contains single quotes and backslashes — safeForAttr used
-      // append
-      box.appendChild(card);
-    });
-  }catch(e){ console.error(e); box.innerHTML = '<div class="small">Error loading videos.</div>'; }
-}
-
-// ---- embed preview (FIXED)
-function embed(videoId){
-  if(!videoId) { alert('No video id'); return; }
-  // remove old preview if exists
-  const old = document.getElementById('previewFrame');
-  if(old) old.remove();
-
-  const iframe = document.createElement('iframe');
-  iframe.id = 'previewFrame';
-  iframe.width = '100%';
-  iframe.height = '300';
-  iframe.style.border = '1px solid rgba(255,255,255,0.06)';
-  iframe.style.borderRadius = '12px';
-  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-  iframe.src = 'https://www.youtube.com/embed/' + encodeURIComponent(videoId) + '?rel=0&modestbranding=1';
-
-  // append into details panel at bottom
-  const details = $('detailContent');
-  if(details) details.appendChild(iframe);
-  iframe.scrollIntoView({behavior:'smooth'});
-}
-
-// ---- exports / library / selection
-$('btnSelectAll').addEventListener('click', ()=>document.querySelectorAll('.sel').forEach(cb=>cb.checked=true));
-$('btnDeselectAll').addEventListener('click', ()=>document.querySelectorAll('.sel').forEach(cb=>cb.checked=false));
-$('btnSaveLib').addEventListener('click', ()=>{ localStorage.setItem(savedLibraryKey, JSON.stringify(LIB)); alert('Library saved'); });
-$('btnLoadLib').addEventListener('click', ()=>{ try{ const raw=localStorage.getItem(savedLibraryKey)||'[]'; const arr=JSON.parse(raw); if(Array.isArray(arr)){ LIB=arr; applyClientFiltersAndRender(); setStatus('Library loaded'); } }catch(e){ alert('Load failed'); }});
-$('btnClearResults').addEventListener('click', ()=>{ if(confirm('Clear current results?')) resetResults(); });
-
-$('btnExportCSV').addEventListener('click', ()=>{ if(!lastExport.length) return alert('No data to export'); downloadText(toCSV(lastExport),'youtube_channels.csv','text/csv'); });
-$('btnExportJSON').addEventListener('click', ()=>{ if(!lastExport.length) return alert('No data'); downloadText(JSON.stringify(lastExport,null,2),'youtube_channels.json','application/json'); });
-$('btnCopyIDs').addEventListener('click', async ()=>{ const ids=getSelected().map(x=>x.channelId); if(!ids.length) return alert('Select rows first'); try{ await navigator.clipboard.writeText(ids.join('\\n')); alert('Copied'); }catch(e){ alert('Copy failed'); }});
-
-$('btnExportSelected').addEventListener('click', ()=>{ const rows=getSelected(); if(!rows.length)return alert('Select rows'); lastExport=rows; downloadText(toCSV(rows),'selected_channels.csv','text/csv'); });
-$('btnCopySelected').addEventListener('click', async ()=>{ const rows=getSelected(); if(!rows.length)return alert('Select rows'); const csv=toCSV(rows); try{ await navigator.clipboard.writeText(csv); alert('Copied CSV'); }catch(e){ alert('Copy failed'); }});
-
-function getSelected(){ const boxes=document.querySelectorAll('.sel:checked'); const out=[]; for(let i=0;i<boxes.length;i++){ const idx=Number(boxes[i].getAttribute('data-idx')); if(!isNaN(idx) && VIEW[idx]) out.push(VIEW[idx]); } return out; }
-function toCSV(arr){ const head=['channel','subs','videos','views','verified','channelId','country','createdAt']; let out=head.join(',')+'\\n'; arr.forEach(r=>{ out += '"'+esc(r.title)+'","'+(r.hidden?'Hidden':r.subs)+'","'+r.videos+'","'+r.views+'","'+r.verified+'","'+r.channelId+'","'+esc(r.country)+'","'+r.createdAt+'"\\n'; }); return out; }
-function downloadText(text, filename, type){ const blob=new Blob([text], {type:type}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=filename; a.click(); setTimeout(()=>URL.revokeObjectURL(url),1500); }
-
-function exportOne(c){ const csv=toCSV([c]); downloadText(csv,'channel_'+c.channelId+'.csv','text/csv'); }
-function saveOne(c){ try{ const lib=JSON.parse(localStorage.getItem(savedLibraryKey)||'[]'); if(!lib.find(x=>x.channelId===c.channelId)) lib.push(c); localStorage.setItem(savedLibraryKey, JSON.stringify(lib)); alert('Saved'); }catch(e){ alert('Save failed'); } }
-
-// ---- socials extraction (safe)
-function extractSocials(ch){
-  const links = [];
-  try{
-    const bs = ch.brandingSettings || {};
-    const chinfo = bs.channel || {};
-    const external = chinfo.externalLinks || chinfo.links || [];
-    if(Array.isArray(external) && external.length){
-      external.forEach(it => { if(it && it.url) links.push(it.url); });
-    }
-  }catch(e){}
-
-  const descA = (ch.snippet && ch.snippet.description) ? ch.snippet.description : '';
-  const descB = (ch.brandingSettings && ch.brandingSettings.channel && ch.brandingSettings.channel.description) ? ch.brandingSettings.channel.description : '';
-  const desc = (descA + ' ' + descB);
-
-  const regex = /(https?:\/\/[^\s"']+)/g;
-  let m;
-  while((m = regex.exec(desc)) !== null){
-    let url = m[1].replace(/[),.]+$/,'');
-    links.push(url);
-  }
-
-  const uniq = [];
-  const seen = {};
-  links.forEach(u => { if(!seen[u]){ seen[u]=1; uniq.push(u); } });
-
-  const socials = {};
-  uniq.forEach(u=>{
-    if(/twitter\.com/i.test(u)) socials.twitter = u;
-    else if(/instagram\.com/i.test(u)) socials.instagram = u;
-    else if(/facebook\.com/i.test(u)) socials.facebook = u;
-    else if(/tiktok\.com/i.test(u)) socials.tiktok = u;
-    else if(/linkedin\.com/i.test(u)) socials.linkedin = u;
-    else if(!socials.website) socials.website = u;
-  });
-  return socials;
-}
-
-// ---- helpers
-function resetResults(){
-  LIB=[]; VIEW=[]; lastExport=[];
-  $('resultsTbody').innerHTML = '<tr><td colspan="6" class="small" style="padding:18px">No results yet — run a search</td></tr>';
-  clearDetails();
-  setProgress(0); setStatus('Ready');
-  $('count').innerText = '0 channels';
-}
-
-// init
-resetResults();
-setStatus('Ready');
-setProgress(0);
-</script>
+        // Function to reliably retrieve social links from the channel's About page
+        async function getSocialLinksFromAboutPage(channelId) {
+            const proxyUrl = $('corsProxy').value || '';
+            const aboutUrl = `${proxyUrl}https://www.youtube.com/channel/${channelId}/about`;
+            
+            try {
+                const response = await fetch(aboutUrl);
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                const socialLinks = {};
+                const linkElements = doc.querySelectorAll('.yt-formatted-string a');
+                
+                linkElements.forEach(link => {
+                    const url = link.href;
+                    if (url.includes('twitter.com')) socialLinks.twitter = url;
+                    else if (url.includes('instagram.com')) socialLinks.instagram = url;
+                    else if (url.includes('facebook.com')) socialLinks.facebook = url;
+                    else if (url.includes('tiktok.com')) socialLinks.tiktok = url;
+                    else if (url.includes('linkedin.com')) socialLinks.linkedin = url;
+                    else if (!socialLinks.website) socialLinks.website = url;
+                });
+                
+                return socialLinks;
+            } catch (error) {
+                console.error('Failed to retrieve social links:', error);
+                return {};
+            }
+        }
+    </script>
 </body>
 </html>
