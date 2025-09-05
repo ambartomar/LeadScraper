@@ -91,6 +91,24 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .stat-card-animation {
+            animation: popIn 0.5s ease-out forwards;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        @keyframes popIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .recent-search-item {
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            transform: scale(1);
+        }
+        .recent-search-item:hover {
+            background-color: rgba(255, 255, 255, 0.06);
+            transform: scale(1.02);
+        }
     </style>
 </head>
 <body class="flex">
@@ -140,56 +158,85 @@
             </header>
 
             <!-- Main Content Grid -->
-            <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Search & Filters Panel -->
-                <div class="col-span-1 glass-panel p-6 flex flex-col gap-6 fade-in" style="animation-delay: 0.2s;">
-                    <h2 class="text-xl font-bold">Search Filters</h2>
-                    <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)" class="w-full bg-white/5 rounded-xl border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors duration-200 resize-none min-h-[120px]"></textarea>
-                    
-                    <div class="grid grid-cols-2 gap-3">
-                        <button class="btn col-span-1 bg-purple-600 text-white font-medium py-3 rounded-xl hover:bg-purple-700" id="btnSearch">Search</button>
-                        <button class="btn col-span-1 bg-purple-600 text-white font-medium py-3 rounded-xl hover:bg-purple-700" id="btnDeepSearch">Deep Search</button>
-                        <button class="btn col-span-2 bg-gray-700 text-gray-200 font-medium py-3 rounded-xl hover:bg-gray-600" id="btnClear">Clear Search</button>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4 text-sm mt-4">
-                        <input class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500" id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA"/>
-                        <input class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500" id="perPage" type="number" min="1" max="50" value="25" placeholder="Results per page"/>
-                        <select id="order" class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                            <option value="relevance">Order: Relevance</option>
-                            <option value="date">Order: Date</option>
-                            <option value="viewCount">Order: Views</option>
-                        </select>
-                        <select id="duration" class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                            <option value="">Duration: Any</option>
-                            <option value="short">Short</option>
-                            <option value="medium">Medium</option>
-                            <option value="long">Long</option>
-                        </select>
-                        <input id="minSubs" type="number" placeholder="Min Subs" class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"/>
-                        <input id="maxSubs" type="number" placeholder="Max Subs" class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"/>
-                        <div class="col-span-2 text-center text-sm mt-2 text-gray-500">
-                            <span id="count">0 channels</span>
+            <div class="flex-1 grid grid-cols-1 md:grid-cols-5 gap-4">
+                <!-- Left Sidebar of Main Content (Search, filters, history) -->
+                <div class="col-span-1 md:col-span-2 flex flex-col gap-4">
+                    <!-- Metrics Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div id="card-total" class="glass-panel p-4 flex flex-col items-center justify-center text-center stat-card-animation" style="animation-delay: 0.4s;">
+                            <span class="text-xs text-gray-400 font-medium">Channels Found</span>
+                            <span id="metric-channels" class="text-2xl font-bold text-white mt-1 skeleton-text">0</span>
+                        </div>
+                        <div id="card-subs" class="glass-panel p-4 flex flex-col items-center justify-center text-center stat-card-animation" style="animation-delay: 0.5s;">
+                            <span class="text-xs text-gray-400 font-medium">Total Subscribers</span>
+                            <span id="metric-subs" class="text-2xl font-bold text-white mt-1 skeleton-text">0</span>
+                        </div>
+                        <div id="card-videos" class="glass-panel p-4 flex flex-col items-center justify-center text-center stat-card-animation" style="animation-delay: 0.6s;">
+                            <span class="text-xs text-gray-400 font-medium">Total Videos</span>
+                            <span id="metric-videos" class="text-2xl font-bold text-white mt-1 skeleton-text">0</span>
                         </div>
                     </div>
                     
-                    <div class="relative pt-1 mt-4">
-                        <div class="flex mb-2 items-center justify-between text-xs">
-                            <div class="text-gray-400">Progress</div>
+                    <!-- Search & Filters Panel -->
+                    <div class="glass-panel p-6 flex flex-col gap-4 fade-in" style="animation-delay: 0.2s;">
+                        <h2 class="text-xl font-bold">Search Filters</h2>
+                        <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)" class="w-full bg-white/5 rounded-xl border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors duration-200 resize-none min-h-[120px]"></textarea>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <button class="btn col-span-1 bg-purple-600 text-white font-medium py-3 rounded-xl hover:bg-purple-700" id="btnSearch">Search</button>
+                            <button class="btn col-span-1 bg-purple-600 text-white font-medium py-3 rounded-xl hover:bg-purple-700" id="btnDeepSearch">Deep Search</button>
+                            <button class="btn col-span-2 bg-gray-700 text-gray-200 font-medium py-3 rounded-xl hover:bg-gray-600" id="btnClear">Clear Search</button>
                         </div>
-                        <div class="flex h-2 mb-4 overflow-hidden text-xs bg-gray-700 rounded-lg">
-                            <div id="progressBar" class="flex flex-col justify-center shadow-none whitespace-nowrap bg-purple-600 transition-all duration-300 ease-in-out" style="width: 0%;"></div>
+
+                        <div class="grid grid-cols-2 gap-4 text-sm mt-4">
+                            <input class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500" id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA"/>
+                            <input class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500" id="perPage" type="number" min="1" max="50" value="25" placeholder="Results per page"/>
+                            <select id="order" class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <option value="relevance">Order: Relevance</option>
+                                <option value="date">Order: Date</option>
+                                <option value="viewCount">Order: Views</option>
+                            </select>
+                            <select id="duration" class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <option value="">Duration: Any</option>
+                                <option value="short">Short</option>
+                                <option value="medium">Medium</option>
+                                <option value="long">Long</option>
+                            </select>
+                            <input id="minSubs" type="number" placeholder="Min Subs" class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"/>
+                            <input id="maxSubs" type="number" placeholder="Max Subs" class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"/>
+                            <div class="col-span-2 text-center text-sm mt-2 text-gray-500">
+                                <span id="count">0 channels</span>
+                            </div>
+                        </div>
+                        
+                        <div class="relative pt-1 mt-4">
+                            <div class="flex mb-2 items-center justify-between text-xs">
+                                <div class="text-gray-400">Progress</div>
+                            </div>
+                            <div class="flex h-2 mb-4 overflow-hidden text-xs bg-gray-700 rounded-lg">
+                                <div id="progressBar" class="flex flex-col justify-center shadow-none whitespace-nowrap bg-purple-600 transition-all duration-300 ease-in-out" style="width: 0%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <button class="btn flex-1 bg-gray-700 text-gray-200 font-medium py-3 rounded-xl hover:bg-gray-600" id="btnSaveLib">Save Library</button>
+                            <button class="btn flex-1 bg-gray-700 text-gray-200 font-medium py-3 rounded-xl hover:bg-gray-600" id="btnLoadLib">Load Library</button>
                         </div>
                     </div>
-
-                    <div class="flex gap-4">
-                        <button class="btn flex-1 bg-gray-700 text-gray-200 font-medium py-3 rounded-xl hover:bg-gray-600" id="btnSaveLib">Save Library</button>
-                        <button class="btn flex-1 bg-gray-700 text-gray-200 font-medium py-3 rounded-xl hover:bg-gray-600" id="btnLoadLib">Load Library</button>
+                    
+                    <!-- Search History Panel -->
+                    <div class="glass-panel p-6 flex flex-col gap-4 fade-in" style="animation-delay: 0.7s;">
+                        <h2 class="text-xl font-bold">Recent Searches</h2>
+                        <div id="searchHistoryContainer" class="flex flex-col gap-2 max-h-48 overflow-y-auto custom-scroll">
+                            <div class="h-6 skeleton rounded-full w-4/5"></div>
+                            <div class="h-6 skeleton rounded-full w-full"></div>
+                            <div class="h-6 skeleton rounded-full w-3/4"></div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Results Table Panel -->
-                <div class="col-span-2 glass-panel p-6 flex flex-col fade-in" style="animation-delay: 0.3s;">
+                <div class="col-span-1 md:col-span-3 glass-panel p-6 flex flex-col fade-in" style="animation-delay: 0.3s;">
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="text-xl font-bold">Search Results</h2>
                         <div class="flex gap-2">
@@ -252,7 +299,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, query, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, getDocs, onSnapshot, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // =========================
         // STATE + HELPERS
@@ -298,6 +345,7 @@
         const db = getFirestore(app);
         
         const PUBLIC_LIBRARIES_COLLECTION = `artifacts/${appId}/public/data/libraries`;
+        const SEARCH_LOGS_COLLECTION = `artifacts/${appId}/users`;
         
         // Initial authentication check
         onAuthStateChanged(auth, async (user) => {
@@ -314,6 +362,9 @@
                 // Update Firestore with last login timestamp
                 const userRef = doc(db, `users`, user.uid);
                 await setDoc(userRef, { lastLogin: new Date().toISOString() }, { merge: true });
+                
+                // Start listening to search history for this user
+                listenToSearchHistory();
 
             } else {
                 currentUser = null;
@@ -422,6 +473,7 @@
             if(!queries.length){ showMessage('Search Error', 'Please enter at least one query'); return; }
             if(!currentUser){ showMessage('Authentication Required', 'Please sign in first.'); return; }
             
+            logSearch(queries.join(', '));
             resetResults();
             setStatus('Searching...');
             const apiKey = $('apiKey').value.trim();
@@ -529,6 +581,7 @@
                 setStatus(`Found ${LIB.length} channels.`);
             }
             setProgress(1);
+            updateMetrics();
         }
 
         function resetResults(){
@@ -543,6 +596,7 @@
             $('count').innerText='0 channels';
             setProgress(0);
             setStatus('Online');
+            updateMetrics();
         }
 
         // =========================
@@ -576,6 +630,73 @@
             });
             $('count').innerText = `${list.length} channels`;
         }
+        
+        // =========================
+        // NEW FEATURE: METRICS
+        // =========================
+        function updateMetrics() {
+            const totalChannels = LIB.length;
+            const totalSubs = LIB.reduce((sum, c) => sum + c.subs, 0);
+            const totalVideos = LIB.reduce((sum, c) => sum + c.videos, 0);
+
+            $('metric-channels').innerText = totalChannels.toLocaleString();
+            $('metric-subs').innerText = totalSubs.toLocaleString();
+            $('metric-videos').innerText = totalVideos.toLocaleString();
+        }
+        
+        // =========================
+        // NEW FEATURE: SEARCH HISTORY
+        // =========================
+        async function logSearch(query) {
+            if (!currentUser) return;
+            try {
+                const userLogsRef = doc(db, SEARCH_LOGS_COLLECTION, currentUser.uid);
+                const logsCollection = collection(userLogsRef, "searchLogs");
+                await setDoc(doc(logsCollection), {
+                    query: query,
+                    timestamp: new Date().toISOString()
+                });
+            } catch (e) {
+                console.error("Failed to log search:", e);
+            }
+        }
+        
+        function listenToSearchHistory() {
+             if (!currentUser) return;
+             const userLogsRef = doc(db, SEARCH_LOGS_COLLECTION, currentUser.uid);
+             const logsCollection = collection(userLogsRef, "searchLogs");
+             const q = query(logsCollection, orderBy("timestamp", "desc"), limit(5));
+             
+             onSnapshot(q, (snapshot) => {
+                 const historyContainer = $('searchHistoryContainer');
+                 historyContainer.innerHTML = '';
+                 
+                 if (snapshot.empty) {
+                     historyContainer.innerHTML = `<span class="text-gray-500 text-sm">No recent searches.</span>`;
+                     return;
+                 }
+                 
+                 snapshot.forEach(doc => {
+                     const data = doc.data();
+                     const item = document.createElement('div');
+                     item.className = "p-3 rounded-xl bg-white/5 recent-search-item";
+                     item.innerHTML = `
+                         <p class="text-sm font-medium text-white">${data.query}</p>
+                         <p class="text-xs text-gray-500">${new Date(data.timestamp).toLocaleString()}</p>
+                     `;
+                     historyContainer.appendChild(item);
+                     
+                     item.addEventListener('click', () => {
+                         $('query').value = data.query;
+                         searchAll(false);
+                     });
+                 });
+             }, (error) => {
+                 console.error("Error listening to search history:", error);
+                 $('searchHistoryContainer').innerHTML = `<span class="text-red-400 text-sm">Error loading history.</span>`;
+             });
+        }
+
 
         // =========================
         // DATA PERSISTENCE & EXPORT
@@ -633,6 +754,7 @@
                 if (docSnap.exists() && docSnap.data().library) {
                     LIB = docSnap.data().library;
                     renderResults(LIB);
+                    updateMetrics();
                     showMessage('Load Success', `Loaded ${LIB.length} channels from your library.`);
                 } else {
                     showMessage('Load Failed', 'No saved library found.');
