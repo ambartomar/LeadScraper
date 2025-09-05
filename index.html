@@ -8,12 +8,30 @@
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js" type="module"></script>
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js" type="module"></script>
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-functions.js" type="module"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
             background-color: #07080c;
             color: #f5f7ff;
+        }
+        .text-ellipsis-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .text-ellipsis-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .modal {
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
         }
     </style>
 </head>
@@ -22,11 +40,10 @@
         <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
     </div>
 
-    <div class="w-full max-w-4xl bg-[#0b0d14] rounded-2xl shadow-lg p-6 md:p-8">
+    <div class="w-full max-w-6xl bg-[#0b0d14] rounded-2xl shadow-lg p-6 md:p-8">
         <h1 class="text-3xl md:text-4xl font-bold text-center text-purple-400 mb-2">Lead Studio Pro MAX</h1>
         <p class="text-center text-gray-400 mb-8">Harness the power of server-side scraping to find your next lead.</p>
 
-        <!-- Search Section -->
         <div class="flex flex-col md:flex-row items-center gap-4 mb-8">
             <input type="text" id="searchInput" placeholder="Enter YouTube channel name or keyword..."
                    class="flex-grow w-full md:w-auto px-4 py-2 bg-[#0f1320] border border-[#a6b0c3] rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-500">
@@ -36,7 +53,6 @@
             </button>
         </div>
 
-        <!-- Status and User Info -->
         <div class="flex flex-col sm:flex-row justify-between items-center text-sm text-gray-400 mb-6">
             <div id="authStatus" class="flex items-center gap-2 mb-2 sm:mb-0">
                 <div id="authIcon" class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></div>
@@ -47,7 +63,6 @@
             </div>
         </div>
 
-        <!-- Results Section -->
         <div id="resultsContainer" class="hidden">
             <h2 class="text-xl font-bold mb-4">Search Results</h2>
             <div class="overflow-x-auto bg-[#0f1320] rounded-lg">
@@ -66,7 +81,6 @@
             <p id="noResultsMessage" class="hidden text-center text-gray-500 mt-4">No channels found. Try a different search.</p>
         </div>
         
-        <!-- Search History Section -->
         <div id="historyContainer" class="mt-8 hidden">
             <h2 class="text-xl font-bold mb-4">Your Search History</h2>
             <div class="bg-[#0f1320] rounded-lg p-4 max-h-64 overflow-y-auto">
@@ -76,21 +90,19 @@
         </div>
     </div>
 
-    <!-- Modals for details and errors -->
-    <div id="detailsModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+    <div id="detailsModal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
         <div class="bg-[#0b0d14] rounded-xl shadow-2xl p-6 w-11/12 md:w-1/2 max-h-full overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-2xl font-bold text-purple-400">Channel Details</h3>
                 <button id="closeModalButton" class="text-gray-400 hover:text-white text-3xl font-light leading-none">
-                    &times;
+                    ×
                 </button>
             </div>
             <div id="modalContent"></div>
         </div>
     </div>
 
-    <!-- Custom Alert Modal -->
-    <div id="alertModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+    <div id="alertModal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
         <div class="bg-[#0b0d14] rounded-xl shadow-2xl p-6 w-11/12 md:w-1/3 text-center">
             <h3 id="alertTitle" class="text-xl font-bold text-purple-400 mb-4"></h3>
             <p id="alertMessage" class="text-gray-300 mb-6"></p>
@@ -100,16 +112,25 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, collection, addDoc, onSnapshot, orderBy, query, limit, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, query, limit, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-functions.js";
 
         // Global variables for Firebase and state
         let db;
         let auth;
         let userId = null;
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const authToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        let functions;
+        const appId = 'youleadmax-prod-v1'; // Use a unique identifier for your app instance
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID",
+            measurementId: "YOUR_MEASUREMENT_ID"
+        };
 
         // UI elements
         const searchInput = document.getElementById('searchInput');
@@ -146,6 +167,7 @@
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
+                functions = getFunctions(app, 'us-central1');
                 setLogLevel('debug'); // Enable Firestore debug logging
 
                 // Listen for auth state changes
@@ -157,11 +179,8 @@
                         authStatusMessage.textContent = 'Connected!';
                         userIdValue.textContent = userId;
                         userIdDisplay.classList.remove('hidden');
-                        
-                        // Start listening to search history after successful auth
                         startHistoryListener();
                     } else {
-                        // User is signed out or not authenticated
                         authStatusIcon.classList.remove('bg-green-500');
                         authStatusIcon.classList.add('bg-red-500', 'animate-pulse');
                         authStatusMessage.textContent = 'Connecting...';
@@ -170,12 +189,7 @@
                     }
                 });
 
-                // Sign in the user
-                if (authToken) {
-                    await signInWithCustomToken(auth, authToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                await signInAnonymously(auth);
             } catch (error) {
                 console.error("Firebase initialization or authentication failed:", error);
                 authStatusMessage.textContent = 'Connection Failed!';
@@ -185,25 +199,21 @@
 
         // --- Firestore History Listener ---
         function startHistoryListener() {
-            if (!db || !userId) {
-                console.error("Firestore not initialized or user not authenticated.");
-                return;
-            }
+            if (!db || !userId) return;
 
             const historyRef = collection(db, `artifacts/${appId}/users/${userId}/searchLogs`);
-            const q = query(historyRef, orderBy('timestamp', 'desc'), limit(10));
+            const q = query(historyRef, limit(10));
             
             onSnapshot(q, (snapshot) => {
                 const historyData = snapshot.docs.map(doc => doc.data());
-                historyList.innerHTML = ''; // Clear previous list
-
+                historyList.innerHTML = '';
                 if (historyData.length > 0) {
                     historyContainer.classList.remove('hidden');
                     noHistoryMessage.classList.add('hidden');
                     historyData.forEach(item => {
                         const li = document.createElement('li');
                         li.className = 'py-2 border-b border-gray-700 last:border-b-0 text-gray-300';
-                        const date = item.timestamp ? new Date(item.timestamp.seconds * 1000).toLocaleString() : 'N/A';
+                        const date = item.timestamp?.seconds ? new Date(item.timestamp.seconds * 1000).toLocaleString() : 'N/A';
                         li.textContent = `${item.query} - ${date}`;
                         historyList.appendChild(li);
                     });
@@ -217,20 +227,13 @@
         }
 
         // --- Core Search and Data Fetching Logic ---
+        const logSearchCallable = httpsCallable(functions, 'logSearch');
+
         async function logSearch(query) {
-            if (!db || !userId) {
-                console.error("Cannot log search: Firestore not initialized or user not authenticated.");
-                return;
-            }
             try {
-                const logRef = collection(db, `artifacts/${appId}/users/${userId}/searchLogs`);
-                await addDoc(logRef, {
-                    query: query,
-                    timestamp: serverTimestamp()
-                });
+                await logSearchCallable({ query });
             } catch (error) {
                 console.error("Failed to log search:", error);
-                showAlert('Logging Error', 'Failed to log your search query.');
             }
         }
 
@@ -241,41 +244,33 @@
                 return;
             }
 
-            // Show loading state
-            loadingIndicator.classList.remove('hidden');
-            searchButton.disabled = true;
-            searchButton.classList.add('opacity-50', 'cursor-not-allowed');
-
+            showLoading();
+            
             try {
-                // Call the new Cloud Function
-                const apiUrl = `https://us-central1-youleadmax.cloudfunctions.net/getChannelData?q=${encodeURIComponent(query)}`;
+                const apiUrl = `https://us-central1-youleadmax.cloudfunctions.net/getChannelData?q=${encodeURIComponent(query)}&uid=${userId}`;
                 const response = await fetch(apiUrl);
                 
                 if (!response.ok) {
-                    throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `Server returned ${response.status}: ${response.statusText}`);
                 }
 
                 const data = await response.json();
                 renderResults(data);
                 
-                // Log the successful search
                 logSearch(query);
-
             } catch (error) {
                 console.error("Failed to fetch search results:", error);
                 showAlert('Search Error', `Could not get search results. Details: ${error.message}. Please check your deployed Cloud Functions and network connection.`);
                 resultsTableBody.innerHTML = '';
                 noResultsMessage.classList.remove('hidden');
             } finally {
-                // Hide loading state
-                loadingIndicator.classList.add('hidden');
-                searchButton.disabled = false;
-                searchButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                hideLoading();
             }
         }
 
         function renderResults(channels) {
-            resultsTableBody.innerHTML = ''; // Clear previous results
+            resultsTableBody.innerHTML = '';
             if (channels.length === 0) {
                 resultsContainer.classList.remove('hidden');
                 noResultsMessage.classList.remove('hidden');
@@ -289,39 +284,46 @@
                 const row = document.createElement('tr');
                 row.className = 'border-b border-gray-700 hover:bg-[#0c101c] transition-colors duration-200';
                 
-                // Truncate name for display
-                const displayName = channel.channelName.length > 30 ? channel.channelName.substring(0, 27) + '...' : channel.channelName;
+                const verifiedIcon = channel.isVerified ? '<span title="Verified Channel" class="ml-1 text-purple-400">✓</span>' : '';
                 
                 row.innerHTML = `
-                    <td class="px-4 py-3">${displayName}</td>
+                    <td class="px-4 py-3 flex items-center gap-2">
+                        <img src="${channel.thumbnailUrl}" alt="Channel Thumbnail" class="w-8 h-8 rounded-full">
+                        <span class="text-ellipsis-1" title="${channel.channelName}">${channel.channelName}</span>${verifiedIcon}
+                    </td>
                     <td class="px-4 py-3">${channel.subscribers || 'N/A'}</td>
                     <td class="px-4 py-3">${channel.videoCount || 'N/A'}</td>
-                    <td class="px-4 py-3">
-                        <button class="view-details-btn px-4 py-1 text-sm bg-purple-500 text-white rounded-md hover:bg-purple-600 transition-colors duration-200" data-channel-id="${channel.channelId}" data-channel-name="${channel.channelName}">View Details</button>
+                    <td class="px-4 py-3 space-x-2">
+                        <button class="view-details-btn px-3 py-1 text-xs bg-purple-500 text-white rounded-md hover:bg-purple-600 transition-colors" data-channel-id="${channel.channelId}" data-channel-name="${channel.channelName}">Details</button>
+                        <button class="view-videos-btn px-3 py-1 text-xs bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors" data-channel-id="${channel.channelId}" data-channel-name="${channel.channelName}">Videos</button>
                     </td>
                 `;
                 resultsTableBody.appendChild(row);
             });
 
-            // Attach event listeners to the "View Details" buttons
             document.querySelectorAll('.view-details-btn').forEach(button => {
                 button.addEventListener('click', () => {
-                    const channelId = button.getAttribute('data-channel-id');
-                    const channelName = button.getAttribute('data-channel-name');
-                    viewChannelDetails(channelId, channelName);
+                    viewChannelDetails(button.getAttribute('data-channel-id'), button.getAttribute('data-channel-name'));
+                });
+            });
+
+            document.querySelectorAll('.view-videos-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    viewChannelVideos(button.getAttribute('data-channel-id'), button.getAttribute('data-channel-name'));
                 });
             });
         }
 
         async function viewChannelDetails(channelId, channelName) {
-            loadingIndicator.classList.remove('hidden');
+            showLoading();
             
             try {
                 const apiUrl = `https://us-central1-youleadmax.cloudfunctions.net/getChannelDetails?id=${encodeURIComponent(channelId)}`;
                 const response = await fetch(apiUrl);
                 
                 if (!response.ok) {
-                    throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `Server returned ${response.status}: ${response.statusText}`);
                 }
                 
                 const data = await response.json();
@@ -343,12 +345,13 @@
                 modalContent.innerHTML = `
                     <div class="space-y-4">
                         <h4 class="text-xl font-bold">${channelName}</h4>
-                        <p class="text-gray-400">Channel ID: <span class="text-white">${channelId}</span></p>
-                        <p class="text-gray-400">Description: <span class="text-white">${data.description || 'N/A'}</span></p>
+                        <p class="text-gray-400">Channel ID: <span class="text-white break-all">${channelId}</span></p>
+                        <p class="text-gray-400">Description: <span class="text-white text-ellipsis-2">${data.description || 'N/A'}</span></p>
                         <div class="bg-[#0f1320] rounded-lg p-4">
                             <h5 class="text-lg font-bold mb-2">Social & Website Links</h5>
                             ${socialLinksHtml}
                         </div>
+                        <p class="text-gray-400 mt-4">Membership: ${data.hasMembership ? '<span class="text-green-400">Available</span>' : '<span class="text-red-400">Not Available</span>'}</p>
                     </div>
                 `;
 
@@ -357,8 +360,71 @@
                 console.error("Failed to fetch channel details:", error);
                 showAlert('Details Error', `Could not retrieve details for this channel. Details: ${error.message}.`);
             } finally {
-                loadingIndicator.classList.add('hidden');
+                hideLoading();
             }
+        }
+
+        async function viewChannelVideos(channelId, channelName) {
+            showLoading();
+            
+            try {
+                const apiUrl = `https://us-central1-youleadmax.cloudfunctions.net/getChannelVideos?id=${encodeURIComponent(channelId)}`;
+                const response = await fetch(apiUrl);
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `Server returned ${response.status}: ${response.statusText}`);
+                }
+
+                const videos = await response.json();
+                let videosHtml = '<p class="text-gray-400">No videos found.</p>';
+
+                if (videos.length > 0) {
+                    videosHtml = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            ${videos.map(video => `
+                                <div class="bg-[#0f1320] rounded-lg p-4 cursor-pointer hover:bg-purple-900/20 transition-colors">
+                                    <img src="${video.thumbnailUrl}" alt="Video Thumbnail" class="w-full h-auto rounded-lg mb-2">
+                                    <h5 class="text-sm font-semibold text-ellipsis-2" title="${video.title}">${video.title}</h5>
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        ${video.viewCount} · ${video.publishedTime}
+                                        <br>
+                                        👍 Likes: ${video.likeCount || 'N/A'}
+                                        <br>
+                                        💬 Comments: ${video.commentsCount || 'N/A'}
+                                    </p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+                
+                modalContent.innerHTML = `
+                    <div class="space-y-4">
+                        <h4 class="text-xl font-bold">${channelName}'s Videos</h4>
+                        ${videosHtml}
+                    </div>
+                `;
+                detailsModal.classList.remove('hidden');
+
+            } catch (error) {
+                console.error("Failed to fetch channel videos:", error);
+                showAlert('Videos Error', `Could not retrieve videos for this channel. Details: ${error.message}.`);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function showLoading() {
+            loadingIndicator.classList.remove('hidden');
+            searchButton.disabled = true;
+            searchButton.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+
+        function hideLoading() {
+            loadingIndicator.classList.add('hidden');
+            searchButton.disabled = false;
+            searchButton.classList.remove('opacity-50', 'cursor-not-allowed');
         }
 
         // --- Event Listeners ---
