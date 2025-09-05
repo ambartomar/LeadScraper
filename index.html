@@ -6,18 +6,27 @@
 <title>Lead Studio Pro — YouTube Channel Finder</title>
 <style>
   /* =========================
-     THEME — Apple-ish + Purple (base file)
-     (kept your original CSS and added tiny improvements)
+     THEME — Apple-ish + Purple
      ========================= */
   :root{
-    --bg-0:#07080c; --bg-1:#0b0d14; --bg-2:#0f1320;
-    --glass: rgba(255,255,255,.06); --glass-2: rgba(255,255,255,.08);
-    --muted:#a6b0c3; --text:#f5f7ff;
-    --accent:#7c3aed; --accent-2:#a78bfa;
-    --ok:#22c55e; --warn:#f59e0b; --danger:#ef4444;
-    --radius:14px; --radius-sm:10px;
+    --bg-0:#07080c;            /* page base */
+    --bg-1:#0b0d14;            /* panels */
+    --bg-2:#0f1320;            /* deeper */
+    --glass: rgba(255,255,255,.06);
+    --glass-2: rgba(255,255,255,.08);
+    --muted:#a6b0c3;
+    --text:#f5f7ff;
+    --accent:#7c3aed;          /* purple */
+    --accent-2:#a78bfa;        /* light purple */
+    --ok:#22c55e;              /* green */
+    --warn:#f59e0b;            /* amber */
+    --danger:#ef4444;
+    --radius:14px;
+    --radius-sm:10px;
     --shadow: 0 30px 70px rgba(0,0,0,.45);
   }
+
+  /* Base reset */
   * { box-sizing:border-box; }
   html,body { height:100%; }
   body {
@@ -28,78 +37,197 @@
       radial-gradient(1200px 800px at 10% -20%, #24103e 0%, transparent 60%),
       radial-gradient(1200px 800px at 110% 120%, #1f1440 0%, transparent 60%),
       linear-gradient(180deg, #080910, #0a0c14 60%, #090b12);
-    overflow:hidden; overscroll-behavior:none;
+    overflow:hidden; /* prevent random page scrollbars */
+    overscroll-behavior:none;
   }
+
   a { color: var(--accent-2); text-decoration: none; }
   a:hover { text-decoration: underline; }
 
-  /* App shell */
-  .app { max-width: 1350px; margin: 0 auto; padding: 18px; display: grid; gap: 14px; grid-template-rows: auto 1fr; height: 100vh; }
+  /* ===== App shell ===== */
+  .app {
+    max-width: 1350px;
+    margin: 0 auto;
+    padding: 18px;
+    display: grid;
+    gap: 14px;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+  }
 
-  /* Topbar */
+  /* ===== Topbar ===== */
   .topbar {
-    display:flex; gap:12px; align-items:center; padding: 14px;
+    display:flex; gap:12px; align-items:center;
+    padding: 14px;
     background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-    border: 1px solid rgba(255,255,255,.06); border-radius: var(--radius); backdrop-filter: blur(10px); box-shadow: var(--shadow);
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: var(--radius);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
   }
   .brand { display:flex; gap:2px; flex-direction:column; min-width: 230px; }
   .brand h1 { margin:0; font-size:18px; letter-spacing:.2px; color:#e9e8ff; }
   .brand p { margin:0; color: var(--muted); font-size:12px; }
 
   .bar-controls { display:flex; gap:8px; align-items:center; flex:1; }
+
   input[type="text"], input[type="number"], input[type="url"], select, textarea {
-    background: var(--glass); border: 1px solid rgba(255,255,255,.07); color: var(--text);
-    padding: 10px 12px; border-radius: var(--radius-sm); outline: none; transition: box-shadow .18s ease, transform .12s ease, border-color .18s ease;
+    background: var(--glass);
+    border: 1px solid rgba(255,255,255,.07);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: box-shadow .18s ease, transform .12s ease, border-color .18s ease;
   }
   textarea { min-height: 44px; resize: vertical; }
   input::placeholder, textarea::placeholder { color: #8f9ab2; }
 
-  input:focus, select:focus, textarea:focus { box-shadow: 0 10px 26px rgba(124,58,237,.18); border-color: rgba(124,58,237,.35); transform: translateY(-1px); }
+  input:focus, select:focus, textarea:focus {
+    box-shadow: 0 10px 26px rgba(124,58,237,.18);
+    border-color: rgba(124,58,237,.35);
+    transform: translateY(-1px);
+  }
 
-  .btn { padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,.08); background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05)); color: var(--text); font-weight: 700; cursor: pointer; transition: transform .12s ease, box-shadow .2s ease, background .2s ease; }
+  .btn {
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255,255,255,.08);
+    background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
+    color: var(--text);
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
+  }
   .btn:hover { transform: translateY(-1px); }
-  .btn-primary { background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-color: transparent; color:#0b0d14; box-shadow: 0 12px 28px rgba(124,58,237,.25); }
-  .btn-danger { background: linear-gradient(90deg, #d83a56, #ef4444); border-color: transparent; }
+  .btn:active { transform: translateY(0); }
+  .btn-primary {
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    border-color: transparent;
+    color:#0b0d14;
+    box-shadow: 0 12px 28px rgba(124,58,237,.25);
+  }
+  .btn-danger {
+    background: linear-gradient(90deg, #d83a56, #ef4444);
+    border-color: transparent;
+  }
+  
+  /* =========================
+     CUSTOM BUTTON ALIGNMENT
+     ========================= */
+  .button-group {
+      display: flex;
+      gap: 8px;
+  }
+  .button-group .btn {
+      flex: 1;
+      text-align: center;
+  }
 
-  .button-group { display:flex; gap:8px; }
-  .button-group .btn { flex: 1; text-align:center; }
+  /* ===== Main layout (3 columns) ===== */
+  .main {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: 350px 1fr 420px;
+    grid-template-rows: 1fr;
+    min-height: 0; /* enable child overflow scrolling */
+  }
 
-  /* Main layout */
-  .main { display: grid; gap: 14px; grid-template-columns: 350px 1fr 420px; grid-template-rows: 1fr; min-height: 0; }
+  .panel {
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: var(--radius);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+    padding: 14px;
+    min-height: 0; /* important for overflow children */
+    overflow: hidden; /* contain */
+  }
 
-  .panel { background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03)); border: 1px solid rgba(255,255,255,.06); border-radius: var(--radius); backdrop-filter: blur(10px); box-shadow: var(--shadow); padding: 14px; min-height: 0; overflow: hidden; }
-
-  /* Filters panel */
+  /* Filters panel (left) */
   .filters { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
   .filters .full { grid-column: 1/-1; }
   .filters small { color: var(--muted); }
   .switch { display:flex; gap:8px; align-items:center; }
   .row { display:flex; gap:8px; align-items:center; flex-wrap: wrap; }
 
-  /* Results */
-  .results-wrap { height: 100%; display:grid; grid-template-rows: auto auto 1fr auto; gap: 10px; min-height:0; }
+  /* Results panel (center) */
+  .results-wrap {
+    height: 100%;
+    display:grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 10px;
+    min-height:0;
+  }
   .results-toolbar { display:flex; gap:8px; align-items:center; justify-content:space-between; }
   .results-toolbar .left { display:flex; gap:8px; align-items:center; }
   .results-toolbar .right{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
 
-  .progress { width:180px; height:9px; border-radius: 999px; background: rgba(255,255,255,.07); overflow:hidden; }
-  .progress > i { display:block; height:100%; width:0%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .25s ease; }
+  .progress {
+    width:180px; height:9px; border-radius: 999px;
+    background: rgba(255,255,255,.07);
+    overflow:hidden;
+  }
+  .progress > i {
+    display:block; height:100%; width:0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width .25s ease;
+  }
 
-  .table-wrap { overflow:auto; border-radius: calc(var(--radius) - 6px); border: 1px solid rgba(255,255,255,.06); }
-  table { width:100%; border-collapse: collapse; background: transparent; }
-  thead th { position: sticky; top: 0; backdrop-filter: blur(10px); background: rgba(16,18,30,.6); color: var(--muted); font-weight: 600; font-size: 13px; text-align: left; padding: 12px; border-bottom: 1px solid rgba(255,255,255,.08); }
-  tbody td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,.06); vertical-align: middle; font-size: 14px; }
-  tbody tr { transition: background .18s ease, transform .14s ease; }
-  tbody tr:hover { background: rgba(124,58,237,.12); transform: translateY(-1px); cursor: pointer; }
+  .table-wrap {
+    overflow:auto;
+    border-radius: calc(var(--radius) - 6px);
+    border: 1px solid rgba(255,255,255,.06);
+  }
+  table {
+    width:100%;
+    border-collapse: collapse;
+    background: transparent;
+  }
+  thead th {
+    position: sticky; top: 0; backdrop-filter: blur(10px);
+    background: rgba(16,18,30,.6);
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 13px;
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  tbody td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    vertical-align: middle;
+    font-size: 14px;
+  }
+  tbody tr {
+    transition: background .18s ease, transform .14s ease;
+  }
+  tbody tr:hover {
+    background: rgba(124,58,237,.12);
+    transform: translateY(-1px);
+    cursor: pointer;
+  }
   .avatar { width:42px; height:42px; border-radius: 12px; object-fit: cover; margin-right:10px; }
 
-  /* Details */
-  .details { height: 100%; display:grid; grid-template-rows: auto auto 1fr; gap:10px; min-height:0; }
-  .banner { height: 120px; border-radius: 12px; background-size: cover; background-position: center; border:1px solid rgba(255,255,255,.06); }
+  /* Details panel (right) */
+  .details {
+    height: 100%;
+    display:grid;
+    grid-template-rows: auto auto 1fr;
+    gap:10px; min-height:0;
+  }
+  .banner {
+    height: 120px; border-radius: 12px; background-size: cover; background-position: center;
+    border:1px solid rgba(255,255,255,.06);
+  }
   .about { overflow:auto; }
   .meta { color: var(--muted); font-size: 13px; }
   .stats { display:grid; grid-template-columns: repeat(3,1fr); gap:10px; }
-  .stat { text-align:center; padding:10px; border-radius:12px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); }
+  .stat {
+    text-align:center; padding:10px; border-radius:12px; background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.08);
+  }
   .stat b { display:block; font-size: 16px; color: #eef; }
 
   .videos-grid { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
@@ -107,25 +235,166 @@
   .video-card img { width:100%; height:110px; object-fit:cover; border-radius:10px; }
   .video-card h4 { font-size: 13px; margin:8px 0 4px; }
 
-  /* selects & scrollbar improvements */
-  select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, #cfd6ea 50%), linear-gradient(135deg, #cfd6ea 50%, transparent 50%), linear-gradient(to right, transparent, transparent); background-position: calc(100% - 18px) calc(50% - 3px), calc(100% - 12px) calc(50% - 3px), calc(100% - 2.5em) 0.5em; background-size: 6px 6px, 6px 6px, 1px 1.8em; background-repeat: no-repeat; }
+  /* Custom selects + scrollbar (subtle) */
+  select {
+    appearance: none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, #cfd6ea 50%),
+      linear-gradient(135deg, #cfd6ea 50%, transparent 50%),
+      linear-gradient(to right, transparent, transparent);
+    background-position:
+      calc(100% - 18px) calc(50% - 3px),
+      calc(100% - 12px) calc(50% - 3px),
+      calc(100% - 2.5em) 0.5em;
+    background-size: 6px 6px, 6px 6px, 1px 1.8em;
+    background-repeat: no-repeat;
+  }
+
   ::-webkit-scrollbar { width: 10px; height:10px; }
-  ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--accent), var(--accent-2)); border-radius: 999px; border: 3px solid rgba(0,0,0,.25); }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--accent), var(--accent-2));
+    border-radius: 999px;
+    border: 3px solid rgba(0,0,0,.25);
+  }
   ::-webkit-scrollbar-track { background: transparent; }
 
   /* Responsive */
-  @media (max-width: 1200px){ .main { grid-template-columns: 1fr; grid-template-rows: 420px 1fr 520px; } .details { grid-template-rows: auto 1fr 1fr; } }
+  @media (max-width: 1200px){
+    .main { grid-template-columns: 1fr; grid-template-rows: 420px 1fr 520px; }
+    .details { grid-template-rows: auto 1fr 1fr; }
+  }
+  
+  /* Additional styles for authentication and admin controls */
+  .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 320px;
+      margin: 10vh auto;
+      padding: 24px;
+      background: var(--bg-1);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+  }
+  .auth-form h2 {
+      text-align: center;
+      margin-bottom: 12px;
+      font-size: 24px;
+  }
+  .auth-form input {
+      width: 100%;
+  }
+  .auth-form button {
+      width: 100%;
+  }
+  .user-info {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+  }
+  
+  /* Message Box Styling */
+  .message-box-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+  }
+  .message-box {
+      background: var(--bg-1);
+      padding: 24px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      max-width: 400px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+  }
 
-  /* extras: message box & UI niceties */
-  .message-box-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); display:none; align-items:center; justify-content:center; z-index:10000; }
-  .message-box { background: var(--bg-1); padding:20px; border-radius:12px; min-width:320px; max-width:560px; box-shadow: var(--shadow); color:var(--text); }
-  .message-box .row { justify-content:center; margin-top:12px; }
-  .chip { display:inline-block; padding:8px 10px; border-radius:999px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.04); color:var(--text); cursor:pointer; margin-right:6px; font-size:13px; }
+  /* =========================
+     CUSTOM CHECKBOX
+     ========================= */
+  .switch input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .switch {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    cursor: pointer;
+  }
+  .switch-visual {
+    width: 28px;
+    height: 16px;
+    background: rgba(255, 255, 255, .1);
+    border-radius: 999px;
+    position: relative;
+    transition: background .2s ease;
+  }
+  .switch-visual::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--text);
+    border-radius: 50%;
+    transition: transform .2s ease;
+  }
+  .switch input[type="checkbox"]:checked + .switch-visual {
+    background: var(--accent);
+  }
+  .switch input[type="checkbox"]:checked + .switch-visual::before {
+    transform: translateX(12px);
+    background-color: #fff;
+  }
+  .switch input[type="checkbox"]:focus + .switch-visual {
+    box-shadow: 0 0 0 2px rgba(124, 58, 237, .5);
+  }
+
+  /* =========================
+     CUSTOM SELECT
+     ========================= */
+  select {
+      appearance: none;
+      background: var(--glass);
+      border: 1px solid rgba(255,255,255,.07);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: box-shadow .18s ease, transform .12s ease, border-color .18s ease;
+      cursor: pointer;
+      background-image:
+          linear-gradient(45deg, transparent 50%, #cfd6ea 50%),
+          linear-gradient(135deg, #cfd6ea 50%, transparent 50%);
+      background-position:
+          calc(100% - 18px) calc(50% + 1px),
+          calc(100% - 12px) calc(50% + 1px);
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+  }
+
+  select:hover {
+    border-color: rgba(124,58,237,.35);
+    box-shadow: 0 4px 12px rgba(124,58,237,.12);
+    transform: translateY(-1px);
+  }
 </style>
 </head>
 <body>
-    <!-- AUTH VIEW (kept) -->
-    <div id="auth-view" class="auth-form" style="display:block">
+    <div id="auth-view" class="auth-form">
         <h2>Welcome to Lead Studio Pro</h2>
         <input id="authEmail" type="email" placeholder="Email" autocomplete="username">
         <input id="authPass" type="password" placeholder="Password" autocomplete="current-password">
@@ -134,18 +403,15 @@
         <div id="authStatus" class="meta" style="text-align: center;"></div>
     </div>
 
-    <!-- APP VIEW (kept, display toggled by auth) -->
     <div id="app-view" class="app" style="display:none">
         <div class="topbar">
             <div class="brand">
                 <h1>Lead Studio Pro</h1>
                 <p>Apple-grade UI • Advanced YouTube lead extractor</p>
             </div>
-
             <div class="bar-controls">
                 <input id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA"/>
                 <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)"></textarea>
-
                 <div class="button-group" style="margin-left:auto;">
                   <button class="btn btn-primary" id="btnSearch">Search</button>
                   <button class="btn btn-primary" id="btnDeepSearch" style="background: linear-gradient(90deg, #d946ef, #a855f7);">Deep Search</button>
@@ -155,7 +421,6 @@
         </div>
 
         <div class="main">
-            <!-- FILTERS -->
             <div class="panel">
                 <div class="row" style="justify-content:space-between;margin-bottom:8px">
                     <div class="meta">Advanced Filters</div>
@@ -163,7 +428,7 @@
                 </div>
                 <div class="filters">
                     <select id="order"><option value="relevance">Order: Relevance</option><option value="date">Order: Date</option><option value="viewCount">Order: Views</option><option value="rating">Order: Rating</option></select>
-                    <select id="duration"><option value="">Duration: Any</option><option value="short">Short (&lt;4m)</option><option value="medium">Medium (4–20m)</option><option value="long">Long (&gt;20m)</option></select>
+                    <select id="duration"><option value="">Duration: Any</option><option value="short">Short (<4m)</option><option value="medium">Medium (4–20m)</option><option value="long">Long (>20m)</option></select>
                     <select id="upload"><option value="">Upload Time: Any</option><option value="hour">Last hour</option><option value="today">Today</option><option value="week">This week</option><option value="month">This month</option></select>
                     <select id="region"><option value="">Region: Any</option><option>US</option><option>IN</option><option>GB</option><option>CA</option><option>AU</option><option>DE</option></select>
                     <select id="definition"><option value="">Definition: Any</option><option value="high">HD</option><option value="standard">SD</option></select>
@@ -180,12 +445,11 @@
 
                     <div class="full row">
                         <input id="corsProxy" type="url" placeholder="Optional CORS proxy for verification (best-effort)"/>
-                        <label class="switch" title="Filter out Shorts (when on)"><input id="filterShorts" type="checkbox" checked/><span class="switch-visual"></span><small>Filter out Shorts</small></label>
-                    </div>
-
-                    <div class="full row">
-                        <label class="switch" title="Attempt to verify channel badges"><input id="doVerify" type="checkbox"/><span class="switch-visual"></span><small>Attempt verify check</small></label>
-                        <div style="flex:1"></div>
+                        <label class="switch">
+                            <input id="doVerify" type="checkbox"/>
+                            <span class="switch-visual"></span>
+                            <small>Attempt verify check</small>
+                        </label>
                     </div>
 
                     <div class="full row" style="justify-content:space-between;margin-top:2px">
@@ -195,13 +459,11 @@
                 </div>
             </div>
 
-            <!-- RESULTS -->
             <div class="panel results-wrap">
                 <div class="results-toolbar">
                     <div class="left button-group">
                         <button class="btn" id="btnSelectAll">Select All</button>
                         <button class="btn" id="btnDeselectAll">Deselect</button>
-                        <button class="btn" id="btnOpenSelected">Open Selected</button>
                         <button class="btn" id="btnSaveLib">Save Library</button>
                         <button class="btn" id="btnLoadLib">Load Library</button>
                     </div>
@@ -242,7 +504,6 @@
                 </div>
             </div>
 
-            <!-- DETAILS -->
             <div class="panel details">
                 <div>
                     <div class="row" style="justify-content:space-between">
@@ -256,16 +517,10 @@
                         </div>
                     </div>
                 </div>
-
                 <div id="banner" class="banner" style="display:none"></div>
-
                 <div class="about" id="detailContent">
                     <div class="meta">No channel selected.</div>
                 </div>
-
-                <!-- preview area (new) -->
-                <div id="videoPreviewContainer" style="display:none;margin-top:8px"></div>
-
                 <div class="meta">
                     <div class="row" style="justify-content:space-between;align-items:flex-end">
                         <div class="user-info">
@@ -277,24 +532,21 @@
             </div>
         </div>
     </div>
-
-    <!-- message box -->
+    
     <div id="messageBoxOverlay" class="message-box-overlay">
         <div id="messageBox" class="message-box">
             <h4 id="messageTitle"></h4>
             <p id="messageText"></p>
-            <div class="row" style="justify-content:center;">
-                <button class="btn btn-primary" id="messageBoxOk">OK</button>
-            </div>
+            <button class="btn btn-primary" id="messageBoxOk">OK</button>
         </div>
     </div>
-
+    
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-functions.js";
-
+        
         /* =========================
            STATE + HELPERS
            ========================= */
@@ -304,23 +556,33 @@
 
         const savedLibraryKey = 'lead_studio_pro_lib_v1';
         let currentUser = null;
-        function setStatus(t){ if($('status')) $('status').innerText = t; if($('footerInfo')) $('footerInfo').innerText = t; }
-        function setProgress(p){ if($('progressBar')) $('progressBar').style.width = Math.min(100, Math.round(p*100)) + '%'; if($('progressText')) $('progressText').innerText = Math.round(Math.min(100, Math.max(0, p*100))) + '%'; }
+        
+        function setStatus(t){ $('status').innerText = t; }
+        function setProgress(p){ $('progressBar').style.width = Math.min(100, Math.round(p*100)) + '%'; }
 
-        let LIB = [];        // enriched channels
-        let VIEW = [];       // filtered/sorted view
+        let LIB = []; // enriched channels
+        let VIEW = []; // filtered/sorted view
         let lastExport = [];
         let lastSearch = {};
-
-        // custom message box
+        
+        // Custom message box to replace alert()
         function showMessage(title, message) {
             $('messageTitle').innerText = title;
             $('messageText').innerText = message;
+            
+            const messageBox = $('messageBox');
+            // Remove any existing dynamic buttons
+            const dynamicButtons = messageBox.querySelectorAll('.btn:not(#messageBoxOk)');
+            dynamicButtons.forEach(btn => btn.remove());
+            $('messageBoxOk').style.display = 'block';
+
             $('messageBoxOverlay').style.display = 'flex';
         }
-        $('messageBoxOk').addEventListener('click', ()=> { $('messageBoxOverlay').style.display = 'none'; });
+        $('messageBoxOk').addEventListener('click', () => {
+            $('messageBoxOverlay').style.display = 'none';
+        });
 
-        // ===== FIREBASE (kept as-is) =====
+        // === FIREBASE CONFIGURATION ===
         const firebaseConfig = {
           apiKey: "AIzaSyBvU3_Njbi1JQr_wD1a16h5coTW2ifaRDU",
           authDomain: "youleadmax.firebaseapp.com",
@@ -337,7 +599,7 @@
         const functions = getFunctions(app);
         const logSearchCallable = httpsCallable(functions, 'logSearch');
 
-        /* ========================= AUTH ========================= */
+        /* ========================= AUTHENTICATION ========================= */
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
@@ -345,13 +607,16 @@
                 $('auth-view').style.display = 'none';
                 $('userEmail').innerText = `Logged in as: ${user.email}`;
 
-                // log user
+                // Log user usage for tracking purposes
                 const userRef = doc(db, 'users', user.uid);
-                await setDoc(userRef, { lastLogin: new Date().toISOString() }, { merge: true });
+                await setDoc(userRef, {
+                    lastLogin: new Date().toISOString()
+                }, { merge: true });
+
             } else {
                 currentUser = null;
                 $('app-view').style.display = 'none';
-                $('auth-view').style.display = 'block';
+                $('auth-view').style.display = 'flex';
             }
         });
 
@@ -384,76 +649,85 @@
         $('btnSearch').addEventListener('click', () => searchAll(false));
         $('btnDeepSearch').addEventListener('click', () => {
           const queryRaw = $('query').value.trim();
-          if (!queryRaw.length) { showMessage('Search Error','Please enter at least one query'); return; }
-          if (!currentUser) { showMessage('Authentication Required','Please sign in first.'); return; }
-
-          // confirmation UI
+          if (!queryRaw.length) {
+            showMessage('Search Error', 'Please enter at least one query');
+            return;
+          }
+          
+          if (!currentUser) {
+            showMessage('Authentication Required', 'Please sign in first.');
+            return;
+          }
+          
+          // Display a confirmation message box
           $('messageTitle').innerText = 'Deep Search Confirmation';
-          $('messageText').innerText = 'Deep Search will use more API quota by searching more pages. Continue?';
-          const confirmBtn = document.createElement('button');
-          confirmBtn.className='btn btn-primary';
-          confirmBtn.innerText='Yes, Continue';
-          const cancelBtn = document.createElement('button');
-          cancelBtn.className='btn';
-          cancelBtn.innerText='Cancel';
+          $('messageText').innerText = 'Deep Search will consume more API credits by searching more pages. Do you want to continue?';
+          
           const messageBox = $('messageBox');
-          const okBtn = $('messageBoxOk');
-          okBtn.style.display='none';
-          // remove previous dynamic buttons
-          const prev = messageBox.querySelectorAll('.btn.dynamic'); prev.forEach(b=>b.remove());
-          confirmBtn.classList.add('dynamic'); cancelBtn.classList.add('dynamic');
-          confirmBtn.addEventListener('click', ()=>{ $('messageBoxOverlay').style.display='none'; searchAll(true); okBtn.style.display='block'; confirmBtn.remove(); cancelBtn.remove(); });
-          cancelBtn.addEventListener('click', ()=>{ $('messageBoxOverlay').style.display='none'; okBtn.style.display='block'; confirmBtn.remove(); cancelBtn.remove(); });
-          messageBox.appendChild(confirmBtn); messageBox.appendChild(cancelBtn);
-          $('messageBoxOverlay').style.display='flex';
+          const oldOkBtn = $('messageBoxOk');
+          
+          const confirmButton = document.createElement('button');
+          confirmButton.className = 'btn btn-primary';
+          confirmButton.innerText = 'Yes, Continue';
+          confirmButton.addEventListener('click', () => {
+            $('messageBoxOverlay').style.display = 'none';
+            searchAll(true);
+          });
+          
+          const cancelButton = document.createElement('button');
+          cancelButton.className = 'btn';
+          cancelButton.innerText = 'Cancel';
+          cancelButton.addEventListener('click', () => {
+            $('messageBoxOverlay').style.display = 'none';
+          });
+          
+          oldOkBtn.style.display = 'none';
+          messageBox.appendChild(confirmButton);
+          messageBox.appendChild(cancelButton);
+          $('messageBoxOverlay').style.display = 'flex';
         });
-
+        
         $('btnClear').addEventListener('click', () => { $('query').value=''; resetResults(); });
-        $('query').addEventListener('keydown', e => { if(e.key==='Enter' && (e.ctrlKey || e.metaKey)) searchAll(); });
+        $('query').addEventListener('keydown', e => { if(e.key==='Enter') searchAll(); });
 
-        function getPublishedAfterISO(choice){
-          const d = new Date();
-          if(choice==='hour') d.setHours(d.getHours()-1);
-          else if(choice==='today') d.setHours(0,0,0,0);
-          else if(choice==='week') d.setDate(d.getDate()-7);
-          else if(choice==='month') d.setMonth(d.getMonth()-1);
-          return d.toISOString();
-        }
+        async function searchAll(isDeepSearch = false){
+            const queryRaw = $('query').value.trim();
+            const queries = queryRaw.split(/[,\\n]/).map(q=>q.trim()).filter(Boolean);
+            const perPage = clamp(Number($('perPage').value||25), 1, 50);
+            const pages = isDeepSearch ? 20 : clamp(Number($('pages').value||2), 1, 10);
 
-        async function searchAll(isDeepSearch=false){
-            if(!currentUser){ showMessage('Authentication Required','Please sign in first.'); return; }
-            const apiKey = $('apiKey').value.trim();
-            if(!apiKey) { showMessage('API Key Missing','Enter YouTube API key'); return; }
+            if(!queries.length){ showMessage('Search Error', 'Please enter at least one query'); return; }
+            if(!currentUser){ showMessage('Authentication Required', 'Please sign in first.'); return; }
 
-            const raw = $('query').value.trim();
-            if(!raw) { showMessage('Input required','Enter at least one query'); return; }
-            const queries = raw.split(/[\n,]/).map(s=>s.trim()).filter(Boolean);
-            if(!queries.length) { showMessage('No queries','No valid queries found'); return; }
-
-            const order = $('order').value || 'relevance';
-            const duration = $('duration').value || '';
-            const upload = $('upload').value || '';
-            const region = $('region').value || '';
-            const definition = $('definition').value || '';
-            const safe = $('safe').value || '';
-            const perPage = clamp(Number($('perPage').value)||25, 1, 50);
-            const pages = isDeepSearch ? 20 : clamp(Number($('pages').value)||2, 1, 10);
-            const filterShorts = !!$('filterShorts').checked;
-
-            // attempt to log search (best-effort)
-            try { await logSearchCallable({ query: raw }); } catch(e){ console.warn('logSearch failure', e); }
+            // Call the logSearch Cloud Function to record the search action
+            try {
+              // The CORS issue means we need to handle the error, but the app should still work.
+              // We will continue the search process even if logging fails.
+              await logSearchCallable({ query: queryRaw });
+            } catch (error) {
+              console.error('Failed to log search:', error);
+            }
 
             resetResults();
-            setStatus('Searching…');
-            setProgress(0);
-
-            let chanIds = new Set();
-            const totalSteps = queries.length * pages;
+            lastSearch = { queryRaw, queries, perPage, pages };
+            
+            setStatus('Searching for channels...');
+            const apiKey = $('apiKey').value.trim();
+            const order = $('order').value;
+            const duration = $('duration').value;
+            const upload = $('upload').value;
+            const region = $('region').value;
+            const definition = $('definition').value;
+            const safe = $('safe').value;
+            let totalSteps = queries.length * pages;
             let done = 0;
-
+            let chanIds = new Set();
+            
             for(const q of queries){
                 let pageToken = '';
-                for(let p=0;p<pages;p++){
+                for(let i=0;i<pages;i++){
+                    if(!pageToken && i>0) break;
+                    
                     const url = new URL('https://www.googleapis.com/youtube/v3/search');
                     url.searchParams.set('part','snippet');
                     url.searchParams.set('type','video');
@@ -463,39 +737,43 @@
                     if(region) url.searchParams.set('regionCode', region);
                     if(duration) url.searchParams.set('videoDuration', duration);
                     if(definition) url.searchParams.set('videoDefinition', definition);
-                    if(safe) url.searchParams.set('safeSearch', safe);
                     if(upload) url.searchParams.set('publishedAfter', getPublishedAfterISO(upload));
                     if(pageToken) url.searchParams.set('pageToken', pageToken);
                     url.searchParams.set('key', apiKey);
-
+                    
                     let resp;
                     try { resp = await fetch(url.toString()); }
-                    catch(e){ console.error(e); showMessage('Network Error','Network error during search'); setStatus('Network Error'); return; }
-
-                    if(!resp.ok){ const t = await resp.text(); showMessage('YouTube Search Error', `Status ${resp.status}\n${t}`); setStatus('API Error'); return; }
+                    catch(e){ console.error(e); showMessage('Network Error', 'A network error occurred during the search. Please check your connection.'); return; }
+                    
+                    if(!resp.ok){
+                        const t = await resp.text();
+                        showMessage('Search API Error', `YouTube API returned an error: ${resp.status}\n${t}`);
+                        return;
+                    }
+                    
                     const data = await resp.json();
-
+                    
                     (data.items || []).forEach(item => {
-                        const t = (item.snippet && item.snippet.title) ? item.snippet.title.toLowerCase() : '';
-                        const d = (item.snippet && item.snippet.description) ? item.snippet.description.toLowerCase() : '';
-                        if(filterShorts) {
-                          if(t.includes('#shorts') || t.includes('shorts ') || t.endsWith('shorts') || d.includes('#shorts') || d.includes('shorts ')) return;
-                        }
-                        const cid = item.snippet ? item.snippet.channelId : '';
+                        // Shorts filtering (multi-heuristic)
+                        const t = (item.snippet.title||'').toLowerCase();
+                        const d = (item.snippet.description||'').toLowerCase();
+                        if(t.includes('#shorts') || t.includes('shorts ') || t.endsWith('shorts') || d.includes('#shorts') || d.includes('shorts ')) return;
+                        const cid = item.snippet.channelId;
                         if(cid) chanIds.add(cid);
                     });
-
+                    
                     pageToken = data.nextPageToken || '';
                     done++;
-                    setProgress(done/totalSteps * 0.55);
-                    await sleep(140);
-                    if(!pageToken) break;
+                    setProgress(done/totalSteps * 0.65);
+                    await sleep(180);
                 }
             }
-
-            if(chanIds.size === 0){ setStatus('No channels'); setProgress(1); showMessage('No Results','No channels found for your queries.'); return; }
+            
+            if(chanIds.size===0){ setStatus('No channels found'); setProgress(1); return; }
+            
             setStatus(`Found ${chanIds.size} channels — fetching details…`);
-
+            
+            // fetch channels in batches of 50
             const ids = Array.from(chanIds);
             for(let i=0;i<ids.length;i+=50){
                 const batch = ids.slice(i,i+50);
@@ -503,71 +781,68 @@
                 chURL.searchParams.set('part','snippet,statistics,brandingSettings');
                 chURL.searchParams.set('id', batch.join(','));
                 chURL.searchParams.set('key', apiKey);
+                
                 let resp;
                 try { resp = await fetch(chURL.toString()); }
-                catch(e){ console.error(e); showMessage('Network Error','Error fetching channel details'); setStatus('Network Error'); return; }
-                if(!resp.ok){ const t = await resp.text(); showMessage('Channels API Error', `Status ${resp.status}\n${t}`); setStatus('API Error'); return; }
-                const data = await resp.json();
-
-                (data.items || []).forEach(ch => {
-                    if(!ch.snippet || !ch.snippet.title) return;
-                    const stats = ch.statistics || {};
-                    const subs = Number(stats.subscriberCount||0);
-                    const views = Number(stats.viewCount||0);
-                    const vids = Number(stats.videoCount||0);
-                    if(subs < 10) return; // filter out junk channels
-                    const country = ch.snippet.country || (ch.brandingSettings && ch.brandingSettings.channel && ch.brandingSettings.channel.country) || 'N/A';
-                    LIB.push({
-                        channelId: ch.id,
-                        title: ch.snippet.title,
-                        description: ch.snippet.description || '',
-                        avatar: (ch.snippet.thumbnails && (ch.snippet.thumbnails.medium || ch.snippet.thumbnails.default)) ? (ch.snippet.thumbnails.medium || ch.snippet.thumbnails.default).url : '',
-                        banner: (ch.brandingSettings && ch.brandingSettings.image && ch.brandingSettings.image.bannerExternalUrl) ? ch.brandingSettings.image.bannerExternalUrl : '',
-                        subs, views, videos: vids,
-                        hidden: !!stats.hiddenSubscriberCount,
-                        country: country,
-                        createdAt: (ch.snippet.publishedAt||'').split('T')[0] || '',
-                        verified: 'Unknown'
-                    });
-                });
-
-                setProgress(0.55 + Math.min((i+50)/ids.length, 1) * 0.4);
-                await sleep(120);
-            }
-
-            // optional verification (best-effort)
-            if($('doVerify').checked && $('corsProxy').value.trim()){
-                setStatus('Verifying channels (best-effort)…');
-                const proxy = $('corsProxy').value.trim().replace(/\/$/,'');
-                for(let i=0;i<LIB.length;i++){
-                    const c = LIB[i];
-                    try {
-                        const url = proxy + '/' + encodeURIComponent('https://www.youtube.com/channel/' + c.channelId);
-                        const r = await fetch(url);
-                        if(r && r.ok){
-                            const txt = (await r.text()).toLowerCase();
-                            if(/verified|checkmark|channelbadge/.test(txt)) c.verified = 'Yes';
-                            else c.verified = 'No';
-                        }
-                    } catch(e){}
-                    setProgress(0.9 + i/LIB.length * 0.08);
+                catch(e){ console.error(e); showMessage('Network Error', 'A network error occurred while fetching channel details.'); return; }
+                
+                if(!resp.ok){
+                    const t = await resp.text();
+                    showMessage('Channels API Error', `YouTube API returned an error: ${resp.status}\n${t}`);
+                    return;
                 }
+                
+                const data = await resp.json();
+                
+                (data.items||[]).forEach(ch => {
+                    if(!ch.snippet || !ch.snippet.title) return; // junk
+                    const stats = ch.statistics || {};
+                    const title = ch.snippet.title;
+                    
+                    let country = ch.snippet.country || '';
+                    if(!country && ch.brandingSettings?.channel?.country){
+                        country = ch.brandingSettings.channel.country;
+                    }
+                    
+                    LIB.push({
+                        title: title,
+                        description: ch.snippet.description,
+                        channelId: ch.id,
+                        subs: Number(stats.subscriberCount||0),
+                        views: Number(stats.viewCount||0),
+                        videos: Number(stats.videoCount||0),
+                        verified: (ch.snippet.customUrl||'').includes('channel') ? 'No' : 'Yes',
+                        avatar: ch.snippet.thumbnails?.high?.url || ch.snippet.thumbnails?.default?.url || '',
+                        banner: ch.brandingSettings?.image?.bannerExternalUrl || '',
+                        country: country,
+                        createdAt: ch.snippet.publishedAt.split('T')[0]
+                    });
+                    
+                    done++;
+                    setProgress(0.65 + (done/totalSteps * 0.35));
+                });
+                await sleep(180);
             }
 
-            applyClientFiltersAndRender();
-            setProgress(1); setStatus('Ready');
-            lastSearch = { queries, perPage, pages };
+            if(LIB.length===0){
+                setStatus('No channels found');
+            } else {
+                applyClientFiltersAndRender();
+                setStatus(`Found ${LIB.length} channels.`);
+            }
+            setProgress(1);
+        }
+
+        function getPublishedAfterISO(timeframe){
+            const d = new Date();
+            if(timeframe==='hour') d.setHours(d.getHours() - 1);
+            if(timeframe==='today') d.setDate(d.getDate() - 1);
+            if(timeframe==='week') d.setDate(d.getDate() - 7);
+            if(timeframe==='month') d.setMonth(d.getMonth() - 1);
+            return d.toISOString();
         }
 
         function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
-
-        /* =========================
-           apply filters + render
-           ========================= */
-        $('clientSort').addEventListener('change', applyClientFiltersAndRender);
-        $('minSubs').addEventListener('input', () => setTimeout(applyClientFiltersAndRender, 120));
-        $('maxSubs').addEventListener('input', () => setTimeout(applyClientFiltersAndRender, 120));
-        $('searchInResults').addEventListener('input', () => setTimeout(applyClientFiltersAndRender, 150));
 
         function applyClientFiltersAndRender(){
             const min = Number($('minSubs').value||0);
@@ -579,7 +854,7 @@
                 if(c.subs < min) return false;
                 if(c.subs > max) return false;
                 if(needle){
-                    const hit = (c.title && c.title.toLowerCase().includes(needle)) || (c.channelId && c.channelId.toLowerCase().includes(needle));
+                    const hit = (c.title?.toLowerCase().includes(needle)) || (c.channelId?.toLowerCase().includes(needle));
                     if(!hit) return false;
                 }
                 return true;
@@ -602,9 +877,12 @@
             $('count').innerText = VIEW.length + ' channels';
         }
 
-        /* =========================
-           render results + details
-           ========================= */
+        /* ========================= RENDER RESULTS + DETAILS ========================= */
+        $('clientSort').addEventListener('change', applyClientFiltersAndRender);
+        $('minSubs').addEventListener('input', applyClientFiltersAndRender);
+        $('maxSubs').addEventListener('input', applyClientFiltersAndRender);
+        $('searchInResults').addEventListener('input', applyClientFiltersAndRender);
+
         function renderResults(list){
             const tbody = $('resultsTbody');
             tbody.innerHTML = '';
@@ -614,120 +892,82 @@
             }
             list.forEach((c, idx) => {
                 const tr = document.createElement('tr');
-
-                // build cells safely
-                const tdCheck = document.createElement('td');
-                tdCheck.innerHTML = `<input type="checkbox" class="sel" data-idx="${idx}"/>`;
-
-                const tdChannel = document.createElement('td');
-                tdChannel.innerHTML = `
-                    <div style="display:flex;align-items:center;gap:10px">
-                        <img class="avatar" src="${escapeAttr(c.avatar || '')}" alt="">
-                        <div>
-                            <div style="font-weight:700">${escapeHtml(c.title)}</div>
-                            <div class="meta">${escapeHtml(c.channelId)}</div>
+                tr.innerHTML = `
+                    <td><input type="checkbox" class="sel" data-idx="${idx}"/></td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:10px">
+                            <img class="avatar" src="${sanitize(c.avatar)}" alt="">
+                            <div>
+                                <div style="font-weight:700">${sanitize(c.title)}</div>
+                                <div class="meta">${sanitize(c.channelId)}</div>
+                            </div>
                         </div>
-                    </div>
+                    </td>
+                    <td>${c.hidden ? 'Hidden' : (c.subs||0).toLocaleString()}</td>
+                    <td>${(c.videos||0).toLocaleString()}</td>
+                    <td>${(c.views||0).toLocaleString()}</td>
+                    <td>${c.verified}</td>
                 `;
-
-                const tdSubs = document.createElement('td'); tdSubs.textContent = c.hidden ? 'Hidden' : (c.subs||0).toLocaleString();
-                const tdVideos = document.createElement('td'); tdVideos.textContent = (c.videos||0).toLocaleString();
-                const tdViews = document.createElement('td'); tdViews.textContent = (c.views||0).toLocaleString();
-                const tdVerified = document.createElement('td'); tdVerified.textContent = c.verified || 'Unknown';
-
-                tr.appendChild(tdCheck); tr.appendChild(tdChannel); tr.appendChild(tdSubs); tr.appendChild(tdVideos); tr.appendChild(tdViews); tr.appendChild(tdVerified);
-
-                tr.addEventListener('click', (e) => {
-                    // ignore clicks on the checkbox itself
-                    if(e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'A' || e.target.tagName === 'BUTTON')) return;
-                    renderDetails(c);
+                tr.addEventListener('click', e => {
+                    if(e.target.type !== 'checkbox'){
+                        renderDetails(c);
+                    }
                 });
-
                 tbody.appendChild(tr);
             });
         }
-
-        /* render details uses an About-page scrape to show socials (best-effort) */
+        
         async function renderDetails(c){
             $('detailTitle').innerText = c.title;
-
-            // show banner if available
-            if(c.banner){
-                $('banner').style.display = 'block';
-                $('banner').style.backgroundImage = `url(${escapeAttr(c.banner)})`;
-            } else {
-                $('banner').style.display = 'none';
-            }
-
-            // fetch social links from about page (best-effort)
             const socialLinks = await getSocialLinksFromAboutPage(c.channelId);
 
             $('detailContent').innerHTML = `
-                <div class="meta">Channel ID: ${escapeHtml(c.channelId)} • ${escapeHtml(c.country)} • Created: ${escapeHtml(c.createdAt)}</div>
-                <p style="margin-top:10px;line-height:1.5;font-size:14px;color:var(--muted)">${escapeHtml(c.description || '')}</p>
+                <div class="meta">Channel ID: ${c.channelId} • ${c.country} • Created: ${c.createdAt}</div>
+                <p style="margin-top:10px;line-height:1.5;font-size:14px;color:var(--muted)">${sanitize(c.description)}</p>
                 <div class="stats" style="margin-top:14px">
-                    <div class="stat"><b>${(c.subs||0).toLocaleString()}</b><div class="meta">Subscribers</div></div>
-                    <div class="stat"><b>${(c.views||0).toLocaleString()}</b><div class="meta">Total Views</div></div>
-                    <div class="stat"><b>${(c.videos||0).toLocaleString()}</b><div class="meta">Total Videos</div></div>
+                    <div class="stat"><b>${c.subs.toLocaleString()}</b><div class="meta">Subscribers</div></div>
+                    <div class="stat"><b>${c.views.toLocaleString()}</b><div class="meta">Total Views</div></div>
+                    <div class="stat"><b>${c.videos.toLocaleString()}</b><div class="meta">Total Videos</div></div>
                 </div>
-
+                
                 <h4 style="margin:20px 0 8px">Social Links</h4>
-                <div id="socialLinksContainer" class="row" style="flex-wrap:wrap;gap:8px"></div>
-
+                <div class="row" style="flex-wrap:nowrap;justify-content:space-between">
+                    <div class="row button-group" id="socialLinksContainer">
+                        ${socialLinks.website?`<a href="${sanitize(socialLinks.website)}" target="_blank" class="btn">Website</a>`:''}
+                        ${socialLinks.twitter?`<a href="${sanitize(socialLinks.twitter)}" target="_blank" class="btn">Twitter</a>`:''}
+                        ${socialLinks.instagram?`<a href="${sanitize(socialLinks.instagram)}" target="_blank" class="btn">Instagram</a>`:''}
+                        ${socialLinks.facebook?`<a href="${sanitize(socialLinks.facebook)}" target="_blank" class="btn">Facebook</a>`:''}
+                        ${socialLinks.tiktok?`<a href="${sanitize(socialLinks.tiktok)}" target="_blank" class="btn">TikTok</a>`:''}
+                        ${socialLinks.linkedin?`<a href="${sanitize(socialLinks.linkedin)}" target="_blank" class="btn">LinkedIn</a>`:''}
+                    </div>
+                </div>
                 <h4 style="margin:20px 0 8px">Latest Videos <small class="meta">(up to 6)</small></h4>
-                <div class="videos-grid" id="latestVideos"><div class="meta">Loading...</div></div>
+                <div class="videos-grid" id="latestVideos">
+                    <div class="meta">Loading...</div>
+                </div>
             `;
-
-            // populate social buttons
-            const container = $('socialLinksContainer');
-            container.innerHTML = '';
-            const addSocialBtn = (label, url) => {
-                const a = document.createElement('a');
-                a.className = 'btn';
-                a.href = url;
-                a.target = '_blank';
-                a.rel = 'noopener';
-                a.textContent = label;
-                container.appendChild(a);
-            };
-            if(socialLinks.website) addSocialBtn('Website', socialLinks.website);
-            if(socialLinks.twitter) addSocialBtn('Twitter', socialLinks.twitter);
-            if(socialLinks.instagram) addSocialBtn('Instagram', socialLinks.instagram);
-            if(socialLinks.facebook) addSocialBtn('Facebook', socialLinks.facebook);
-            if(socialLinks.tiktok) addSocialBtn('TikTok', socialLinks.tiktok);
-            if(socialLinks.linkedin) addSocialBtn('LinkedIn', socialLinks.linkedin);
-            if(!Object.keys(socialLinks).length) container.innerHTML = '<div class="meta">No socials detected.</div>';
-
-            // render quick social chips at topbar (small)
-            renderQuickChips(socialLinks);
-
-            // load latest videos
-            await loadLatestVideos(c.channelId);
-        }
-
-        // Quick chips in topbar (non-destructive addition)
-        function renderQuickChips(socials){
-            // create topbar chip area if missing
-            let tb = document.getElementById('topbarChips');
-            if(!tb){
-                tb = document.createElement('div'); tb.id='topbarChips'; tb.style.marginLeft='12px';
-                document.querySelector('.topbar .bar-controls').appendChild(tb);
+            if(c.banner){
+                $('banner').style.display = 'block';
+                $('banner').style.backgroundImage = `url(${sanitize(c.banner)})`;
+            } else {
+                $('banner').style.display = 'none';
             }
-            tb.innerHTML = '';
-            const keys = ['website','twitter','instagram','facebook','tiktok','linkedin'];
-            let added=false;
-            keys.forEach(k=>{
-                if(socials[k]){
-                    const chip = document.createElement('span'); chip.className='chip'; chip.textContent = k[0].toUpperCase()+k.slice(1);
-                    chip.title = socials[k];
-                    chip.onclick = ()=> window.open(socials[k], '_blank', 'noopener');
-                    tb.appendChild(chip); added=true;
-                }
-            });
-            if(!added){ const hint = document.createElement('span'); hint.className='chip'; hint.style.opacity='.6'; hint.textContent='No socials'; tb.appendChild(hint); }
+            
+            loadLatestVideos(c.channelId);
         }
 
-        /* ========================= loadLatestVideos (rewritten safe build) ========================= */
+        /* ========================= UTIL ========================= */
+        function resetResults(){
+            LIB = []; VIEW = []; lastExport = [];
+            $('resultsTbody').innerHTML=''; $('count').innerText='0 channels';
+            $('detailTitle').innerText = 'Select a channel';
+            $('detailContent').innerHTML = '<div class="meta">No channel selected.</div>';
+            $('banner').style.display='none'; $('banner').style.backgroundImage='none';
+            setProgress(0); setStatus('Idle');
+        }
+
+        function sanitize(s){ try{ return s.replace(/</g,'<'); } catch(e){return '';} }
+
         async function loadLatestVideos(channelId){
             const apiKey = $('apiKey').value.trim();
             const box = $('latestVideos');
@@ -740,196 +980,197 @@
                 u.searchParams.set('type','video');
                 u.searchParams.set('key', apiKey);
                 const r = await fetch(u.toString());
-                if(!r.ok){ box.innerHTML = '<div class="meta">Cannot load videos.</div>'; return; }
+                if(!r.ok){
+                    box.innerHTML = '<div class="meta">Cannot load videos.</div>';
+                    return;
+                }
                 const data = await r.json();
-                if(!data.items?.length){ box.innerHTML = '<div class="meta">No recent videos.</div>'; return; }
-
-                box.innerHTML = '';
+                if(!data.items?.length){
+                    box.innerHTML = '<div class="meta">No recent videos.</div>';
+                    return;
+                }
+                box.innerHTML='';
                 data.items.forEach(it => {
-                    const vid = (it.id && it.id.videoId) ? it.id.videoId : '';
-                    const thumb = (it.snippet && it.snippet.thumbnails && (it.snippet.thumbnails.medium || it.snippet.thumbnails.default)) ? (it.snippet.thumbnails.medium || it.snippet.thumbnails.default).url : '';
-                    const title = it.snippet && it.snippet.title ? it.snippet.title : '';
-
+                    const vid = it.id.videoId;
+                    const thumb = it.snippet.thumbnails?.medium?.url || it.snippet.thumbnails?.default?.url || '';
+                    const title = it.snippet.title || '';
                     const card = document.createElement('div');
                     card.className = 'video-card';
-
-                    const img = document.createElement('img'); img.src = thumb || ''; img.alt = title;
-                    const h4 = document.createElement('h4'); h4.textContent = title;
-                    const row = document.createElement('div'); row.className = 'row'; row.style.marginTop = '6px';
-                    const openBtn = document.createElement('button'); openBtn.className = 'btn btn-primary'; openBtn.textContent = 'Open';
-                    openBtn.addEventListener('click', ()=> window.open('https://www.youtube.com/watch?v='+vid, '_blank', 'noopener'));
-                    const prevBtn = document.createElement('button'); prevBtn.className = 'btn'; prevBtn.textContent = 'Preview';
-                    prevBtn.addEventListener('click', ()=> embed(vid));
-
-                    row.appendChild(openBtn); row.appendChild(prevBtn);
-                    card.appendChild(img); card.appendChild(h4); card.appendChild(row);
-
+                    card.innerHTML = `
+                        <img src="${sanitize(thumb)}" alt="">
+                        <h4>${sanitize(title)}</h4>
+                        <div class="row" style="margin-top:6px">
+                            <button class="btn btn-primary" onclick="window.open('https://www.youtube.com/watch?v=${vid}')">Open</button>
+                            <button class="btn" onclick="embed('${vid}')">Preview</button>
+                        </div>
+                    `;
                     box.appendChild(card);
                 });
-            }catch(e){ console.error(e); box.innerHTML = '<div class="meta">Error loading videos.</div>'; }
+            }catch(e){
+                console.error(e);
+                box.innerHTML = '<div class="meta">Error loading videos.</div>';
+            }
         }
-
-        /* ========================= embed preview (FIXED + improved) ========================= */
+        
         function embed(videoId){
-            if(!videoId) { showMessage('Preview Error','No video id available'); return; }
-            // remove existing preview
-            const container = $('videoPreviewContainer');
-            if(!container) return;
-            container.innerHTML = '';
-            container.style.display = 'block';
-
-            const wrap = document.createElement('div');
-            wrap.style.position = 'relative';
-
-            const closeBtn = document.createElement('button');
-            closeBtn.className = 'btn';
-            closeBtn.style.position = 'absolute';
-            closeBtn.style.right = '6px';
-            closeBtn.style.top = '-40px';
-            closeBtn.textContent = 'Close Preview';
-            closeBtn.addEventListener('click', ()=> {
-                container.innerHTML=''; container.style.display='none';
-            });
-
-            const iframe = document.createElement('iframe');
-            iframe.id = 'previewFrame';
-            iframe.width = '100%';
-            iframe.height = '280';
-            iframe.style.border = '1px solid rgba(255,255,255,.08)';
-            iframe.style.borderRadius = '12px';
-            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-            iframe.src = 'https://www.youtube.com/embed/' + encodeURIComponent(videoId) + '?rel=0&modestbranding=1&autoplay=1';
-
-            wrap.appendChild(closeBtn);
-            wrap.appendChild(iframe);
-            container.appendChild(wrap);
-            iframe.scrollIntoView({behavior:'smooth'});
+            // add/replace a small embed at bottom-right of results panel
+            let frame = document.getElementById('previewFrame');
+            if(frame){ frame.remove(); }
+            frame = document.createElement('iframe');
+            frame.id='previewFrame';
+            frame.width='100%';
+            frame.height='220px';
+            frame.style.marginTop='10px';
+            frame.src=`https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            frame.setAttribute('allow','accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture');
+            $('detailContent').appendChild(frame);
+        }
+        
+        // Helper for copying text to clipboard
+        async function copyText(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+            } catch (err) {
+                // Fallback for older browsers or restricted environments
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            }
         }
 
-        /* ========================= UTIL: sanitize functions ========================= */
-        function escapeHtml(str){
-            if(!str && str!==0) return '';
-            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-        }
-        function escapeAttr(s){ return escapeHtml(s); } // safe for attributes set via innerHTML
-        function escapeHtmlText(s){ return escapeHtml(s); }
-
-        /* ========================= Exporting + library management ========================= */
+        /* ========================= EXPORTING ========================= */
         $('btnExportCSV').addEventListener('click', () => {
-            if(!lastExport.length) { showMessage('Export Failed','No results to export'); return; }
-            downloadText(toCSV(lastExport),'lead_studio_pro.csv','text/csv');
+            const rows = lastExport;
+            if(!rows.length) return showMessage('Export Failed', 'No results to export');
+            downloadText(toCSV(rows), 'lead_studio_pro.csv', 'text/csv');
         });
         $('btnExportJSON').addEventListener('click', () => {
-            if(!lastExport.length) { showMessage('Export Failed','No results to export'); return; }
-            downloadText(JSON.stringify(lastExport.map(cToSafe), null, 2),'lead_studio_pro.json','application/json');
+            const rows = lastExport.map(cToSafe);
+            if(!rows.length) return showMessage('Export Failed', 'No results to export');
+            downloadText(JSON.stringify(rows,null,2), 'lead_studio_pro.json', 'application/json');
         });
         $('btnCopyIDs').addEventListener('click', async () => {
-            if(!lastExport.length) { showMessage('Copy Failed','No results to copy'); return; }
-            const ids = lastExport.map(r => r.channelId).join('\n');
+            const rows = lastExport;
+            if(!rows.length) return showMessage('Copy Failed', 'No results to copy');
+            const ids = rows.map(r=>r.channelId).join('\n');
             await copyText(ids);
-            showMessage('Copy Success','Channel IDs copied to clipboard.');
+            showMessage('Copy Success', 'Channel IDs copied to clipboard.');
+        });
+        $('btnSelectAll').addEventListener('click', () => {
+            document.querySelectorAll('.sel').forEach(cb => cb.checked=true);
+        });
+        $('btnDeselectAll').addEventListener('click', () => {
+            document.querySelectorAll('.sel').forEach(cb => cb.checked=false);
+        });
+        $('btnExportSelected').addEventListener('click', () => {
+            const rows = getSelected();
+            if(!rows.length) return showMessage('Export Failed', 'Select some rows first');
+            downloadText(toCSV(rows), 'lead_studio_pro_selected.csv', 'text/csv');
+        });
+        $('btnCopySelected').addEventListener('click', async () => {
+            const rows = getSelected();
+            if(!rows.length) return showMessage('Copy Failed', 'Select some rows first');
+            const csv = toCSV(rows);
+            await copyText(csv);
+            showMessage('Copy Success', 'Selected CSV copied to clipboard.');
+        });
+        $('btnClearResults').addEventListener('click', () => {
+          resetResults();
+          showMessage('Results Cleared', 'All search results have been cleared.');
         });
 
-        $('btnSelectAll').addEventListener('click', ()=>document.querySelectorAll('.sel').forEach(cb=>cb.checked=true));
-        $('btnDeselectAll').addEventListener('click', ()=>document.querySelectorAll('.sel').forEach(cb=>cb.checked=false));
-        $('btnOpenSelected').addEventListener('click', ()=> {
-            const s = getSelected();
-            if(!s.length) return showMessage('Open Failed','Select some channels first');
-            s.forEach(ch => window.open('https://www.youtube.com/channel/'+ch.channelId,'_blank','noopener'));
-        });
+        function getSelected(){
+            return Array.from(document.querySelectorAll('.sel:checked')).map(cb => VIEW[Number(cb.dataset.idx)]).filter(Boolean);
+        }
 
-        $('btnExportSelected').addEventListener('click', ()=> {
-            const rows = getSelected(); if(!rows.length) return showMessage('Export Failed','Select some rows first');
-            downloadText(toCSV(rows),'lead_studio_pro_selected.csv','text/csv');
-        });
-        $('btnCopySelected').addEventListener('click', async ()=> {
-            const rows = getSelected(); if(!rows.length) return showMessage('Copy Failed','Select some rows first');
-            const csv = toCSV(rows); await copyText(csv); showMessage('Copy Success','Selected CSV copied to clipboard.');
-        });
-
-        $('btnClearResults').addEventListener('click', ()=> { resetResults(); showMessage('Cleared','Results cleared'); });
-
-        function getSelected(){ return Array.from(document.querySelectorAll('.sel:checked')).map(cb => VIEW[Number(cb.dataset.idx)]).filter(Boolean); }
         function toCSV(arr){
             const fields = ['channel','subs','videos','views','verified','channelId','country','createdAt'];
-            let out = fields.join(',') + '\n';
+            let out = fields.map(f=>`"${f}"`).join(',')+'\n';
             arr.forEach(r => {
                 out += `"${esc(r.title)}","${r.hidden?'Hidden':r.subs}","${r.videos}","${r.views}","${r.verified}","${r.channelId}","${esc(r.country)}","${r.createdAt}"\n`;
             });
             return out;
         }
+
         function downloadText(text, filename, type){
-            const blob = new Blob([text], {type:type});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
-            setTimeout(()=>URL.revokeObjectURL(url),1500);
+            const blob = new Blob([text], {type: type});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
         }
-        function cToSafe(c){ return { channelId:c.channelId, title:c.title, subs:c.subs, views:c.views, videos:c.videos, verified:c.verified, country:c.country, createdAt:c.createdAt }; }
-        $('btnSaveLib').addEventListener('click', ()=> {
-            if(!LIB.length) return showMessage('Save Failed','No channels to save.');
-            try { localStorage.setItem(savedLibraryKey, JSON.stringify(LIB)); showMessage('Save Success',`Saved ${LIB.length} channels`); } catch(e){ showMessage('Save Failed','Local storage error'); }
-        });
-        $('btnLoadLib').addEventListener('click', ()=> {
-            const raw = localStorage.getItem(savedLibraryKey); if(!raw) return showMessage('Load Failed','No saved library');
-            try{ LIB = JSON.parse(raw); applyClientFiltersAndRender(); showMessage('Load Success',`Loaded ${LIB.length} channels`);}catch(e){ showMessage('Load Failed','Data corrupted'); }
+
+        function cToSafe(c){
+            // strip big strings that might break inline JSON calls
+            return {
+                channelId:c.channelId,
+                title:c.title,
+                subs:c.subs,
+                views:c.views,
+                videos:c.videos,
+                verified:c.verified,
+                country:c.country,
+                createdAt:c.createdAt
+            };
+        }
+
+        // Handle local storage for library
+        $('btnSaveLib').addEventListener('click', () => {
+            if(!LIB.length) return showMessage('Save Failed', 'No channels to save.');
+            try {
+                localStorage.setItem(savedLibraryKey, JSON.stringify(LIB));
+                showMessage('Save Success', `Saved ${LIB.length} channels to local storage.`);
+            } catch(e){
+                showMessage('Save Failed', 'Failed to save library. Local storage might be full.');
+            }
         });
 
-        /* ========================= Social scraping (best-effort; respects CORS) ========================= */
-        async function getSocialLinksFromAboutPage(channelId){
+        $('btnLoadLib').addEventListener('click', () => {
+            const data = localStorage.getItem(savedLibraryKey);
+            if(!data) return showMessage('Load Failed', 'No saved library found.');
             try{
-                const proxy = $('corsProxy').value || '';
-                // if a proxy is provided, ensure it ends with / or not? user likely provides one ending in /
-                const aboutUrl = proxy + 'https://www.youtube.com/channel/' + channelId + '/about';
-                const resp = await fetch(aboutUrl);
-                if(!resp.ok) return {};
-                const html = await resp.text();
-                // parse the HTML and find external links in "about" area (best-effort)
+                const loaded = JSON.parse(data);
+                LIB = loaded;
+                applyClientFiltersAndRender();
+                showMessage('Load Success', `Loaded ${LIB.length} channels from local storage.`);
+            } catch(e){
+                showMessage('Load Failed', 'Failed to load library. Data may be corrupted.');
+            }
+        });
+
+        // Function to reliably retrieve social links from the channel's About page
+        async function getSocialLinksFromAboutPage(channelId) {
+            const proxyUrl = $('corsProxy').value || '';
+            const aboutUrl = `${proxyUrl}https://www.youtube.com/channel/${channelId}/about`;
+            
+            try {
+                const response = await fetch(aboutUrl);
+                const html = await response.text();
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
-                const anchors = doc.querySelectorAll('a[href]');
-                const socials = {};
-                anchors.forEach(a => {
-                    const href = a.href || a.getAttribute('href') || '';
-                    if(!href) return;
-                    if(/twitter\.com/i.test(href)) socials.twitter = href;
-                    else if(/instagram\.com/i.test(href)) socials.instagram = href;
-                    else if(/facebook\.com/i.test(href)) socials.facebook = href;
-                    else if(/tiktok\.com/i.test(href)) socials.tiktok = href;
-                    else if(/linkedin\.com/i.test(href)) socials.linkedin = href;
-                    else if(!socials.website) socials.website = href;
+                
+                const socialLinks = {};
+                const linkElements = doc.querySelectorAll('.yt-formatted-string a');
+                
+                linkElements.forEach(link => {
+                    const url = link.href;
+                    if (url.includes('twitter.com')) socialLinks.twitter = url;
+                    else if (url.includes('instagram.com')) socialLinks.instagram = url;
+                    else if (url.includes('facebook.com')) socialLinks.facebook = url;
+                    else if (url.includes('tiktok.com')) socialLinks.tiktok = url;
+                    else if (url.includes('linkedin.com')) socialLinks.linkedin = url;
+                    else if (!socialLinks.website) socialLinks.website = url;
                 });
-                return socials;
-            }catch(e){
-                console.warn('social scraping failed', e);
+                
+                return socialLinks;
+            } catch (error) {
+                console.error('Failed to retrieve social links:', error);
                 return {};
             }
         }
-
-        /* ========================= Sanitizers + copy helper ========================= */
-        function escapeHtml(s){ if(s === null || s === undefined) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-        function copyText(text){ return navigator.clipboard?.writeText ? navigator.clipboard.writeText(text) : (function(){ const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); })(); }
-        function sanitize(s){ try { return String(s || ''); } catch(e){ return ''; } }
-
-        /* ========================= reset + init ========================= */
-        function resetResults(){
-            LIB = []; VIEW = []; lastExport = [];
-            $('resultsTbody').innerHTML=''; $('count').innerText='0 channels';
-            $('detailTitle').innerText = 'Select a channel';
-            $('detailContent').innerHTML = '<div class="meta">No channel selected.</div>';
-            $('banner').style.display='none'; $('banner').style.backgroundImage='none';
-            const preview = $('videoPreviewContainer'); if(preview){ preview.innerHTML=''; preview.style.display='none'; }
-            setProgress(0); setStatus('Idle');
-        }
-
-        // small helpers used by templates
-        function escapeHtmlForTemplate(s){ return escapeHtml(String(s || '')); }
-        // ensure image src safe for innerHTML attributes
-        function escapeAttr(s){ return String(s || ''); }
-
-        // initialize UI state
-        resetResults();
-        setStatus('Ready');
-        setProgress(0);
     </script>
 </body>
 </html>
