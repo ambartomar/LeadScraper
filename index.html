@@ -917,9 +917,9 @@
             });
         }
         
-        function renderDetails(c){
+        async function renderDetails(c){
             $('detailTitle').innerText = c.title;
-            const socialLinks = getSocialLinksFromDesc(c);
+            const socialLinks = await getSocialLinksFromAboutPage(c.channelId);
 
             $('detailContent').innerHTML = `
                 <div class="meta">Channel ID: ${c.channelId} • ${c.country} • Created: ${c.createdAt}</div>
