@@ -11,11 +11,45 @@
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-functions.js" type="module"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --bg-base: #07080c;
+            --bg-card: #0b0d14;
+            --bg-input: #0f1320;
+            --text-primary: #f5f7ff;
+            --text-secondary: #a6b0c3;
+            --accent-purple: #7c3aed;
+            --accent-purple-dark: #6d28d9;
+            --shadow-light: rgba(255, 255, 255, 0.05);
+            --shadow-dark: rgba(0, 0, 0, 0.4);
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #07080c;
-            color: #f5f7ff;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
         }
+        
+        .custom-btn {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-purple-dark));
+            border-radius: 10px;
+            box-shadow: 0 4px 15px var(--shadow-dark);
+            transition: all 0.3s ease;
+        }
+
+        .custom-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow-dark);
+        }
+
+        .custom-btn:active {
+            transform: translateY(0);
+        }
+
+        .modal {
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        
         .text-ellipsis-1 {
             display: -webkit-box;
             -webkit-line-clamp: 1;
@@ -23,6 +57,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        
         .text-ellipsis-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -30,8 +65,32 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .modal {
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+
+        .channel-card {
+            background-color: var(--bg-input);
+            border: 1px solid var(--shadow-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px var(--shadow-dark);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .channel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px var(--shadow-dark);
+        }
+
+        .copy-btn {
+            background-color: #2a3040;
+            color: var(--text-primary);
+            border-radius: 6px;
+            padding: 0.3rem 0.6rem;
+            font-size: 0.8rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background-color: #3b4255;
         }
     </style>
 </head>
@@ -40,66 +99,69 @@
         <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
     </div>
 
-    <div class="w-full max-w-6xl bg-[#0b0d14] rounded-2xl shadow-lg p-6 md:p-8">
-        <h1 class="text-3xl md:text-4xl font-bold text-center text-purple-400 mb-2">Lead Studio Pro MAX</h1>
-        <p class="text-center text-gray-400 mb-8">Harness the power of server-side scraping to find your next lead.</p>
+    <div class="w-full max-w-6xl bg-bg-card rounded-2xl shadow-lg p-6 md:p-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-center text-accent-purple mb-2">Lead Studio Pro MAX</h1>
+        <p class="text-center text-text-secondary mb-8">Harness the power of server-side scraping to find your next lead.</p>
 
         <!-- Search Section -->
         <div class="flex flex-col md:flex-row items-center gap-4 mb-8">
             <input type="text" id="searchInput" placeholder="Enter YouTube channel name or keyword..."
-                   class="flex-grow w-full md:w-auto px-4 py-2 bg-[#0f1320] border border-[#a6b0c3] rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-500">
+                   class="flex-grow w-full md:w-auto px-4 py-3 bg-bg-input border border-text-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple text-text-primary placeholder-text-secondary">
             <button id="searchButton"
-                    class="w-full md:w-auto px-6 py-2 bg-purple-600 text-white font-semibold rounded-lg shadow-lg hover:bg-purple-700 transition-colors duration-200">
+                    class="w-full md:w-auto px-6 py-3 font-semibold text-white custom-btn">
                 <span id="searchBtnText">Search Channels</span>
             </button>
         </div>
 
         <!-- Status and User Info -->
-        <div class="flex flex-col sm:flex-row justify-between items-center text-sm text-gray-400 mb-6">
+        <div class="flex flex-col sm:flex-row justify-between items-center text-sm text-text-secondary mb-6">
             <div id="authStatus" class="flex items-center gap-2 mb-2 sm:mb-0">
                 <div id="authIcon" class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></div>
                 <span id="authMessage">Connecting to Firebase...</span>
             </div>
             <div id="userIdDisplay" class="truncate hidden">
-                <span class="font-bold">Your User ID:</span> <span id="userIdValue" class="text-purple-300"></span>
+                <span class="font-bold">Your User ID:</span> <span id="userIdValue" class="text-accent-purple-dark"></span>
             </div>
         </div>
 
         <!-- Results Section -->
         <div id="resultsContainer" class="hidden">
-            <h2 class="text-xl font-bold mb-4">Search Results</h2>
-            <div class="overflow-x-auto bg-[#0f1320] rounded-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Search Results</h2>
+                <button id="exportButton" class="custom-btn px-4 py-2 text-sm hidden">Download Results</button>
+            </div>
+            <div class="overflow-x-auto bg-bg-input rounded-lg">
                 <table class="w-full text-left table-auto">
                     <thead>
                         <tr class="bg-gray-800">
-                            <th class="px-4 py-2 text-gray-300">Channel Name</th>
-                            <th class="px-4 py-2 text-gray-300">Subscribers</th>
-                            <th class="px-4 py-2 text-gray-300">Videos</th>
-                            <th class="px-4 py-2 text-gray-300">Actions</th>
+                            <th class="px-4 py-3 text-text-secondary">Channel Name</th>
+                            <th class="px-4 py-3 text-text-secondary">Subscribers</th>
+                            <th class="px-4 py-3 text-text-secondary">Videos</th>
+                            <th class="px-4 py-3 text-text-secondary">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="resultsTableBody"></tbody>
                 </table>
             </div>
-            <p id="noResultsMessage" class="hidden text-center text-gray-500 mt-4">No channels found. Try a different search.</p>
+            <p id="noResultsMessage" class="hidden text-center text-text-secondary mt-4">No channels found. Try a different search.</p>
         </div>
         
         <!-- Search History Section -->
         <div id="historyContainer" class="mt-8 hidden">
             <h2 class="text-xl font-bold mb-4">Your Search History</h2>
-            <div class="bg-[#0f1320] rounded-lg p-4 max-h-64 overflow-y-auto">
+            <div class="bg-bg-input rounded-lg p-4 max-h-64 overflow-y-auto">
                 <ul id="historyList"></ul>
-                <p id="noHistoryMessage" class="hidden text-center text-gray-500 mt-2">No search history yet.</p>
+                <p id="noHistoryMessage" class="hidden text-center text-text-secondary mt-2">No search history yet.</p>
             </div>
         </div>
     </div>
 
     <!-- Modals for details and errors -->
     <div id="detailsModal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-        <div class="bg-[#0b0d14] rounded-xl shadow-2xl p-6 w-11/12 md:w-1/2 max-h-full overflow-y-auto">
+        <div class="bg-bg-card rounded-xl shadow-2xl p-6 w-11/12 md:w-1/2 max-h-full overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-2xl font-bold text-purple-400">Channel Details</h3>
-                <button id="closeModalButton" class="text-gray-400 hover:text-white text-3xl font-light leading-none">
+                <h3 id="modalTitle" class="text-2xl font-bold text-accent-purple"></h3>
+                <button id="closeModalButton" class="text-text-secondary hover:text-white text-3xl font-light leading-none">
                     ×
                 </button>
             </div>
@@ -109,10 +171,10 @@
 
     <!-- Custom Alert Modal -->
     <div id="alertModal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-        <div class="bg-[#0b0d14] rounded-xl shadow-2xl p-6 w-11/12 md:w-1/3 text-center">
-            <h3 id="alertTitle" class="text-xl font-bold text-purple-400 mb-4"></h3>
-            <p id="alertMessage" class="text-gray-300 mb-6"></p>
-            <button id="closeAlertButton" class="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">OK</button>
+        <div class="bg-bg-card rounded-xl shadow-2xl p-6 w-11/12 md:w-1/3 text-center">
+            <h3 id="alertTitle" class="text-xl font-bold text-accent-purple mb-4"></h3>
+            <p id="alertMessage" class="text-text-secondary mb-6"></p>
+            <button id="closeAlertButton" class="custom-btn px-6 py-2 text-white">OK</button>
         </div>
     </div>
 
@@ -127,6 +189,7 @@
         let auth;
         let userId = null;
         let functions;
+        let currentSearchResults = [];
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
         const authToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
@@ -139,6 +202,7 @@
         const noResultsMessage = document.getElementById('noResultsMessage');
         const loadingIndicator = document.getElementById('loadingIndicator');
         const detailsModal = document.getElementById('detailsModal');
+        const modalTitle = document.getElementById('modalTitle');
         const closeModalButton = document.getElementById('closeModalButton');
         const modalContent = document.getElementById('modalContent');
         const alertModal = document.getElementById('alertModal');
@@ -152,7 +216,8 @@
         const authStatusMessage = document.getElementById('authMessage');
         const userIdDisplay = document.getElementById('userIdDisplay');
         const userIdValue = document.getElementById('userIdValue');
-        
+        const exportButton = document.getElementById('exportButton');
+
         // Custom Alert function to replace window.alert()
         function showAlert(title, message) {
             alertTitle.textContent = title;
@@ -224,7 +289,7 @@
                     noHistoryMessage.classList.add('hidden');
                     historyData.forEach(item => {
                         const li = document.createElement('li');
-                        li.className = 'py-2 border-b border-gray-700 last:border-b-0 text-gray-300';
+                        li.className = 'py-2 border-b border-gray-700 last:border-b-0 text-text-secondary';
                         const date = item.timestamp?.seconds ? new Date(item.timestamp.seconds * 1000).toLocaleString() : 'N/A';
                         li.textContent = `${item.query} - ${date}`;
                         historyList.appendChild(li);
@@ -260,15 +325,17 @@
                 }
 
                 const data = await response.json();
+                currentSearchResults = data;
                 renderResults(data);
                 
-                // This function is called separately so it doesn't block the UI
+                // Log search query to Firestore without blocking the UI
                 logSearchCallable({ query });
             } catch (error) {
                 console.error("Failed to fetch search results:", error);
                 showAlert('Search Error', `Could not get search results. Details: ${error.message}. Please check your deployed Cloud Functions and network connection.`);
                 resultsTableBody.innerHTML = '';
                 noResultsMessage.classList.remove('hidden');
+                exportButton.classList.add('hidden');
             } finally {
                 hideLoading();
             }
@@ -279,11 +346,13 @@
             if (channels.length === 0) {
                 resultsContainer.classList.remove('hidden');
                 noResultsMessage.classList.remove('hidden');
+                exportButton.classList.add('hidden');
                 return;
             }
             
             resultsContainer.classList.remove('hidden');
             noResultsMessage.classList.add('hidden');
+            exportButton.classList.remove('hidden');
 
             channels.forEach(channel => {
                 const row = document.createElement('tr');
@@ -299,8 +368,8 @@
                     <td class="px-4 py-3">${channel.subscribers || 'N/A'}</td>
                     <td class="px-4 py-3">${channel.videoCount || 'N/A'}</td>
                     <td class="px-4 py-3 space-x-2">
-                        <button class="view-details-btn px-3 py-1 text-xs bg-purple-500 text-white rounded-md hover:bg-purple-600 transition-colors" data-channel-id="${channel.channelId}" data-channel-name="${channel.channelName}">Details</button>
-                        <button class="view-videos-btn px-3 py-1 text-xs bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors" data-channel-id="${channel.channelId}" data-channel-name="${channel.channelName}">Videos</button>
+                        <button class="view-details-btn custom-btn px-3 py-1 text-xs" data-channel-id="${channel.channelId}" data-channel-name="${channel.channelName}">Details</button>
+                        <button class="view-videos-btn custom-btn px-3 py-1 text-xs" data-channel-id="${channel.channelId}" data-channel-name="${channel.channelName}">Videos</button>
                     </td>
                 `;
                 resultsTableBody.appendChild(row);
@@ -333,32 +402,55 @@
                 
                 const data = await response.json();
                 
-                let socialLinksHtml = '<p class="text-gray-400">No social links found.</p>';
+                let socialLinksHtml = '<p class="text-text-secondary">No social links found.</p>';
                 if (data.socialLinks && Object.keys(data.socialLinks).length > 0) {
                     socialLinksHtml = `
                         <ul class="space-y-2">
                             ${Object.entries(data.socialLinks).map(([platform, url]) => `
                                 <li class="flex items-center">
                                     <span class="text-sm font-semibold capitalize">${platform}:</span>
-                                    <a href="${url}" target="_blank" class="ml-2 text-purple-300 hover:underline break-all">${url}</a>
+                                    <a href="${url}" target="_blank" class="ml-2 text-accent-purple-dark hover:underline break-all">${url}</a>
                                 </li>
                             `).join('')}
                         </ul>
                     `;
                 }
-                
+
+                // Enhanced email scraping check
+                const emailMatch = data.description && data.description.match(/[\w.-]+@[\w.-]+\.[\w.-]+/i);
+                const emailHtml = emailMatch ? `
+                    <div class="flex items-center gap-2 mt-4 bg-bg-input rounded-lg p-3">
+                        <span class="font-semibold text-text-secondary">Scraped Email:</span>
+                        <span id="scrapedEmail" class="text-white break-all flex-grow">${emailMatch[0]}</span>
+                        <button class="copy-btn" onclick="copyEmail()">Copy</button>
+                    </div>` : '<p class="text-text-secondary mt-4">No email found in description.</p>';
+
+                modalTitle.textContent = 'Channel Details';
                 modalContent.innerHTML = `
                     <div class="space-y-4">
                         <h4 class="text-xl font-bold">${channelName}</h4>
-                        <p class="text-gray-400">Channel ID: <span class="text-white break-all">${channelId}</span></p>
-                        <p class="text-gray-400">Description: <span class="text-white text-ellipsis-2">${data.description || 'N/A'}</span></p>
-                        <div class="bg-[#0f1320] rounded-lg p-4">
+                        <p class="text-text-secondary">Channel ID: <span class="text-text-primary break-all">${channelId}</span></p>
+                        <p class="text-text-secondary">Description: <span class="text-text-primary text-ellipsis-2">${data.description || 'N/A'}</span></p>
+                        <div class="bg-bg-input rounded-lg p-4">
                             <h5 class="text-lg font-bold mb-2">Social & Website Links</h5>
                             ${socialLinksHtml}
                         </div>
-                        <p class="text-gray-400 mt-4">Membership: ${data.hasMembership ? '<span class="text-green-400">Available</span>' : '<span class="text-red-400">Not Available</span>'}</p>
+                        ${emailHtml}
+                        <p class="text-text-secondary mt-4">Membership: ${data.hasMembership ? '<span class="text-green-400">Available</span>' : '<span class="text-red-400">Not Available</span>'}</p>
                     </div>
                 `;
+
+                // Add clipboard copy function
+                window.copyEmail = () => {
+                    const email = document.getElementById('scrapedEmail').textContent;
+                    const el = document.createElement('textarea');
+                    el.value = email;
+                    document.body.appendChild(el);
+                    el.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(el);
+                    showAlert('Success', 'Email address copied to clipboard!');
+                };
 
                 detailsModal.classList.remove('hidden');
             } catch (error) {
@@ -382,16 +474,16 @@
                 }
 
                 const videos = await response.json();
-                let videosHtml = '<p class="text-gray-400">No videos found.</p>';
+                let videosHtml = '<p class="text-text-secondary">No videos found.</p>';
 
                 if (videos.length > 0) {
                     videosHtml = `
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             ${videos.map(video => `
-                                <div class="bg-[#0f1320] rounded-lg p-4 cursor-pointer hover:bg-purple-900/20 transition-colors">
+                                <div class="bg-bg-input channel-card p-4 cursor-pointer">
                                     <img src="${video.thumbnailUrl}" alt="Video Thumbnail" class="w-full h-auto rounded-lg mb-2">
                                     <h5 class="text-sm font-semibold text-ellipsis-2" title="${video.title}">${video.title}</h5>
-                                    <p class="text-xs text-gray-500 mt-1">
+                                    <p class="text-xs text-text-secondary mt-1">
                                         ${video.viewCount} · ${video.publishedTime}
                                         <br>
                                         👍 Likes: ${video.likeCount || 'N/A'}
@@ -404,9 +496,9 @@
                     `;
                 }
                 
+                modalTitle.textContent = `${channelName}'s Videos`;
                 modalContent.innerHTML = `
                     <div class="space-y-4">
-                        <h4 class="text-xl font-bold">${channelName}'s Videos</h4>
                         ${videosHtml}
                     </div>
                 `;
@@ -418,6 +510,20 @@
             } finally {
                 hideLoading();
             }
+        }
+
+        function exportDataAsJson() {
+            if (currentSearchResults.length === 0) {
+                showAlert('No Data', 'There are no results to export.');
+                return;
+            }
+            const dataStr = JSON.stringify(currentSearchResults, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            const exportFileDefaultName = 'youtube_leads.json';
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
         }
 
         function showLoading() {
@@ -442,7 +548,7 @@
         });
         closeModalButton.addEventListener('click', () => detailsModal.classList.add('hidden'));
         closeAlertButton.addEventListener('click', () => alertModal.classList.add('hidden'));
-
+        exportButton.addEventListener('click', exportDataAsJson);
     </script>
 </body>
 </html>
