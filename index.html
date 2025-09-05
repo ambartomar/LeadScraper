@@ -163,6 +163,11 @@
         // --- Firebase Initialization and Authentication ---
         async function initializeFirebase() {
             try {
+                // Critical check for Firebase configuration
+                if (!firebaseConfig.apiKey) {
+                    throw new Error("Firebase configuration is missing the API key. This is a deployment issue, not a code issue. Please ensure the '__firebase_config' variable is correctly set by the platform.");
+                }
+
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
@@ -236,14 +241,6 @@
         // --- Core Search and Data Fetching Logic ---
         const logSearchCallable = httpsCallable(functions, 'logSearch');
 
-        async function logSearch(query) {
-            try {
-                await logSearchCallable({ query });
-            } catch (error) {
-                console.error("Failed to log search:", error);
-            }
-        }
-
         async function searchChannels() {
             const query = searchInput.value.trim();
             if (!query) {
@@ -265,7 +262,8 @@
                 const data = await response.json();
                 renderResults(data);
                 
-                logSearch(query);
+                // This function is called separately so it doesn't block the UI
+                logSearchCallable({ query });
             } catch (error) {
                 console.error("Failed to fetch search results:", error);
                 showAlert('Search Error', `Could not get search results. Details: ${error.message}. Please check your deployed Cloud Functions and network connection.`);
