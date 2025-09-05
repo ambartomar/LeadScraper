@@ -3,12 +3,13 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Lead Studio Pro MAX — YouTube Channel Scraper</title>
+    <title>Lead Studio Pro MAX Advanced — YouTube Scraper</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js" type="module"></script>
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js" type="module"></script>
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js" type="module"></script>
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-functions.js" type="module"></script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
@@ -92,6 +93,31 @@
         .copy-btn:hover {
             background-color: #3b4255;
         }
+
+        .sortable-header {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+        
+        .sort-icon {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+        }
+        
+        .sort-asc .sort-icon {
+            border-bottom: 5px solid var(--text-primary);
+        }
+        
+        .sort-desc .sort-icon {
+            border-top: 5px solid var(--text-primary);
+        }
     </style>
 </head>
 <body class="p-4 md:p-8 flex flex-col items-center min-h-screen">
@@ -100,7 +126,7 @@
     </div>
 
     <div class="w-full max-w-6xl bg-bg-card rounded-2xl shadow-lg p-6 md:p-8">
-        <h1 class="text-3xl md:text-4xl font-bold text-center text-accent-purple mb-2">Lead Studio Pro MAX</h1>
+        <h1 class="text-3xl md:text-4xl font-bold text-center text-accent-purple mb-2">Lead Studio Pro MAX Advanced</h1>
         <p class="text-center text-text-secondary mb-8">Harness the power of server-side scraping to find your next lead.</p>
 
         <!-- Search Section -->
@@ -120,7 +146,7 @@
                 <span id="authMessage">Connecting to Firebase...</span>
             </div>
             <div id="userIdDisplay" class="truncate hidden">
-                <span class="font-bold">Your User ID:</span> <span id="userIdValue" class="text-accent-purple-dark"></span>
+                <span class="font-bold">Your User ID:</span> <span id="userIdValue" class="text-accent-purple-dark break-all"></span>
             </div>
         </div>
 
@@ -135,7 +161,9 @@
                     <thead>
                         <tr class="bg-gray-800">
                             <th class="px-4 py-3 text-text-secondary">Channel Name</th>
-                            <th class="px-4 py-3 text-text-secondary">Subscribers</th>
+                            <th id="subscribersHeader" class="px-4 py-3 text-text-secondary sortable-header">
+                                Subscribers <span class="sort-icon"></span>
+                            </th>
                             <th class="px-4 py-3 text-text-secondary">Videos</th>
                             <th class="px-4 py-3 text-text-secondary">Actions</th>
                         </tr>
@@ -184,17 +212,22 @@
         import { getFirestore, collection, onSnapshot, query, limit, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-functions.js";
 
-        // Global variables for Firebase and state
+        // =========================================================================
+        // === CORE APP VARIABLES & CONFIGURATION
+        // =========================================================================
         let db;
         let auth;
         let userId = null;
         let functions;
         let currentSearchResults = [];
+        let sortDirection = 'asc'; // 'asc' or 'desc'
+
+        // Access dynamic variables provided by the platform
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
         const authToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-        // UI elements
+        // UI element references
         const searchInput = document.getElementById('searchInput');
         const searchButton = document.getElementById('searchButton');
         const resultsTableBody = document.getElementById('resultsTableBody');
@@ -217,29 +250,66 @@
         const userIdDisplay = document.getElementById('userIdDisplay');
         const userIdValue = document.getElementById('userIdValue');
         const exportButton = document.getElementById('exportButton');
+        const subscribersHeader = document.getElementById('subscribersHeader');
 
-        // Custom Alert function to replace window.alert()
+        // =========================================================================
+        // === UI UTILITY FUNCTIONS
+        // =========================================================================
+
+        /**
+         * Displays a custom modal alert.
+         * @param {string} title The title of the alert.
+         * @param {string} message The message content of the alert.
+         */
         function showAlert(title, message) {
             alertTitle.textContent = title;
             alertMessage.textContent = message;
             alertModal.classList.remove('hidden');
         }
 
-        // --- Firebase Initialization and Authentication ---
+        /**
+         * Shows the loading overlay.
+         */
+        function showLoading() {
+            loadingIndicator.classList.remove('hidden');
+            searchButton.disabled = true;
+            searchButton.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+
+        /**
+         * Hides the loading overlay.
+         */
+        function hideLoading() {
+            loadingIndicator.classList.add('hidden');
+            searchButton.disabled = false;
+            searchButton.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+
+        // =========================================================================
+        // === FIREBASE INITIALIZATION & AUTHENTICATION
+        // =========================================================================
+
+        /**
+         * Initializes Firebase services and handles authentication.
+         * This function is crucial for the app's functionality. It first attempts to
+         * authenticate the user with the provided custom token. If that's not
+         * available, it falls back to anonymous sign-in.
+         */
         async function initializeFirebase() {
             try {
-                // Critical check for Firebase configuration
+                // Check if Firebase config is available. This is the fix for the previous error.
                 if (!firebaseConfig.apiKey) {
-                    throw new Error("Firebase configuration is missing the API key. This is a deployment issue, not a code issue. Please ensure the '__firebase_config' variable is correctly set by the platform.");
+                    throw new Error("Firebase configuration is missing the API key. Please check the environment configuration.");
                 }
 
+                // Initialize services
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
                 functions = getFunctions(app, 'us-central1');
-                setLogLevel('debug'); // Enable Firestore debug logging
+                setLogLevel('debug');
 
-                // Listen for auth state changes
+                // Set up authentication state listener
                 onAuthStateChanged(auth, async (user) => {
                     if (user) {
                         userId = user.uid;
@@ -258,10 +328,11 @@
                     }
                 });
 
+                // Authenticate with the custom token or anonymously
                 if (authToken) {
-                  await signInWithCustomToken(auth, authToken);
+                    await signInWithCustomToken(auth, authToken);
                 } else {
-                  await signInAnonymously(auth);
+                    await signInAnonymously(auth);
                 }
 
             } catch (error) {
@@ -271,7 +342,14 @@
             }
         }
 
-        // --- Firestore History Listener ---
+        // =========================================================================
+        // === FIRESTORE DATA HANDLING
+        // =========================================================================
+
+        /**
+         * Listens for real-time updates to the user's search history in Firestore.
+         * The `onSnapshot` listener ensures the UI is always in sync with the database.
+         */
         function startHistoryListener() {
             if (!db || !userId) {
                 console.error("Firestore not initialized or user not authenticated.");
@@ -303,9 +381,17 @@
             });
         }
 
-        // --- Core Search and Data Fetching Logic ---
+        // =========================================================================
+        // === SEARCH AND DATA FETCHING LOGIC
+        // =========================================================================
+        const getChannelDataCallable = httpsCallable(functions, 'getChannelData');
+        const getChannelDetailsCallable = httpsCallable(functions, 'getChannelDetails');
+        const getChannelVideosCallable = httpsCallable(functions, 'getChannelVideos');
         const logSearchCallable = httpsCallable(functions, 'logSearch');
 
+        /**
+         * Initiates a YouTube channel search via a Cloud Function.
+         */
         async function searchChannels() {
             const query = searchInput.value.trim();
             if (!query) {
@@ -316,15 +402,8 @@
             showLoading();
             
             try {
-                const apiUrl = `https://us-central1-youleadmax.cloudfunctions.net/getChannelData?q=${encodeURIComponent(query)}`;
-                const response = await fetch(apiUrl);
-                
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || `Server returned ${response.status}: ${response.statusText}`);
-                }
-
-                const data = await response.json();
+                const result = await getChannelDataCallable({ q: query });
+                const data = result.data;
                 currentSearchResults = data;
                 renderResults(data);
                 
@@ -341,6 +420,10 @@
             }
         }
 
+        /**
+         * Renders the search results in the table.
+         * @param {Array} channels - An array of channel objects.
+         */
         function renderResults(channels) {
             resultsTableBody.innerHTML = '';
             if (channels.length === 0) {
@@ -375,6 +458,7 @@
                 resultsTableBody.appendChild(row);
             });
 
+            // Add event listeners for the newly created buttons
             document.querySelectorAll('.view-details-btn').forEach(button => {
                 button.addEventListener('click', () => {
                     viewChannelDetails(button.getAttribute('data-channel-id'), button.getAttribute('data-channel-name'));
@@ -388,19 +472,17 @@
             });
         }
 
+        /**
+         * Fetches and displays detailed information for a specific channel.
+         * @param {string} channelId The ID of the channel.
+         * @param {string} channelName The name of the channel.
+         */
         async function viewChannelDetails(channelId, channelName) {
             showLoading();
             
             try {
-                const apiUrl = `https://us-central1-youleadmax.cloudfunctions.net/getChannelDetails?id=${encodeURIComponent(channelId)}`;
-                const response = await fetch(apiUrl);
-                
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || `Server returned ${response.status}: ${response.statusText}`);
-                }
-                
-                const data = await response.json();
+                const result = await getChannelDetailsCallable({ id: channelId });
+                const data = result.data;
                 
                 let socialLinksHtml = '<p class="text-text-secondary">No social links found.</p>';
                 if (data.socialLinks && Object.keys(data.socialLinks).length > 0) {
@@ -431,6 +513,8 @@
                         <h4 class="text-xl font-bold">${channelName}</h4>
                         <p class="text-text-secondary">Channel ID: <span class="text-text-primary break-all">${channelId}</span></p>
                         <p class="text-text-secondary">Description: <span class="text-text-primary text-ellipsis-2">${data.description || 'N/A'}</span></p>
+                        <p class="text-text-secondary">Total Views: <span class="text-text-primary">${data.views || 'N/A'}</span></p>
+                        <p class="text-text-secondary">Created: <span class="text-text-primary">${data.publishedDate || 'N/A'}</span></p>
                         <div class="bg-bg-input rounded-lg p-4">
                             <h5 class="text-lg font-bold mb-2">Social & Website Links</h5>
                             ${socialLinksHtml}
@@ -443,13 +527,18 @@
                 // Add clipboard copy function
                 window.copyEmail = () => {
                     const email = document.getElementById('scrapedEmail').textContent;
-                    const el = document.createElement('textarea');
-                    el.value = email;
-                    document.body.appendChild(el);
-                    el.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(el);
-                    showAlert('Success', 'Email address copied to clipboard!');
+                    navigator.clipboard.writeText(email).then(() => {
+                        showAlert('Success', 'Email address copied to clipboard!');
+                    }).catch(err => {
+                        // Fallback for browsers that don't support navigator.clipboard
+                        const el = document.createElement('textarea');
+                        el.value = email;
+                        document.body.appendChild(el);
+                        el.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(el);
+                        showAlert('Success', 'Email address copied to clipboard!');
+                    });
                 };
 
                 detailsModal.classList.remove('hidden');
@@ -461,19 +550,17 @@
             }
         }
 
+        /**
+         * Fetches and displays videos for a specific channel.
+         * @param {string} channelId The ID of the channel.
+         * @param {string} channelName The name of the channel.
+         */
         async function viewChannelVideos(channelId, channelName) {
             showLoading();
             
             try {
-                const apiUrl = `https://us-central1-youleadmax.cloudfunctions.net/getChannelVideos?id=${encodeURIComponent(channelId)}`;
-                const response = await fetch(apiUrl);
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || `Server returned ${response.status}: ${response.statusText}`);
-                }
-
-                const videos = await response.json();
+                const result = await getChannelVideosCallable({ id: channelId });
+                const videos = result.data;
                 let videosHtml = '<p class="text-text-secondary">No videos found.</p>';
 
                 if (videos.length > 0) {
@@ -484,7 +571,9 @@
                                     <img src="${video.thumbnailUrl}" alt="Video Thumbnail" class="w-full h-auto rounded-lg mb-2">
                                     <h5 class="text-sm font-semibold text-ellipsis-2" title="${video.title}">${video.title}</h5>
                                     <p class="text-xs text-text-secondary mt-1">
-                                        ${video.viewCount} · ${video.publishedTime}
+                                        Views: ${video.viewCount || 'N/A'}
+                                        <br>
+                                        Published: ${video.publishedTime || 'N/A'}
                                         <br>
                                         👍 Likes: ${video.likeCount || 'N/A'}
                                         <br>
@@ -512,6 +601,40 @@
             }
         }
 
+        /**
+         * Sorts the current search results by subscribers.
+         */
+        function sortResultsBySubscribers() {
+            if (currentSearchResults.length === 0) return;
+
+            // Clear sort icons
+            subscribersHeader.classList.remove('sort-asc', 'sort-desc');
+
+            // Toggle sort direction
+            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+
+            // Add new sort icon
+            subscribersHeader.classList.add(`sort-${sortDirection}`);
+            
+            // Sort the array
+            const sortedResults = [...currentSearchResults].sort((a, b) => {
+                const subsA = parseInt(a.subscribers?.replace(/,/g, '') || '0');
+                const subsB = parseInt(b.subscribers?.replace(/,/g, '') || '0');
+                
+                if (sortDirection === 'asc') {
+                    return subsA - subsB;
+                } else {
+                    return subsB - subsA;
+                }
+            });
+
+            // Re-render the sorted results
+            renderResults(sortedResults);
+        }
+
+        /**
+         * Exports the current search results as a JSON file.
+         */
         function exportDataAsJson() {
             if (currentSearchResults.length === 0) {
                 showAlert('No Data', 'There are no results to export.');
@@ -526,19 +649,9 @@
             linkElement.click();
         }
 
-        function showLoading() {
-            loadingIndicator.classList.remove('hidden');
-            searchButton.disabled = true;
-            searchButton.classList.add('opacity-50', 'cursor-not-allowed');
-        }
-
-        function hideLoading() {
-            loadingIndicator.classList.add('hidden');
-            searchButton.disabled = false;
-            searchButton.classList.remove('opacity-50', 'cursor-not-allowed');
-        }
-
-        // --- Event Listeners ---
+        // =========================================================================
+        // === EVENT LISTENERS
+        // =========================================================================
         window.addEventListener('load', initializeFirebase);
         searchButton.addEventListener('click', searchChannels);
         searchInput.addEventListener('keydown', (e) => {
@@ -549,6 +662,7 @@
         closeModalButton.addEventListener('click', () => detailsModal.classList.add('hidden'));
         closeAlertButton.addEventListener('click', () => alertModal.classList.add('hidden'));
         exportButton.addEventListener('click', exportDataAsJson);
+        subscribersHeader.addEventListener('click', sortResultsBySubscribers);
     </script>
 </body>
 </html>
