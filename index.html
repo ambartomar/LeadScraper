@@ -317,6 +317,80 @@
       flex-direction: column;
       gap: 16px;
   }
+  
+  /* =========================
+     CUSTOM CHECKBOX
+     ========================= */
+  .switch input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .switch {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    cursor: pointer;
+  }
+  .switch-visual {
+    width: 28px;
+    height: 16px;
+    background: rgba(255, 255, 255, .1);
+    border-radius: 999px;
+    position: relative;
+    transition: background .2s ease;
+  }
+  .switch-visual::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--text);
+    border-radius: 50%;
+    transition: transform .2s ease;
+  }
+  .switch input[type="checkbox"]:checked + .switch-visual {
+    background: var(--accent);
+  }
+  .switch input[type="checkbox"]:checked + .switch-visual::before {
+    transform: translateX(12px);
+    background-color: #fff;
+  }
+  .switch input[type="checkbox"]:focus + .switch-visual {
+    box-shadow: 0 0 0 2px rgba(124, 58, 237, .5);
+  }
+  
+  /* =========================
+     CUSTOM SELECT
+     ========================= */
+  select {
+      appearance: none;
+      background: var(--glass);
+      border: 1px solid rgba(255,255,255,.07);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: box-shadow .18s ease, transform .12s ease, border-color .18s ease;
+      cursor: pointer;
+      background-image:
+          linear-gradient(45deg, transparent 50%, #cfd6ea 50%),
+          linear-gradient(135deg, #cfd6ea 50%, transparent 50%);
+      background-position:
+          calc(100% - 18px) calc(50% + 1px),
+          calc(100% - 12px) calc(50% + 1px);
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+  }
+
+  select:hover {
+    border-color: rgba(124,58,237,.35);
+    box-shadow: 0 4px 12px rgba(124,58,237,.12);
+    transform: translateY(-1px);
+  }
 </style>
 </head>
 <body>
@@ -340,6 +414,7 @@
                 <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)"></textarea>
                 <div class="button-group" style="margin-left:auto;">
                   <button class="btn btn-primary" id="btnSearch">Search</button>
+                  <button class="btn btn-primary" id="btnDeepSearch" style="background: linear-gradient(90deg, #d946ef, #a855f7);">Deep Search</button>
                   <button class="btn" id="btnClear">Clear</button>
                 </div>
             </div>
@@ -353,7 +428,7 @@
                 </div>
                 <div class="filters">
                     <select id="order"><option value="relevance">Order: Relevance</option><option value="date">Order: Date</option><option value="viewCount">Order: Views</option><option value="rating">Order: Rating</option></select>
-                    <select id="duration"><option value="">Duration: Any</option><option value="short">Short (<4m)</option><option value="medium">Medium (4–20m)</option><option value="long">Long (>20m)</option></select>
+                    <select id="duration"><option value="">Duration: Any</option><option value="short">Short (&lt;4m)</option><option value="medium">Medium (4–20m)</option><option value="long">Long (&gt;20m)</option></select>
                     <select id="upload"><option value="">Upload Time: Any</option><option value="hour">Last hour</option><option value="today">Today</option><option value="week">This week</option><option value="month">This month</option></select>
                     <select id="region"><option value="">Region: Any</option><option>US</option><option>IN</option><option>GB</option><option>CA</option><option>AU</option><option>DE</option></select>
                     <select id="definition"><option value="">Definition: Any</option><option value="high">HD</option><option value="standard">SD</option></select>
@@ -370,7 +445,7 @@
 
                     <div class="full row">
                         <input id="corsProxy" type="url" placeholder="Optional CORS proxy for verification (best-effort)"/>
-                        <label class="switch"><input id="doVerify" type="checkbox"/> <small>Attempt verify check</small></label>
+                        <label class="switch"><input id="doVerify" type="checkbox"/><span class="switch-visual"></span> <small>Attempt verify check</small></label>
                     </div>
 
                     <div class="full row" style="justify-content:space-between;margin-top:2px">
@@ -490,6 +565,13 @@
         function showMessage(title, message) {
             $('messageTitle').innerText = title;
             $('messageText').innerText = message;
+            
+            const messageBox = $('messageBox');
+            // Remove any existing dynamic buttons
+            const dynamicButtons = messageBox.querySelectorAll('.btn:not(#messageBoxOk)');
+            dynamicButtons.forEach(btn => btn.remove());
+            $('messageBoxOk').style.display = 'block';
+
             $('messageBoxOverlay').style.display = 'flex';
         }
         $('messageBoxOk').addEventListener('click', () => {
@@ -560,15 +642,55 @@
         });
 
         /* ========================= SEARCH / FETCH ========================= */
-        $('btnSearch').addEventListener('click', searchAll);
+        $('btnSearch').addEventListener('click', () => searchAll(false));
+        $('btnDeepSearch').addEventListener('click', () => {
+          const queryRaw = $('query').value.trim();
+          if (!queryRaw.length) {
+            showMessage('Search Error', 'Please enter at least one query');
+            return;
+          }
+          
+          if (!currentUser) {
+            showMessage('Authentication Required', 'Please sign in first.');
+            return;
+          }
+          
+          // Display a confirmation message box
+          $('messageTitle').innerText = 'Deep Search Confirmation';
+          $('messageText').innerText = 'Deep Search will consume more API credits by searching more pages. Do you want to continue?';
+          
+          const messageBox = $('messageBox');
+          const oldOkBtn = $('messageBoxOk');
+          
+          const confirmButton = document.createElement('button');
+          confirmButton.className = 'btn btn-primary';
+          confirmButton.innerText = 'Yes, Continue';
+          confirmButton.addEventListener('click', () => {
+            $('messageBoxOverlay').style.display = 'none';
+            searchAll(true);
+          });
+          
+          const cancelButton = document.createElement('button');
+          cancelButton.className = 'btn';
+          cancelButton.innerText = 'Cancel';
+          cancelButton.addEventListener('click', () => {
+            $('messageBoxOverlay').style.display = 'none';
+          });
+          
+          oldOkBtn.style.display = 'none';
+          messageBox.appendChild(confirmButton);
+          messageBox.appendChild(cancelButton);
+          $('messageBoxOverlay').style.display = 'flex';
+        });
+        
         $('btnClear').addEventListener('click', () => { $('query').value=''; resetResults(); });
         $('query').addEventListener('keydown', e => { if(e.key==='Enter') searchAll(); });
 
-        async function searchAll(){
+        async function searchAll(isDeepSearch = false){
             const queryRaw = $('query').value.trim();
             const queries = queryRaw.split(/[,\\n]/).map(q=>q.trim()).filter(Boolean);
             const perPage = clamp(Number($('perPage').value||25), 1, 50);
-            const pages = clamp(Number($('pages').value||2), 1, 10);
+            const pages = isDeepSearch ? 20 : clamp(Number($('pages').value||2), 1, 10);
 
             if(!queries.length){ showMessage('Search Error', 'Please enter at least one query'); return; }
             if(!currentUser){ showMessage('Authentication Required', 'Please sign in first.'); return; }
