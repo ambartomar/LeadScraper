@@ -1,483 +1,618 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Lead Studio Pro — YouTube Channel Finder</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* =========================
-           THEME — Apple-ish + Purple
-           ========================= */
-        :root {
-            --bg-dark: #07090D;
-            --panel-bg: rgba(255, 255, 255, 0.04);
-            --border-color: rgba(255, 255, 255, 0.1);
-            --purple-accent: #8b5cf6; /* Tailwind's purple-500 */
-            --purple-hover: #7c3aed; /* Tailwind's purple-600 */
-            --text-light: #e2e8f0;
-            --text-muted: #94a3b8;
-        }
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Lead Studio Pro — YouTube Channel Finder</title>
+<style>
+  /* =========================
+     THEME — Apple-ish + Purple
+     ========================= */
+  :root{
+    --bg-0:#07080c;            /* page base */
+    --bg-1:#0b0d14;            /* panels */
+    --bg-2:#0f1320;            /* deeper */
+    --glass: rgba(255,255,255,.06);
+    --glass-2: rgba(255,255,255,.08);
+    --muted:#a6b0c3;
+    --text:#f5f7ff;
+    --accent:#7c3aed;          /* purple */
+    --accent-2:#a78bfa;        /* light purple */
+    --ok:#22c55e;              /* green */
+    --warn:#f59e0b;            /* amber */
+    --danger:#ef4444;
+    --radius:14px;
+    --radius-sm:10px;
+    --shadow: 0 30px 70px rgba(0,0,0,.45);
+  }
 
-        /* Base reset */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-            background: radial-gradient(circle at 15% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 40%), radial-gradient(circle at 85% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 40%), var(--bg-dark);
-        }
+  /* Base reset */
+  * { box-sizing:border-box; }
+  html,body { height:100%; }
+  body {
+    margin:0;
+    font-family: ui-sans-serif, -apple-system, system-ui, "Segoe UI", Roboto, Inter, Arial;
+    color: var(--text);
+    background:
+      radial-gradient(1200px 800px at 10% -20%, #24103e 0%, transparent 60%),
+      radial-gradient(1200px 800px at 110% 120%, #1f1440 0%, transparent 60%),
+      linear-gradient(180deg, #080910, #0a0c14 60%, #090b12);
+    overflow:hidden; /* prevent random page scrollbars */
+    overscroll-behavior:none;
+  }
 
-        .glass-panel {
-            background-color: var(--panel-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            border-radius: 1.5rem;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-        }
+  a { color: var(--accent-2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
 
-        .glass-panel:hover {
-            border-color: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
-        }
+  /* ===== App shell ===== */
+  .app {
+    max-width: 1350px;
+    margin: 0 auto;
+    padding: 18px;
+    display: grid;
+    gap: 14px;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+  }
 
-        .custom-scroll::-webkit-scrollbar {
-            width: 8px;
-        }
+  /* ===== Topbar ===== */
+  .topbar {
+    display:flex; gap:12px; align-items:center;
+    padding: 14px;
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: var(--radius);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+  }
+  .brand { display:flex; gap:2px; flex-direction:column; min-width: 230px; }
+  .brand h1 { margin:0; font-size:18px; letter-spacing:.2px; color:#e9e8ff; }
+  .brand p { margin:0; color: var(--muted); font-size:12px; }
 
-        .custom-scroll::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
+  .bar-controls { display:flex; gap:8px; align-items:center; flex:1; }
 
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: var(--purple-accent);
-            border-radius: 10px;
-        }
+  input[type="text"], input[type="number"], input[type="url"], select, textarea {
+    background: var(--glass);
+    border: 1px solid rgba(255,255,255,.07);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: box-shadow .18s ease, transform .12s ease, border-color .18s ease;
+  }
+  textarea { min-height: 44px; resize: vertical; }
+  input::placeholder, textarea::placeholder { color: #8f9ab2; }
 
-        .custom-scroll::-webkit-scrollbar-thumb:hover {
-            background: var(--purple-hover);
-        }
+  input:focus, select:focus, textarea:focus {
+    box-shadow: 0 10px 26px rgba(124,58,237,.18);
+    border-color: rgba(124,58,237,.35);
+    transform: translateY(-1px);
+  }
 
-        .btn {
-            position: relative;
-            overflow: hidden;
-            transition-property: transform;
-            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-            transition-duration: 200ms;
-        }
+  .btn {
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255,255,255,.08);
+    background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
+    color: var(--text);
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn-primary {
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    border-color: transparent;
+    color:#0b0d14;
+    box-shadow: 0 12px 28px rgba(124,58,237,.25);
+  }
+  .btn-danger {
+    background: linear-gradient(90deg, #d83a56, #ef4444);
+    border-color: transparent;
+  }
+  
+  /* =========================
+     CUSTOM BUTTON ALIGNMENT
+     ========================= */
+  .button-group {
+      display: flex;
+      gap: 8px;
+  }
+  .button-group .btn {
+      flex: 1;
+      text-align: center;
+  }
 
-        .btn:hover {
-            transform: translateY(-2px);
-        }
+  /* ===== Main layout (3 columns) ===== */
+  .main {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: 350px 1fr 420px;
+    grid-template-rows: 1fr;
+    min-height: 0; /* enable child overflow scrolling */
+  }
 
-        .btn:active {
-            transform: translateY(1px);
-        }
+  .panel {
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: var(--radius);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+    padding: 14px;
+    min-height: 0; /* important for overflow children */
+    overflow: hidden; /* contain */
+  }
 
-        .ripple-effect {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            animation: ripple 0.6s linear;
-            transform: scale(0);
-        }
+  /* Filters panel (left) */
+  .filters { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
+  .filters .full { grid-column: 1/-1; }
+  .filters small { color: var(--muted); }
+  .switch { display:flex; gap:8px; align-items:center; }
+  .row { display:flex; gap:8px; align-items:center; flex-wrap: wrap; }
 
-        @keyframes ripple {
-            to {
-                transform: scale(2.5);
-                opacity: 0;
-            }
-        }
+  /* Results panel (center) */
+  .results-wrap {
+    height: 100%;
+    display:grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 10px;
+    min-height:0;
+  }
+  .results-toolbar { display:flex; gap:8px; align-items:center; justify-content:space-between; }
+  .results-toolbar .left { display:flex; gap:8px; align-items:center; }
+  .results-toolbar .right{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
 
-        .skeleton {
-            animation: skeleton-loading 1.5s infinite linear;
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 75%);
-            background-size: 200% 100%;
-        }
+  .progress {
+    width:180px; height:9px; border-radius: 999px;
+    background: rgba(255,255,255,.07);
+    overflow:hidden;
+  }
+  .progress > i {
+    display:block; height:100%; width:0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width .25s ease;
+  }
 
-        @keyframes skeleton-loading {
-            from {
-                background-position: -200px 0;
-            }
-            to {
-                background-position: 200px 0;
-            }
-        }
+  .table-wrap {
+    overflow:auto;
+    border-radius: calc(var(--radius) - 6px);
+    border: 1px solid rgba(255,255,255,.06);
+  }
+  table {
+    width:100%;
+    border-collapse: collapse;
+    background: transparent;
+  }
+  thead th {
+    position: sticky; top: 0; backdrop-filter: blur(10px);
+    background: rgba(16,18,30,.6);
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 13px;
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  tbody td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    vertical-align: middle;
+    font-size: 14px;
+  }
+  tbody tr {
+    transition: background .18s ease, transform .14s ease;
+  }
+  tbody tr:hover {
+    background: rgba(124,58,237,.12);
+    transform: translateY(-1px);
+    cursor: pointer;
+  }
+  .avatar { width:42px; height:42px; border-radius: 12px; object-fit: cover; margin-right:10px; }
 
-        .fade-in {
-            animation: fadeIn 0.8s ease-out;
-        }
+  /* Details panel (right) */
+  .details {
+    height: 100%;
+    display:grid;
+    grid-template-rows: auto auto 1fr;
+    gap:10px; min-height:0;
+  }
+  .banner {
+    height: 120px; border-radius: 12px; background-size: cover; background-position: center;
+    border:1px solid rgba(255,255,255,.06);
+  }
+  .about { overflow:auto; }
+  .meta { color: var(--muted); font-size: 13px; }
+  .stats { display:grid; grid-template-columns: repeat(3,1fr); gap:10px; }
+  .stat {
+    text-align:center; padding:10px; border-radius:12px; background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.08);
+  }
+  .stat b { display:block; font-size: 16px; color: #eef; }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+  .videos-grid { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+  .video-card { background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:8px; }
+  .video-card img { width:100%; height:110px; object-fit:cover; border-radius:10px; }
+  .video-card h4 { font-size: 13px; margin:8px 0 4px; }
 
-        .stat-card-animation {
-            animation: popIn 0.5s ease-out forwards;
-            opacity: 0;
-            transform: scale(0.9);
-        }
+  /* Custom selects + scrollbar (subtle) */
+  select {
+    appearance: none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, #cfd6ea 50%),
+      linear-gradient(135deg, #cfd6ea 50%, transparent 50%),
+      linear-gradient(to right, transparent, transparent);
+    background-position:
+      calc(100% - 18px) calc(50% - 3px),
+      calc(100% - 12px) calc(50% - 3px),
+      calc(100% - 2.5em) 0.5em;
+    background-size: 6px 6px, 6px 6px, 1px 1.8em;
+    background-repeat: no-repeat;
+  }
 
-        @keyframes popIn {
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
+  ::-webkit-scrollbar { width: 10px; height:10px; }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--accent), var(--accent-2));
+    border-radius: 999px;
+    border: 3px solid rgba(0,0,0,.25);
+  }
+  ::-webkit-scrollbar-track { background: transparent; }
 
-        .recent-search-item {
-            cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.2s ease;
-            transform: scale(1);
-        }
+  /* Responsive */
+  @media (max-width: 1200px){
+    .main { grid-template-columns: 1fr; grid-template-rows: 420px 1fr 520px; }
+    .details { grid-template-rows: auto 1fr 1fr; }
+  }
+  
+  /* Additional styles for authentication and admin controls */
+  .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 320px;
+      margin: 10vh auto;
+      padding: 24px;
+      background: var(--bg-1);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+  }
+  .auth-form h2 {
+      text-align: center;
+      margin-bottom: 12px;
+      font-size: 24px;
+  }
+  .auth-form input {
+      width: 100%;
+  }
+  .auth-form button {
+      width: 100%;
+  }
+  .user-info {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+  }
+  
+  /* Message Box Styling */
+  .message-box-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+  }
+  .message-box {
+      background: var(--bg-1);
+      padding: 24px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      max-width: 400px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+  }
 
-        .recent-search-item:hover {
-            background-color: rgba(255, 255, 255, 0.06);
-            transform: scale(1.02);
-        }
-    </style>
+  /* =========================
+     CUSTOM CHECKBOX
+     ========================= */
+  .switch input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .switch {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    cursor: pointer;
+  }
+  .switch-visual {
+    width: 28px;
+    height: 16px;
+    background: rgba(255, 255, 255, .1);
+    border-radius: 999px;
+    position: relative;
+    transition: background .2s ease;
+  }
+  .switch-visual::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--text);
+    border-radius: 50%;
+    transition: transform .2s ease;
+  }
+  .switch input[type="checkbox"]:checked + .switch-visual {
+    background: var(--accent);
+  }
+  .switch input[type="checkbox"]:checked + .switch-visual::before {
+    transform: translateX(12px);
+    background-color: #fff;
+  }
+  .switch input[type="checkbox"]:focus + .switch-visual {
+    box-shadow: 0 0 0 2px rgba(124, 58, 237, .5);
+  }
+
+  /* =========================
+     CUSTOM SELECT
+     ========================= */
+  select {
+      appearance: none;
+      background: var(--glass);
+      border: 1px solid rgba(255,255,255,.07);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: box-shadow .18s ease, transform .12s ease, border-color .18s ease;
+      cursor: pointer;
+      background-image:
+          linear-gradient(45deg, transparent 50%, #cfd6ea 50%),
+          linear-gradient(135deg, #cfd6ea 50%, transparent 50%);
+      background-position:
+          calc(100% - 18px) calc(50% + 1px),
+          calc(100% - 12px) calc(50% + 1px);
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+  }
+
+  select:hover {
+    border-color: rgba(124,58,237,.35);
+    box-shadow: 0 4px 12px rgba(124,58,237,.12);
+    transform: translateY(-1px);
+  }
+</style>
 </head>
-<body class="flex">
-    <div id="app-view" class="h-full w-full flex" style="display: none;">
-        <aside class="glass-panel w-20 flex flex-col items-center py-6 mx-4 my-4 fade-in" style="animation-delay: 0.1s;">
-            <div class="mb-8 p-3 bg-purple-600 rounded-full flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M10 20c0 .55.45 1 1 1s1-.45 1-1-.45-1-1-1-1 .45-1 1zm8-18c0-.55-.45-1-1-1s-1 .45-1 1 .45 1 1 1 1-.45 1-1zm-6 2c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1zm6 17c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1zm-4-4c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-3 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM9 2v4h4V2H9zm2 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
-                </svg>
-            </div>
-            <nav class="flex-1 flex flex-col gap-4">
-                <div class="group relative cursor-pointer flex items-center justify-center p-3 rounded-xl hover:bg-white/10 transition-colors duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-400" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-1.6.53-3.08 1.4-4.28L19.43 18.6c-1.2.87-2.68 1.4-4.28 1.4-1.62 0-3.13-.53-4.32-1.47zM4.07 12c.49 3.95 3.85 7 7.93 7 1.6 0 3.08-.53 4.28-1.4L4.57 5.4c-.87 1.2-1.4 2.68-1.4 4.28 0 1.62.53 3.13 1.47 4.32z"/>
-                    </svg>
-                    <span class="absolute left-full ml-4 whitespace-nowrap px-3 py-1 bg-gray-700 text-sm text-white rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">Dashboard</span>
-                </div>
-                <div class="group relative cursor-pointer flex items-center justify-center p-3 rounded-xl hover:bg-white/10 transition-colors duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15c0 .55.45 1 1 1s1-.45 1-1V9c0-.55-.45-1-1-1s-1 .45-1 1v8zm-1-9c0-.55.45-1 1-1h1c.55 0 1 .45 1 1v1c0 .55-.45 1-1 1h-1c-.55 0-1-.45-1-1V8z"/>
-                    </svg>
-                    <span class="absolute left-full ml-4 whitespace-nowrap px-3 py-1 bg-gray-700 text-sm text-white rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">Analytics</span>
-                </div>
-            </nav>
-            <div class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center text-sm font-semibold">
-                <span id="initials"></span>
-            </div>
-        </aside>
-
-        <main class="flex-1 overflow-auto p-4 flex flex-col">
-            <header class="h-16 flex items-center justify-between px-6 mb-4">
-                <div class="flex items-center gap-4">
-                    <h1 class="text-3xl font-bold text-white">Dashboard</h1>
-                    <div class="flex items-center gap-2 text-sm text-gray-400">
-                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span id="status">Online</span>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <span id="userEmail" class="text-sm text-gray-400"></span>
-                    <button class="btn bg-gray-700 text-gray-200 px-4 py-2 rounded-xl text-sm font-medium hover:bg-gray-600" id="btnSignOut">Sign Out</button>
-                </div>
-            </header>
-
-            <div class="flex-1 grid grid-cols-1 md:grid-cols-5 gap-4">
-                <div class="col-span-1 md:col-span-2 flex flex-col gap-4">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div id="card-total" class="glass-panel p-4 flex flex-col items-center justify-center text-center stat-card-animation" style="animation-delay: 0.4s;">
-                            <span class="text-xs text-gray-400 font-medium">Channels Found</span>
-                            <span id="metric-channels" class="text-2xl font-bold text-white mt-1 skeleton-text">0</span>
-                        </div>
-                        <div id="card-subs" class="glass-panel p-4 flex flex-col items-center justify-center text-center stat-card-animation" style="animation-delay: 0.5s;">
-                            <span class="text-xs text-gray-400 font-medium">Total Subscribers</span>
-                            <span id="metric-subs" class="text-2xl font-bold text-white mt-1 skeleton-text">0</span>
-                        </div>
-                        <div id="card-videos" class="glass-panel p-4 flex flex-col items-center justify-center text-center stat-card-animation" style="animation-delay: 0.6s;">
-                            <span class="text-xs text-gray-400 font-medium">Total Videos</span>
-                            <span id="metric-videos" class="text-2xl font-bold text-white mt-1 skeleton-text">0</span>
-                        </div>
-                    </div>
-
-                    <div class="glass-panel p-6 flex flex-col gap-4 fade-in" style="animation-delay: 0.2s;">
-                        <h2 class="text-xl font-bold">Search Filters</h2>
-                        <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)" class="w-full bg-white/5 rounded-xl border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors duration-200 resize-none min-h-[120px]"></textarea>
-
-                        <div class="grid grid-cols-2 gap-3">
-                            <button class="btn col-span-1 bg-purple-600 text-white font-medium py-3 rounded-xl hover:bg-purple-700" id="btnSearch">Search</button>
-                            <button class="btn col-span-1 bg-purple-600 text-white font-medium py-3 rounded-xl hover:bg-purple-700" id="btnDeepSearch">Deep Search</button>
-                            <button class="btn col-span-2 bg-gray-700 text-gray-200 font-medium py-3 rounded-xl hover:bg-gray-600" id="btnClear">Clear Search</button>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4 text-sm mt-4">
-                            <input class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500" id="apiKey" type="text" placeholder="YouTube API Key" value=""/>
-                            <input class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500" id="perPage" type="number" min="1" max="50" value="25" placeholder="Results per page"/>
-                            <select id="order" class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                                <option value="relevance">Order: Relevance</option>
-                                <option value="date">Order: Date</option>
-                                <option value="viewCount">Order: Views</option>
-                            </select>
-                            <select id="duration" class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                                <option value="">Duration: Any</option>
-                                <option value="short">Short</option>
-                                <option value="medium">Medium</option>
-                                <option value="long">Long</option>
-                            </select>
-                            <input id="minSubs" type="number" placeholder="Min Subs" class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"/>
-                            <input id="maxSubs" type="number" placeholder="Max Subs" class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"/>
-                            <div class="col-span-2 text-center text-sm mt-2 text-gray-500">
-                                <span id="count">0 channels</span>
-                            </div>
-                        </div>
-
-                        <div class="relative pt-1 mt-4">
-                            <div class="flex mb-2 items-center justify-between text-xs">
-                                <div class="text-gray-400">Progress</div>
-                            </div>
-                            <div class="flex h-2 mb-4 overflow-hidden text-xs bg-gray-700 rounded-lg">
-                                <div id="progressBar" class="flex flex-col justify-center shadow-none whitespace-nowrap bg-purple-600 transition-all duration-300 ease-in-out" style="width: 0%;"></div>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-4">
-                            <button class="btn flex-1 bg-gray-700 text-gray-200 font-medium py-3 rounded-xl hover:bg-gray-600" id="btnSaveLib">Save Library</button>
-                            <button class="btn flex-1 bg-gray-700 text-gray-200 font-medium py-3 rounded-xl hover:bg-gray-600" id="btnLoadLib">Load Library</button>
-                        </div>
-                    </div>
-
-                    <div class="glass-panel p-6 flex flex-col gap-4 fade-in" style="animation-delay: 0.7s;">
-                        <h2 class="text-xl font-bold">Recent Searches</h2>
-                        <div id="searchHistoryContainer" class="flex flex-col gap-2 max-h-48 overflow-y-auto custom-scroll">
-                            <div class="h-6 skeleton rounded-full w-4/5"></div>
-                            <div class="h-6 skeleton rounded-full w-full"></div>
-                            <div class="h-6 skeleton rounded-full w-3/4"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-span-1 md:col-span-3 glass-panel p-6 flex flex-col fade-in" style="animation-delay: 0.3s;">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xl font-bold">Search Results</h2>
-                        <div class="flex gap-2">
-                            <button class="btn bg-gray-700 text-gray-200 px-4 py-2 rounded-xl text-sm font-medium hover:bg-gray-600" id="btnExportCSV">Export CSV</button>
-                            <button class="btn bg-gray-700 text-gray-200 px-4 py-2 rounded-xl text-sm font-medium hover:bg-gray-600" id="btnExportJSON">Export JSON</button>
-                        </div>
-                    </div>
-
-                    <div class="flex-1 overflow-y-auto custom-scroll">
-                        <table class="w-full text-sm text-left">
-                            <thead class="sticky top-0 bg-gray-800/80 backdrop-blur-sm z-10">
-                                <tr class="text-gray-400 font-semibold border-b border-gray-700">
-                                    <th class="p-4 rounded-tl-xl">
-                                        <input type="checkbox" id="selectAllCheckbox" class="rounded-sm bg-gray-700 border-gray-500 text-purple-600 focus:ring-purple-500">
-                                    </th>
-                                    <th class="p-4">Channel</th>
-                                    <th class="p-4">Subs</th>
-                                    <th class="p-4">Videos</th>
-                                    <th class="p-4 rounded-tr-xl">Socials</th>
-                                </tr>
-                            </thead>
-                            <tbody id="resultsTbody">
-                                <tr>
-                                    <td colspan="5" class="p-4 text-center text-gray-500">
-                                        Enter your search queries and API key to begin.
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </main>
+<body>
+    <div id="auth-view" class="auth-form">
+        <h2>Welcome to Lead Studio Pro</h2>
+        <input id="authEmail" type="email" placeholder="Email" autocomplete="username">
+        <input id="authPass" type="password" placeholder="Password" autocomplete="current-password">
+        <button class="btn btn-primary" id="btnSignIn">Sign In</button>
+        <button class="btn" id="btnSignUp">Sign Up</button>
+        <div id="authStatus" class="meta" style="text-align: center;"></div>
     </div>
 
-    <div id="auth-view" class="h-screen w-screen flex items-center justify-center fade-in" style="display: none;">
-        <div class="glass-panel p-10 flex flex-col gap-6 text-center max-w-lg w-full">
-            <h2 class="text-3xl font-bold text-white">Lead Studio Pro</h2>
-            <p class="text-gray-400">Sign in to find and manage your YouTube channel leads.</p>
-            <input id="authEmail" type="email" placeholder="Email" autocomplete="username" class="bg-white/5 rounded-xl border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors duration-200">
-            <input id="authPass" type="password" placeholder="Password" autocomplete="current-password" class="bg-white/5 rounded-xl border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors duration-200">
-            <div class="flex gap-4">
-                <button class="btn flex-1 bg-purple-600 text-white font-semibold py-3 rounded-xl" id="btnSignIn">Sign In</button>
-                <button class="btn flex-1 bg-gray-700 text-gray-200 font-semibold py-3 rounded-xl hover:bg-gray-600" id="btnSignUp">Sign Up</button>
+    <div id="app-view" class="app" style="display:none">
+        <div class="topbar">
+            <div class="brand">
+                <h1>Lead Studio Pro</h1>
+                <p>Apple-grade UI • Advanced YouTube lead extractor</p>
             </div>
-            <div id="authStatus" class="text-sm text-red-400"></div>
+            <div class="bar-controls">
+                <input id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA"/>
+                <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)"></textarea>
+                <div class="button-group" style="margin-left:auto;">
+                  <button class="btn btn-primary" id="btnSearch">Search</button>
+                  <button class="btn btn-primary" id="btnDeepSearch" style="background: linear-gradient(90deg, #d946ef, #a855f7);">Deep Search</button>
+                  <button class="btn" id="btnClear">Clear</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="main">
+            <div class="panel">
+                <div class="row" style="justify-content:space-between;margin-bottom:8px">
+                    <div class="meta">Advanced Filters</div>
+                    <div class="meta" id="status">Idle</div>
+                </div>
+                <div class="filters">
+                    <select id="order"><option value="relevance">Order: Relevance</option><option value="date">Order: Date</option><option value="viewCount">Order: Views</option><option value="rating">Order: Rating</option></select>
+                    <select id="duration"><option value="">Duration: Any</option><option value="short">Short (<4m)</option><option value="medium">Medium (4–20m)</option><option value="long">Long (>20m)</option></select>
+                    <select id="upload"><option value="">Upload Time: Any</option><option value="hour">Last hour</option><option value="today">Today</option><option value="week">This week</option><option value="month">This month</option></select>
+                    <select id="region"><option value="">Region: Any</option><option>US</option><option>IN</option><option>GB</option><option>CA</option><option>AU</option><option>DE</option></select>
+                    <select id="definition"><option value="">Definition: Any</option><option value="high">HD</option><option value="standard">SD</option></select>
+                    <select id="safe"><option value="">Safe: Any</option><option value="none">None</option><option value="moderate">Moderate</option><option value="strict">Strict</option></select>
+
+                    <input id="perPage" class="full" type="number" min="1" max="50" value="25" placeholder="Results per page (1–50)"/>
+                    <input id="pages" class="full" type="number" min="1" max="10" value="2" placeholder="Pages per query (1–10)"/>
+
+                    <div class="full row">
+                        <input id="minSubs" type="number" placeholder="Min subs"/>
+                        <input id="maxSubs" type="number" placeholder="Max subs"/>
+                        <input id="searchInResults" type="text" placeholder="Search within results (title / ID)"/>
+                    </div>
+
+                    <div class="full row">
+                        <input id="corsProxy" type="url" placeholder="Optional CORS proxy for verification (best-effort)"/>
+                        <label class="switch">
+                            <input id="doVerify" type="checkbox"/>
+                            <span class="switch-visual"></span>
+                            <small>Attempt verify check</small>
+                        </label>
+                    </div>
+
+                    <div class="full row" style="justify-content:space-between;margin-top:2px">
+                        <div class="progress"><i id="progressBar"></i></div>
+                        <small id="count">0 channels</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel results-wrap">
+                <div class="results-toolbar">
+                    <div class="left button-group">
+                        <button class="btn" id="btnSelectAll">Select All</button>
+                        <button class="btn" id="btnDeselectAll">Deselect</button>
+                        <button class="btn" id="btnSaveLib">Save Library</button>
+                        <button class="btn" id="btnLoadLib">Load Library</button>
+                    </div>
+                    <div class="right button-group">
+                        <select id="clientSort">
+                            <option value="subs-desc">Sort: Subs ↓</option>
+                            <option value="subs-asc">Sort: Subs ↑</option>
+                            <option value="views-desc">Sort: Views ↓</option>
+                            <option value="views-asc">Sort: Views ↑</option>
+                            <option value="title-asc">Sort: Title A→Z</option>
+                            <option value="title-desc">Sort: Title Z→A</option>
+                        </select>
+                        <button class="btn btn-primary" id="btnExportCSV">Export CSV</button>
+                        <button class="btn" id="btnExportJSON">Export JSON</button>
+                        <button class="btn" id="btnCopyIDs">Copy Channel IDs</button>
+                        <button class="btn btn-danger" id="btnClearResults">Clear</button>
+                    </div>
+                </div>
+
+                <div class="table-wrap" id="resultsScroller">
+                    <table aria-label="Channel results">
+                        <thead>
+                            <tr>
+                                <th style="width:42px"></th>
+                                <th>Channel</th>
+                                <th>Subs</th>
+                                <th>Videos</th>
+                                <th>Views</th>
+                                <th>Verified</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTbody"></tbody>
+                    </table>
+                </div>
+
+                <div class="row" style="justify-content:flex-end">
+                    <small class="meta">Tip: Click a row to open full details in the panel on the right.</small>
+                </div>
+            </div>
+
+            <div class="panel details">
+                <div>
+                    <div class="row" style="justify-content:space-between">
+                        <div>
+                            <div class="meta">Channel Details</div>
+                            <h3 id="detailTitle" style="margin:6px 0 0">Select a channel</h3>
+                        </div>
+                        <div class="row button-group">
+                            <button class="btn" id="btnExportSelected">Export Selected</button>
+                            <button class="btn" id="btnCopySelected">Copy Selected CSV</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="banner" class="banner" style="display:none"></div>
+                <div class="about" id="detailContent">
+                    <div class="meta">No channel selected.</div>
+                </div>
+                <div class="meta">
+                    <div class="row" style="justify-content:space-between;align-items:flex-end">
+                        <div class="user-info">
+                            <div id="userEmail"></div>
+                        </div>
+                        <button class="btn" id="btnSignOut">Sign Out</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-    <div id="messageBoxOverlay" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 transition-opacity duration-300 opacity-0 pointer-events-none">
-        <div id="messageBox" class="glass-panel p-8 max-w-lg text-center flex flex-col gap-6 transform scale-95 transition-transform duration-300">
-            <h4 id="messageTitle" class="text-xl font-semibold text-white"></h4>
-            <p id="messageText" class="text-gray-400"></p>
-            <button class="btn bg-purple-600 text-white font-semibold py-3 rounded-xl" id="messageBoxOk">OK</button>
+    
+    <div id="messageBoxOverlay" class="message-box-overlay">
+        <div id="messageBox" class="message-box">
+            <h4 id="messageTitle"></h4>
+            <p id="messageText"></p>
+            <button class="btn btn-primary" id="messageBoxOk">OK</button>
         </div>
     </div>
-
+    
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, query, getDocs, onSnapshot, addDoc, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // =========================
-        // STATE + HELPERS
-        // =========================
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-functions.js";
+        
+        /* =========================
+           STATE + HELPERS
+           ========================= */
         const $ = id => document.getElementById(id);
-        const esc = s => String(s || '').replace(/"/g, '""');
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
+        const esc = s => String(s ?? '').replace(/"/g,'""');
 
-        let LIB = [];
-        let auth, db, currentUser;
+        const savedLibraryKey = 'lead_studio_pro_lib_v1';
+        let currentUser = null;
+        
+        function setStatus(t){ $('status').innerText = t; }
+        function setProgress(p){ $('progressBar').style.width = Math.min(100, Math.round(p*100)) + '%'; }
 
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBvU3_Njbi1JQr_wD1a16h5coTW2ifaRDU",
-            authDomain: "youleadmax.firebaseapp.com",
-            projectId: "youleadmax",
-            storageBucket: "youleadmax.firebasestorage.app",
-            messagingSenderId: "710806971072",
-            appId: "1:710806971072:web:ced903befe8693f886c325",
-            measurementId: "G-JW9W20C1LQ"
-        };
-        const app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        db = getFirestore(app);
-
-        // =========================
-        // UI & MESSAGE BOX FUNCTIONS
-        // =========================
-        function showMessage(title, message, isHtml = false) {
+        let LIB = []; // enriched channels
+        let VIEW = []; // filtered/sorted view
+        let lastExport = [];
+        let lastSearch = {};
+        
+        // Custom message box to replace alert()
+        function showMessage(title, message) {
             $('messageTitle').innerText = title;
-            if (isHtml) {
-                $('messageText').innerHTML = message;
-            } else {
-                $('messageText').innerText = message;
-            }
-            $('messageBoxOverlay').classList.remove('opacity-0', 'pointer-events-none');
-            $('messageBox').classList.remove('scale-95');
-            $('messageBox').classList.add('scale-100');
-        }
+            $('messageText').innerText = message;
+            
+            const messageBox = $('messageBox');
+            // Remove any existing dynamic buttons
+            const dynamicButtons = messageBox.querySelectorAll('.btn:not(#messageBoxOk)');
+            dynamicButtons.forEach(btn => btn.remove());
+            $('messageBoxOk').style.display = 'block';
 
+            $('messageBoxOverlay').style.display = 'flex';
+        }
         $('messageBoxOk').addEventListener('click', () => {
-            $('messageBoxOverlay').classList.add('opacity-0', 'pointer-events-none');
-            $('messageBox').classList.remove('scale-100');
-            $('messageBox').classList.add('scale-95');
+            $('messageBoxOverlay').style.display = 'none';
         });
 
-        function setStatus(t) { $('status').innerText = t; }
+        // === FIREBASE CONFIGURATION ===
+        const firebaseConfig = {
+          apiKey: "AIzaSyBvU3_Njbi1JQr_wD1a16h5coTW2ifaRDU",
+          authDomain: "youleadmax.firebaseapp.com",
+          projectId: "youleadmax",
+          storageBucket: "youleadmax.firebasestorage.app",
+          messagingSenderId: "710806971072",
+          appId: "1:710806971072:web:ced903befe8693f886c325",
+          measurementId: "G-JW9W20C1LQ"
+        };
 
-        function setProgress(p) { $('progressBar').style.width = Math.min(100, Math.round(p * 100)) + '%'; }
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const functions = getFunctions(app);
+        const logSearchCallable = httpsCallable(functions, 'logSearch');
 
-        function updateMetrics() {
-            const totalSubs = LIB.reduce((sum, c) => sum + (c.subscribers || 0), 0);
-            const totalVideos = LIB.reduce((sum, c) => sum + (c.videoCount || 0), 0);
-
-            $('metric-channels').innerText = formatNumber(LIB.length);
-            $('metric-subs').innerText = formatNumber(totalSubs);
-            $('metric-videos').innerText = formatNumber(totalVideos);
-        }
-
-        function formatNumber(num) {
-            if (num >= 1000000000) return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
-            if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-            if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
-            return num;
-        }
-
-        function downloadFile(filename, mimeType, content) {
-            const blob = new Blob([content], { type: mimeType });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        function getSelectedData() {
-            const selectedChannels = [];
-            document.querySelectorAll('.sel:checked').forEach(checkbox => {
-                const row = checkbox.closest('tr');
-                const title = row.querySelector('a').innerText;
-                const id = row.querySelector('a').href.split('/').pop();
-                const subs = parseInt(row.children[2].innerText.replace(/[^0-9.]/g, '') * (row.children[2].innerText.includes('M') ? 1000000 : row.children[2].innerText.includes('K') ? 1000 : 1));
-                const videos = parseInt(row.children[3].innerText.replace(/[^0-9.]/g, '') * (row.children[3].innerText.includes('M') ? 1000000 : row.children[3].innerText.includes('K') ? 1000 : 1));
-                selectedChannels.push({ id, title, subscribers: subs, videoCount: videos });
-            });
-            return selectedChannels;
-        }
-
-        // Add ripple effect listener
-        document.querySelectorAll('.btn').forEach(button => {
-            button.addEventListener('click', function(e) {
-                const rect = button.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-
-                const ripple = document.createElement('span');
-                ripple.className = 'ripple-effect';
-                ripple.style.left = `${x}px`;
-                ripple.style.top = `${y}px`;
-
-                this.appendChild(ripple);
-
-                ripple.addEventListener('animationend', () => {
-                    ripple.remove();
-                });
-            });
-        });
-
-        $('selectAllCheckbox').addEventListener('change', (e) => {
-            const isChecked = e.target.checked;
-            document.querySelectorAll('.sel').forEach(cb => cb.checked = isChecked);
-        });
-
-        $('btnExportCSV').addEventListener('click', () => {
-            const data = getSelectedData();
-            if (data.length === 0) {
-                return showMessage('Export Failed', 'Please select at least one channel to export.');
-            }
-            const csvRows = [];
-            const headers = ['Channel ID', 'Title', 'Subscribers', 'Video Count'];
-            csvRows.push(headers.map(esc).join(','));
-
-            for (const row of data) {
-                const values = [row.id, row.title, row.subscribers, row.videoCount];
-                csvRows.push(values.map(esc).join(','));
-            }
-            const csvString = csvRows.join('\n');
-            downloadFile('channels.csv', 'text/csv', csvString);
-        });
-
-        $('btnExportJSON').addEventListener('click', () => {
-            const data = getSelectedData();
-            if (data.length === 0) {
-                return showMessage('Export Failed', 'Please select at least one channel to export.');
-            }
-            const jsonString = JSON.stringify(data, null, 2);
-            downloadFile('channels.json', 'application/json', jsonString);
-        });
-
-        // =========================
-        // AUTHENTICATION LOGIC
-        // =========================
+        /* ========================= AUTHENTICATION ========================= */
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                $('app-view').style.display = 'flex';
+                $('app-view').style.display = 'grid';
                 $('auth-view').style.display = 'none';
-                $('userEmail').innerText = user.email || user.uid;
-                const initials = user.email ? user.email.charAt(0).toUpperCase() : user.uid.charAt(0).toUpperCase();
-                $('initials').innerText = initials;
-                listenToSearchHistory();
+                $('userEmail').innerText = `Logged in as: ${user.email}`;
+
+                // Log user usage for tracking purposes
+                const userRef = doc(db, 'users', user.uid);
+                await setDoc(userRef, {
+                    lastLogin: new Date().toISOString()
+                }, { merge: true });
+
             } else {
                 currentUser = null;
                 $('app-view').style.display = 'none';
@@ -490,7 +625,6 @@
             const pass = $('authPass').value;
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
-                $('authStatus').innerText = '';
             } catch (error) {
                 $('authStatus').innerText = 'Sign-in failed: ' + error.message;
             }
@@ -501,7 +635,6 @@
             const pass = $('authPass').value;
             try {
                 await createUserWithEmailAndPassword(auth, email, pass);
-                $('authStatus').innerText = '';
             } catch (error) {
                 $('authStatus').innerText = 'Sign-up failed: ' + error.message;
             }
@@ -512,43 +645,516 @@
             resetResults();
         });
 
+        /* ========================= SEARCH / FETCH ========================= */
+        $('btnSearch').addEventListener('click', () => searchAll(false));
+        $('btnDeepSearch').addEventListener('click', () => {
+          const queryRaw = $('query').value.trim();
+          if (!queryRaw.length) {
+            showMessage('Search Error', 'Please enter at least one query');
+            return;
+          }
+          
+          if (!currentUser) {
+            showMessage('Authentication Required', 'Please sign in first.');
+            return;
+          }
+          
+          // Display a confirmation message box
+          $('messageTitle').innerText = 'Deep Search Confirmation';
+          $('messageText').innerText = 'Deep Search will consume more API credits by searching more pages. Do you want to continue?';
+          
+          const messageBox = $('messageBox');
+          const oldOkBtn = $('messageBoxOk');
+          
+          const confirmButton = document.createElement('button');
+          confirmButton.className = 'btn btn-primary';
+          confirmButton.innerText = 'Yes, Continue';
+          confirmButton.addEventListener('click', () => {
+            $('messageBoxOverlay').style.display = 'none';
+            searchAll(true);
+          });
+          
+          const cancelButton = document.createElement('button');
+          cancelButton.className = 'btn';
+          cancelButton.innerText = 'Cancel';
+          cancelButton.addEventListener('click', () => {
+            $('messageBoxOverlay').style.display = 'none';
+          });
+          
+          oldOkBtn.style.display = 'none';
+          messageBox.appendChild(confirmButton);
+          messageBox.appendChild(cancelButton);
+          $('messageBoxOverlay').style.display = 'flex';
+        });
+        
+        $('btnClear').addEventListener('click', () => { $('query').value=''; resetResults(); });
+        $('query').addEventListener('keydown', e => { if(e.key==='Enter') searchAll(); });
 
-        // =========================
-        // ORIGINAL FUNCTIONS FROM INDEX (4)
-        // =========================
-        async function getChannelDetails(channelId) {
-            const apiKey = $('apiKey').value;
-            const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${channelId}&key=${apiKey}`;
-            const response = await fetch(url);
-            const data = await response.json();
-            if (data.items.length === 0) {
-                return null;
+        async function searchAll(isDeepSearch = false){
+            const queryRaw = $('query').value.trim();
+            const queries = queryRaw.split(/[,\\n]/).map(q=>q.trim()).filter(Boolean);
+            const perPage = clamp(Number($('perPage').value||25), 1, 50);
+            const pages = isDeepSearch ? 20 : clamp(Number($('pages').value||2), 1, 10);
+
+            if(!queries.length){ showMessage('Search Error', 'Please enter at least one query'); return; }
+            if(!currentUser){ showMessage('Authentication Required', 'Please sign in first.'); return; }
+
+            // Call the logSearch Cloud Function to record the search action
+            try {
+              // The CORS issue means we need to handle the error, but the app should still work.
+              // We will continue the search process even if logging fails.
+              await logSearchCallable({ query: queryRaw });
+            } catch (error) {
+              console.error('Failed to log search:', error);
             }
-            const item = data.items[0];
-            const socialLinks = await getSocialLinksFromAboutPage(channelId);
+
+            resetResults();
+            lastSearch = { queryRaw, queries, perPage, pages };
+            
+            setStatus('Searching for channels...');
+            const apiKey = $('apiKey').value.trim();
+            const order = $('order').value;
+            const duration = $('duration').value;
+            const upload = $('upload').value;
+            const region = $('region').value;
+            const definition = $('definition').value;
+            const safe = $('safe').value;
+            let totalSteps = queries.length * pages;
+            let done = 0;
+            let chanIds = new Set();
+            
+            for(const q of queries){
+                let pageToken = '';
+                for(let i=0;i<pages;i++){
+                    if(!pageToken && i>0) break;
+                    
+                    const url = new URL('https://www.googleapis.com/youtube/v3/search');
+                    url.searchParams.set('part','snippet');
+                    url.searchParams.set('type','video');
+                    url.searchParams.set('q', q);
+                    url.searchParams.set('maxResults', String(perPage));
+                    url.searchParams.set('order', order);
+                    if(region) url.searchParams.set('regionCode', region);
+                    if(duration) url.searchParams.set('videoDuration', duration);
+                    if(definition) url.searchParams.set('videoDefinition', definition);
+                    if(upload) url.searchParams.set('publishedAfter', getPublishedAfterISO(upload));
+                    if(pageToken) url.searchParams.set('pageToken', pageToken);
+                    url.searchParams.set('key', apiKey);
+                    
+                    let resp;
+                    try { resp = await fetch(url.toString()); }
+                    catch(e){ console.error(e); showMessage('Network Error', 'A network error occurred during the search. Please check your connection.'); return; }
+                    
+                    if(!resp.ok){
+                        const t = await resp.text();
+                        showMessage('Search API Error', `YouTube API returned an error: ${resp.status}\n${t}`);
+                        return;
+                    }
+                    
+                    const data = await resp.json();
+                    
+                    (data.items || []).forEach(item => {
+                        // Shorts filtering (multi-heuristic)
+                        const t = (item.snippet.title||'').toLowerCase();
+                        const d = (item.snippet.description||'').toLowerCase();
+                        if(t.includes('#shorts') || t.includes('shorts ') || t.endsWith('shorts') || d.includes('#shorts') || d.includes('shorts ')) return;
+                        const cid = item.snippet.channelId;
+                        if(cid) chanIds.add(cid);
+                    });
+                    
+                    pageToken = data.nextPageToken || '';
+                    done++;
+                    setProgress(done/totalSteps * 0.65);
+                    await sleep(180);
+                }
+            }
+            
+            if(chanIds.size===0){ setStatus('No channels found'); setProgress(1); return; }
+            
+            setStatus(`Found ${chanIds.size} channels — fetching details…`);
+            
+            // fetch channels in batches of 50
+            const ids = Array.from(chanIds);
+            for(let i=0;i<ids.length;i+=50){
+                const batch = ids.slice(i,i+50);
+                const chURL = new URL('https://www.googleapis.com/youtube/v3/channels');
+                chURL.searchParams.set('part','snippet,statistics,brandingSettings');
+                chURL.searchParams.set('id', batch.join(','));
+                chURL.searchParams.set('key', apiKey);
+                
+                let resp;
+                try { resp = await fetch(chURL.toString()); }
+                catch(e){ console.error(e); showMessage('Network Error', 'A network error occurred while fetching channel details.'); return; }
+                
+                if(!resp.ok){
+                    const t = await resp.text();
+                    showMessage('Channels API Error', `YouTube API returned an error: ${resp.status}\n${t}`);
+                    return;
+                }
+                
+                const data = await resp.json();
+                
+                (data.items||[]).forEach(ch => {
+                    if(!ch.snippet || !ch.snippet.title) return; // junk
+                    const stats = ch.statistics || {};
+                    const title = ch.snippet.title;
+                    
+                    let country = ch.snippet.country || '';
+                    if(!country && ch.brandingSettings?.channel?.country){
+                        country = ch.brandingSettings.channel.country;
+                    }
+                    
+                    LIB.push({
+                        title: title,
+                        description: ch.snippet.description,
+                        channelId: ch.id,
+                        subs: Number(stats.subscriberCount||0),
+                        views: Number(stats.viewCount||0),
+                        videos: Number(stats.videoCount||0),
+                        verified: (ch.snippet.customUrl||'').includes('channel') ? 'No' : 'Yes',
+                        avatar: ch.snippet.thumbnails?.high?.url || ch.snippet.thumbnails?.default?.url || '',
+                        banner: ch.brandingSettings?.image?.bannerExternalUrl || '',
+                        country: country,
+                        createdAt: ch.snippet.publishedAt.split('T')[0]
+                    });
+                    
+                    done++;
+                    setProgress(0.65 + (done/totalSteps * 0.35));
+                });
+                await sleep(180);
+            }
+
+            if(LIB.length===0){
+                setStatus('No channels found');
+            } else {
+                applyClientFiltersAndRender();
+                setStatus(`Found ${LIB.length} channels.`);
+            }
+            setProgress(1);
+        }
+
+        function getPublishedAfterISO(timeframe){
+            const d = new Date();
+            if(timeframe==='hour') d.setHours(d.getHours() - 1);
+            if(timeframe==='today') d.setDate(d.getDate() - 1);
+            if(timeframe==='week') d.setDate(d.getDate() - 7);
+            if(timeframe==='month') d.setMonth(d.getMonth() - 1);
+            return d.toISOString();
+        }
+
+        function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
+
+        function applyClientFiltersAndRender(){
+            const min = Number($('minSubs').value||0);
+            const maxRaw = Number($('maxSubs').value||0);
+            const max = maxRaw>0? maxRaw : Infinity;
+            const needle = $('searchInResults').value.trim().toLowerCase();
+
+            VIEW = LIB.filter(c => {
+                if(c.subs < min) return false;
+                if(c.subs > max) return false;
+                if(needle){
+                    const hit = (c.title?.toLowerCase().includes(needle)) || (c.channelId?.toLowerCase().includes(needle));
+                    if(!hit) return false;
+                }
+                return true;
+            });
+
+            // client sort
+            const sort = $('clientSort').value;
+            VIEW.sort((a,b) => {
+                if(sort==='subs-desc') return (b.subs||0) - (a.subs||0);
+                if(sort==='subs-asc') return (a.subs||0) - (b.subs||0);
+                if(sort==='views-desc')return (b.views||0) - (a.views||0);
+                if(sort==='views-asc') return (a.views||0) - (b.views||0);
+                if(sort==='title-asc') return (a.title||'').localeCompare(b.title||'');
+                if(sort==='title-desc')return (b.title||'').localeCompare(a.title||'');
+                return 0;
+            });
+
+            renderResults(VIEW);
+            lastExport = VIEW.slice();
+            $('count').innerText = VIEW.length + ' channels';
+        }
+
+        /* ========================= RENDER RESULTS + DETAILS ========================= */
+        $('clientSort').addEventListener('change', applyClientFiltersAndRender);
+        $('minSubs').addEventListener('input', applyClientFiltersAndRender);
+        $('maxSubs').addEventListener('input', applyClientFiltersAndRender);
+        $('searchInResults').addEventListener('input', applyClientFiltersAndRender);
+
+        function renderResults(list){
+            const tbody = $('resultsTbody');
+            tbody.innerHTML = '';
+            if(!list.length){
+                tbody.innerHTML = `<tr><td colspan="6" class="meta">No channels match your filters.</td></tr>`;
+                return;
+            }
+            list.forEach((c, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><input type="checkbox" class="sel" data-idx="${idx}"/></td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:10px">
+                            <img class="avatar" src="${sanitize(c.avatar)}" alt="">
+                            <div>
+                                <div style="font-weight:700">${sanitize(c.title)}</div>
+                                <div class="meta">${sanitize(c.channelId)}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${c.hidden ? 'Hidden' : (c.subs||0).toLocaleString()}</td>
+                    <td>${(c.videos||0).toLocaleString()}</td>
+                    <td>${(c.views||0).toLocaleString()}</td>
+                    <td>${c.verified}</td>
+                `;
+                tr.addEventListener('click', e => {
+                    if(e.target.type !== 'checkbox'){
+                        renderDetails(c);
+                    }
+                });
+                tbody.appendChild(tr);
+            });
+        }
+        
+        async function renderDetails(c){
+            $('detailTitle').innerText = c.title;
+            const socialLinks = await getSocialLinksFromAboutPage(c.channelId);
+
+            $('detailContent').innerHTML = `
+                <div class="meta">Channel ID: ${c.channelId} • ${c.country} • Created: ${c.createdAt}</div>
+                <p style="margin-top:10px;line-height:1.5;font-size:14px;color:var(--muted)">${sanitize(c.description)}</p>
+                <div class="stats" style="margin-top:14px">
+                    <div class="stat"><b>${c.subs.toLocaleString()}</b><div class="meta">Subscribers</div></div>
+                    <div class="stat"><b>${c.views.toLocaleString()}</b><div class="meta">Total Views</div></div>
+                    <div class="stat"><b>${c.videos.toLocaleString()}</b><div class="meta">Total Videos</div></div>
+                </div>
+                
+                <h4 style="margin:20px 0 8px">Social Links</h4>
+                <div class="row" style="flex-wrap:nowrap;justify-content:space-between">
+                    <div class="row button-group" id="socialLinksContainer">
+                        ${socialLinks.website?`<a href="${sanitize(socialLinks.website)}" target="_blank" class="btn">Website</a>`:''}
+                        ${socialLinks.twitter?`<a href="${sanitize(socialLinks.twitter)}" target="_blank" class="btn">Twitter</a>`:''}
+                        ${socialLinks.instagram?`<a href="${sanitize(socialLinks.instagram)}" target="_blank" class="btn">Instagram</a>`:''}
+                        ${socialLinks.facebook?`<a href="${sanitize(socialLinks.facebook)}" target="_blank" class="btn">Facebook</a>`:''}
+                        ${socialLinks.tiktok?`<a href="${sanitize(socialLinks.tiktok)}" target="_blank" class="btn">TikTok</a>`:''}
+                        ${socialLinks.linkedin?`<a href="${sanitize(socialLinks.linkedin)}" target="_blank" class="btn">LinkedIn</a>`:''}
+                    </div>
+                </div>
+                <h4 style="margin:20px 0 8px">Latest Videos <small class="meta">(up to 6)</small></h4>
+                <div class="videos-grid" id="latestVideos">
+                    <div class="meta">Loading...</div>
+                </div>
+            `;
+            if(c.banner){
+                $('banner').style.display = 'block';
+                $('banner').style.backgroundImage = `url(${sanitize(c.banner)})`;
+            } else {
+                $('banner').style.display = 'none';
+            }
+            
+            loadLatestVideos(c.channelId);
+        }
+
+        /* ========================= UTIL ========================= */
+        function resetResults(){
+            LIB = []; VIEW = []; lastExport = [];
+            $('resultsTbody').innerHTML=''; $('count').innerText='0 channels';
+            $('detailTitle').innerText = 'Select a channel';
+            $('detailContent').innerHTML = '<div class="meta">No channel selected.</div>';
+            $('banner').style.display='none'; $('banner').style.backgroundImage='none';
+            setProgress(0); setStatus('Idle');
+        }
+
+        function sanitize(s){ try{ return s.replace(/</g,'<'); } catch(e){return '';} }
+
+        async function loadLatestVideos(channelId){
+            const apiKey = $('apiKey').value.trim();
+            const box = $('latestVideos');
+            try{
+                const u = new URL('https://www.googleapis.com/youtube/v3/search');
+                u.searchParams.set('part','snippet');
+                u.searchParams.set('channelId', channelId);
+                u.searchParams.set('order','date');
+                u.searchParams.set('maxResults','6');
+                u.searchParams.set('type','video');
+                u.searchParams.set('key', apiKey);
+                const r = await fetch(u.toString());
+                if(!r.ok){
+                    box.innerHTML = '<div class="meta">Cannot load videos.</div>';
+                    return;
+                }
+                const data = await r.json();
+                if(!data.items?.length){
+                    box.innerHTML = '<div class="meta">No recent videos.</div>';
+                    return;
+                }
+                box.innerHTML='';
+                data.items.forEach(it => {
+                    const vid = it.id.videoId;
+                    const thumb = it.snippet.thumbnails?.medium?.url || it.snippet.thumbnails?.default?.url || '';
+                    const title = it.snippet.title || '';
+                    const card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                        <img src="${sanitize(thumb)}" alt="">
+                        <h4>${sanitize(title)}</h4>
+                        <div class="row" style="margin-top:6px">
+                            <button class="btn btn-primary" onclick="window.open('https://www.youtube.com/watch?v=${vid}')">Open</button>
+                            <button class="btn" onclick="embed('${vid}')">Preview</button>
+                        </div>
+                    `;
+                    box.appendChild(card);
+                });
+            }catch(e){
+                console.error(e);
+                box.innerHTML = '<div class="meta">Error loading videos.</div>';
+            }
+        }
+        
+        function embed(videoId){
+            // add/replace a small embed at bottom-right of results panel
+            let frame = document.getElementById('previewFrame');
+            if(frame){ frame.remove(); }
+            frame = document.createElement('iframe');
+            frame.id='previewFrame';
+            frame.width='100%';
+            frame.height='220px';
+            frame.style.marginTop='10px';
+            frame.src=`https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            frame.setAttribute('allow','accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture');
+            $('detailContent').appendChild(frame);
+        }
+        
+        // Helper for copying text to clipboard
+        async function copyText(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+            } catch (err) {
+                // Fallback for older browsers or restricted environments
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            }
+        }
+
+        /* ========================= EXPORTING ========================= */
+        $('btnExportCSV').addEventListener('click', () => {
+            const rows = lastExport;
+            if(!rows.length) return showMessage('Export Failed', 'No results to export');
+            downloadText(toCSV(rows), 'lead_studio_pro.csv', 'text/csv');
+        });
+        $('btnExportJSON').addEventListener('click', () => {
+            const rows = lastExport.map(cToSafe);
+            if(!rows.length) return showMessage('Export Failed', 'No results to export');
+            downloadText(JSON.stringify(rows,null,2), 'lead_studio_pro.json', 'application/json');
+        });
+        $('btnCopyIDs').addEventListener('click', async () => {
+            const rows = lastExport;
+            if(!rows.length) return showMessage('Copy Failed', 'No results to copy');
+            const ids = rows.map(r=>r.channelId).join('\n');
+            await copyText(ids);
+            showMessage('Copy Success', 'Channel IDs copied to clipboard.');
+        });
+        $('btnSelectAll').addEventListener('click', () => {
+            document.querySelectorAll('.sel').forEach(cb => cb.checked=true);
+        });
+        $('btnDeselectAll').addEventListener('click', () => {
+            document.querySelectorAll('.sel').forEach(cb => cb.checked=false);
+        });
+        $('btnExportSelected').addEventListener('click', () => {
+            const rows = getSelected();
+            if(!rows.length) return showMessage('Export Failed', 'Select some rows first');
+            downloadText(toCSV(rows), 'lead_studio_pro_selected.csv', 'text/csv');
+        });
+        $('btnCopySelected').addEventListener('click', async () => {
+            const rows = getSelected();
+            if(!rows.length) return showMessage('Copy Failed', 'Select some rows first');
+            const csv = toCSV(rows);
+            await copyText(csv);
+            showMessage('Copy Success', 'Selected CSV copied to clipboard.');
+        });
+        $('btnClearResults').addEventListener('click', () => {
+          resetResults();
+          showMessage('Results Cleared', 'All search results have been cleared.');
+        });
+
+        function getSelected(){
+            return Array.from(document.querySelectorAll('.sel:checked')).map(cb => VIEW[Number(cb.dataset.idx)]).filter(Boolean);
+        }
+
+        function toCSV(arr){
+            const fields = ['channel','subs','videos','views','verified','channelId','country','createdAt'];
+            let out = fields.map(f=>`"${f}"`).join(',')+'\n';
+            arr.forEach(r => {
+                out += `"${esc(r.title)}","${r.hidden?'Hidden':r.subs}","${r.videos}","${r.views}","${r.verified}","${r.channelId}","${esc(r.country)}","${r.createdAt}"\n`;
+            });
+            return out;
+        }
+
+        function downloadText(text, filename, type){
+            const blob = new Blob([text], {type: type});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+        }
+
+        function cToSafe(c){
+            // strip big strings that might break inline JSON calls
             return {
-                id: item.id,
-                title: item.snippet.title,
-                subscribers: parseInt(item.statistics.subscriberCount),
-                videoCount: parseInt(item.statistics.videoCount),
-                thumbnail: item.snippet.thumbnails.default.url,
-                socialLinks: socialLinks,
+                channelId:c.channelId,
+                title:c.title,
+                subs:c.subs,
+                views:c.views,
+                videos:c.videos,
+                verified:c.verified,
+                country:c.country,
+                createdAt:c.createdAt
             };
         }
 
+        // Handle local storage for library
+        $('btnSaveLib').addEventListener('click', () => {
+            if(!LIB.length) return showMessage('Save Failed', 'No channels to save.');
+            try {
+                localStorage.setItem(savedLibraryKey, JSON.stringify(LIB));
+                showMessage('Save Success', `Saved ${LIB.length} channels to local storage.`);
+            } catch(e){
+                showMessage('Save Failed', 'Failed to save library. Local storage might be full.');
+            }
+        });
+
+        $('btnLoadLib').addEventListener('click', () => {
+            const data = localStorage.getItem(savedLibraryKey);
+            if(!data) return showMessage('Load Failed', 'No saved library found.');
+            try{
+                const loaded = JSON.parse(data);
+                LIB = loaded;
+                applyClientFiltersAndRender();
+                showMessage('Load Success', `Loaded ${LIB.length} channels from local storage.`);
+            } catch(e){
+                showMessage('Load Failed', 'Failed to load library. Data may be corrupted.');
+            }
+        });
+
+        // Function to reliably retrieve social links from the channel's About page
         async function getSocialLinksFromAboutPage(channelId) {
             const proxyUrl = $('corsProxy').value || '';
             const aboutUrl = `${proxyUrl}https://www.youtube.com/channel/${channelId}/about`;
-
+            
             try {
                 const response = await fetch(aboutUrl);
                 const html = await response.text();
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
-
+                
                 const socialLinks = {};
                 const linkElements = doc.querySelectorAll('.yt-formatted-string a');
-
+                
                 linkElements.forEach(link => {
                     const url = link.href;
                     if (url.includes('twitter.com')) socialLinks.twitter = url;
@@ -558,274 +1164,13 @@
                     else if (url.includes('linkedin.com')) socialLinks.linkedin = url;
                     else if (!socialLinks.website) socialLinks.website = url;
                 });
+                
                 return socialLinks;
             } catch (error) {
                 console.error('Failed to retrieve social links:', error);
                 return {};
             }
         }
-        
-        // =========================
-        // NEW FUNCTIONS & LOGIC
-        // =========================
-        // FIXED: Replaced __app_id with firebaseConfig.projectId
-        const PUBLIC_LIBRARIES_COLLECTION = `artifacts/${firebaseConfig.projectId}/public/data/libraries`;
-
-        async function logSearch(queryText) {
-            if (!currentUser) return;
-            const logsRef = collection(db, `users`, currentUser.uid, 'searchLogs');
-            addDoc(logsRef, {
-                query: queryText,
-                timestamp: new Date().toISOString()
-            }).catch(e => console.error("Failed to log search:", e));
-        }
-
-        function listenToSearchHistory() {
-            if (!currentUser) return;
-            const historyRef = collection(db, `users`, currentUser.uid, 'searchLogs');
-            const q = query(historyRef, orderBy('timestamp', 'desc'), limit(10));
-            onSnapshot(q, (snapshot) => {
-                $('searchHistoryContainer').innerHTML = '';
-                if (snapshot.empty) {
-                    $('searchHistoryContainer').innerHTML = '<p class="text-gray-500 text-sm">No recent searches.</p>';
-                } else {
-                    snapshot.forEach(doc => {
-                        const search = doc.data();
-                        const item = document.createElement('div');
-                        item.className = 'recent-search-item p-3 rounded-lg border border-white/10 text-gray-200 text-sm';
-                        item.innerText = search.query;
-                        item.onclick = () => {
-                            $('query').value = search.query;
-                            searchAll();
-                        };
-                        $('searchHistoryContainer').appendChild(item);
-                    });
-                }
-            }, (error) => {
-                console.error("Error listening to search history:", error);
-            });
-        }
-
-        function renderResults(channels) {
-            $('resultsTbody').innerHTML = '';
-            const frag = document.createDocumentFragment();
-            channels.forEach(channel => {
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-white/5 transition-colors duration-200";
-                tr.innerHTML = `
-                    <td class="p-4">
-                        <input type="checkbox" class="sel rounded-sm bg-gray-700 border-gray-500 text-purple-600 focus:ring-purple-500">
-                    </td>
-                    <td class="p-4">
-                        <div class="flex items-center gap-3">
-                            <img src="${channel.thumbnail || 'https://placehold.co/40x40/5c5c5c/E2E8F0?text=CH'}" alt="Channel Thumbnail" class="w-10 h-10 rounded-full object-cover">
-                            <a href="https://www.youtube.com/channel/${channel.id}" target="_blank" class="text-gray-200 hover:underline hover:text-purple-400 transition-colors">${channel.title}</a>
-                        </div>
-                    </td>
-                    <td class="p-4">${formatNumber(channel.subscribers)}</td>
-                    <td class="p-4">${formatNumber(channel.videoCount)}</td>
-                    <td class="p-4">${Object.keys(channel.socialLinks).length > 0 ? Object.keys(channel.socialLinks).join(', ') : 'N/A'}</td>
-                `;
-                frag.appendChild(tr);
-            });
-            $('resultsTbody').appendChild(frag);
-            $('count').innerText = `${channels.length} channels`;
-        }
-
-        function resetResults() {
-            LIB = [];
-            $('resultsTbody').innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-500">Enter your search queries and API key to begin.</td></tr>';
-            $('count').innerText = '0 channels';
-            updateMetrics();
-            setProgress(0);
-        }
-
-        async function searchAll() {
-            const queryRaw = $('query').value.trim();
-            const queries = queryRaw.split(/[,\\n]/).map(q => q.trim()).filter(Boolean);
-            const apiKey = $('apiKey').value;
-            const perPage = $('perPage').value;
-            const order = $('order').value;
-            const duration = $('duration').value;
-
-            if (!queries.length) {
-                showMessage('Search Error', 'Please enter at least one query');
-                return;
-            }
-            if (!apiKey) {
-                showMessage('API Key Missing', 'Please enter your YouTube API key.');
-                return;
-            }
-
-            logSearch(queries.join(', '));
-            resetResults();
-            setStatus('Searching...');
-            let allChannels = new Map();
-
-            for (const query of queries) {
-                try {
-                    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=channel&maxResults=${perPage}&order=${order}&videoDuration=${duration}&key=${apiKey}`;
-                    const response = await fetch(url);
-                    const data = await response.json();
-
-                    if (data.error) {
-                        throw new Error(data.error.message);
-                    }
-
-                    for (const item of data.items) {
-                        if (!allChannels.has(item.snippet.channelId)) {
-                            const details = await getChannelDetails(item.snippet.channelId);
-                            if (details) {
-                                const minSubs = parseInt($('minSubs').value) || 0;
-                                const maxSubs = parseInt($('maxSubs').value) || Infinity;
-                                if (details.subscribers >= minSubs && details.subscribers <= maxSubs) {
-                                    allChannels.set(item.snippet.channelId, details);
-                                }
-                            }
-                        }
-                    }
-                } catch (error) {
-                    showMessage('API Error', `Search for "${query}" failed: ${error.message}`);
-                    console.error('Search error:', error);
-                }
-            }
-
-            LIB = Array.from(allChannels.values());
-            renderResults(LIB);
-            updateMetrics();
-            setStatus('Search complete!');
-        }
-
-        async function deepSearchAll() {
-            const queryRaw = $('query').value.trim();
-            const queries = queryRaw.split(/[,\\n]/).map(q => q.trim()).filter(Boolean);
-            const perPage = parseInt($('perPage').value);
-            const order = $('order').value;
-            const duration = $('duration').value;
-            const pages = 20;
-            
-            if (!queries.length) {
-                showMessage('Search Error', 'Please enter at least one query');
-                return;
-            }
-            const apiKey = $('apiKey').value;
-            if (!apiKey) {
-                showMessage('API Key Missing', 'Please enter your YouTube API key.');
-                return;
-            }
-
-            logSearch(queries.join(', '));
-            resetResults();
-            setStatus('Deep Searching...');
-            const allChannels = new Map();
-            let totalProcessed = 0;
-            let totalQueries = queries.length;
-
-            try {
-                for (let i = 0; i < totalQueries; i++) {
-                    const q = queries[i];
-                    setStatus(`Deep Searching for "${q}"...`);
-
-                    let nextPageToken = null;
-                    for (let p = 0; p < pages; p++) {
-                        try {
-                            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(q)}&type=channel&maxResults=${perPage}&order=${order}&videoDuration=${duration}&key=${apiKey}&pageToken=${nextPageToken || ''}`;
-                            const res = await fetch(url);
-                            const data = await res.json();
-
-                            if (data.error) throw new Error(data.error.message);
-
-                            if (data.items.length === 0) {
-                                break;
-                            }
-
-                            for (const item of data.items) {
-                                if (!allChannels.has(item.snippet.channelId)) {
-                                    const details = await getChannelDetails(item.snippet.channelId);
-                                    if (details) {
-                                        const minSubs = parseInt($('minSubs').value) || 0;
-                                        const maxSubs = parseInt($('maxSubs').value) || Infinity;
-                                        if (details.subscribers >= minSubs && details.subscribers <= maxSubs) {
-                                            allChannels.set(item.snippet.channelId, details);
-                                        }
-                                    }
-                                }
-                            }
-                            nextPageToken = data.nextPageToken;
-                            if (!nextPageToken) break;
-                            await new Promise(r => setTimeout(r, 1000)); // Respect API rate limits
-                        } catch (error) {
-                            showMessage('API Error', `YouTube API error for query "${q}": ${error.message}`);
-                            console.error('API Error:', error);
-                            return;
-                        }
-                    }
-                    totalProcessed++;
-                    setProgress(totalProcessed / totalQueries);
-                }
-
-                LIB = Array.from(allChannels.values());
-                renderResults(LIB);
-                updateMetrics();
-                setStatus('Search complete!');
-
-            } catch (e) {
-                console.error(e);
-                showMessage('Search Failed', 'An unexpected error occurred. Please check the console for details.');
-                setStatus('Error');
-            }
-        }
-
-        $('btnSearch').addEventListener('click', searchAll);
-        $('btnDeepSearch').addEventListener('click', () => {
-            showMessage('Deep Search Confirmation', 'Deep Search will consume more API credits by searching more pages. Do you want to continue?');
-            $('messageBoxOk').onclick = () => {
-                deepSearchAll();
-                $('messageBoxOverlay').classList.add('opacity-0', 'pointer-events-none');
-                $('messageBox').classList.remove('scale-100');
-                $('messageBox').classList.add('scale-95');
-            };
-        });
-        $('btnClear').addEventListener('click', resetResults);
-
-        $('btnSaveLib').addEventListener('click', async () => {
-            if (!currentUser) {
-                return showMessage('Save Failed', 'Please sign in to save your library.');
-            }
-            try {
-                const userDocRef = doc(db, PUBLIC_LIBRARIES_COLLECTION, currentUser.uid);
-                await setDoc(userDocRef, {
-                    library: LIB,
-                    timestamp: new Date().toISOString()
-                }, { merge: true });
-                showMessage('Save Success', `Saved ${LIB.length} channels to your library.`);
-            } catch (e) {
-                console.error(e);
-                showMessage('Save Failed', 'Failed to save library to Firestore. Check console for details.');
-            }
-        });
-
-        $('btnLoadLib').addEventListener('click', async () => {
-            if (!currentUser) {
-                return showMessage('Load Failed', 'Please sign in to load your library.');
-            }
-            try {
-                const userDocRef = doc(db, PUBLIC_LIBRARIES_COLLECTION, currentUser.uid);
-                const docSnap = await getDoc(userDocRef);
-
-                if (docSnap.exists() && docSnap.data().library) {
-                    LIB = docSnap.data().library;
-                    renderResults(LIB);
-                    updateMetrics();
-                    showMessage('Load Success', `Loaded ${LIB.length} channels from your library.`);
-                } else {
-                    showMessage('Load Failed', 'No saved library found.');
-                }
-            } catch (e) {
-                console.error(e);
-                showMessage('Load Failed', 'Failed to load library from Firestore. Data may be corrupted or permission denied.');
-            }
-        });
     </script>
 </body>
 </html>
