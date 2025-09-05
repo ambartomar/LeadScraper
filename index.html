@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Lead Studio Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 
+        Using the Tailwind CDN here for simplicity, as this is a single, self-contained HTML file. 
+        For production, it is recommended to install Tailwind as a PostCSS plugin to bundle and purge unused CSS.
+    -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
@@ -189,7 +193,7 @@
                         </div>
 
                         <div class="grid grid-cols-2 gap-4 text-sm mt-4">
-                            <input class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500" id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA"/>
+                            <input class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500" id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyA0pBpYIdm3l-qcgjojNSXE-rOC45afyGI"/>
                             <input class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500" id="perPage" type="number" min="1" max="50" value="25" placeholder="Results per page"/>
                             <select id="order" class="bg-white/5 rounded-xl border border-white/10 px-4 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
                                 <option value="relevance">Order: Relevance</option>
@@ -294,7 +298,7 @@
             <button class="btn bg-purple-600 text-white font-semibold py-3 rounded-xl" id="messageBoxOk">OK</button>
         </div>
     </div>
-    
+
     <!-- Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -309,11 +313,7 @@
         const esc = s => String(s ?? '').replace(/"/g,'""');
         const clamp = (n,min,max) => Math.max(min, Math.min(max, n));
         
-        // Provided by the hosting environment
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
+        let firebaseApp, auth, db;
         let currentUser = null;
         let LIB = [];
         
@@ -338,15 +338,24 @@
         });
 
         // =========================
-        // FIREBASE CONFIGURATION
+        // FIREBASE CONFIGURATION & INITIALIZATION
         // =========================
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyA0pBpYIdm3l-qcgjojNSXE-rOC45afyGI",
+          authDomain: "youleadmax.firebaseapp.com",
+          projectId: "youleadmax",
+          storageBucket: "youleadmax.firebasestorage.app",
+          messagingSenderId: "710806971072",
+          appId: "1:710806971072:web:ced903befe8693f886c325"
+        };
         
-        const PUBLIC_LIBRARIES_COLLECTION = `artifacts/${appId}/public/data/libraries`;
-        const SEARCH_LOGS_COLLECTION = `artifacts/${appId}/users`;
-        
+        // Initialize Firebase
+        initializeApp(firebaseConfig);
+        auth = getAuth();
+        db = getFirestore();
+
         // Initial authentication check
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -355,7 +364,6 @@
                 $('auth-view').style.display = 'none';
                 $('userEmail').innerText = user.email || user.uid;
                 
-                // Set initials for the avatar
                 const initials = user.email ? user.email.charAt(0).toUpperCase() : user.uid.charAt(0).toUpperCase();
                 $('initials').innerText = initials;
                 
@@ -363,7 +371,6 @@
                 const userRef = doc(db, `users`, user.uid);
                 await setDoc(userRef, { lastLogin: new Date().toISOString() }, { merge: true });
                 
-                // Start listening to search history for this user
                 listenToSearchHistory();
 
             } else {
@@ -372,16 +379,10 @@
                 $('auth-view').style.display = 'flex';
             }
         });
-        
-        if (initialAuthToken) {
-             signInWithCustomToken(auth, initialAuthToken).catch(e => {
-                console.error("Custom token sign-in failed. Attempting anonymous.", e);
-                signInAnonymously(auth);
-            });
-        } else {
-            signInAnonymously(auth);
-        }
 
+        // =========================
+        // AUTHENTICATION LOGIC
+        // =========================
         $('btnSignIn').addEventListener('click', async () => {
             const email = $('authEmail').value;
             const pass = $('authPass').value;
@@ -476,261 +477,223 @@
             logSearch(queries.join(', '));
             resetResults();
             setStatus('Searching...');
-            const apiKey = $('apiKey').value.trim();
-            const order = $('order').value;
-            const duration = $('duration').value;
-            let totalSteps = queries.length * pages;
-            let done = 0;
-            let chanIds = new Set();
-            
-            for(const q of queries){
-                let pageToken = '';
-                for(let i=0;i<pages;i++){
-                    if(!pageToken && i>0) break;
-                    
-                    const url = new URL('https://www.googleapis.com/youtube/v3/search');
-                    url.searchParams.set('part','snippet');
-                    url.searchParams.set('type','video');
-                    url.searchParams.set('q', q);
-                    url.searchParams.set('maxResults', String(perPage));
-                    url.searchParams.set('order', order);
-                    if(duration) url.searchParams.set('videoDuration', duration);
-                    if(pageToken) url.searchParams.set('pageToken', pageToken);
-                    url.searchParams.set('key', apiKey);
-                    
-                    let resp;
-                    try { resp = await fetch(url.toString()); }
-                    catch(e){ console.error(e); showMessage('Network Error', 'A network error occurred during the search. Please check your connection.'); return; }
-                    
-                    if(!resp.ok){
-                        const t = await resp.text();
-                        showMessage('Search API Error', `YouTube API returned an error: ${resp.status}\n${t}`);
-                        return;
-                    }
-                    
-                    const data = await resp.json();
-                    
-                    (data.items || []).forEach(item => {
-                        const t = (item.snippet.title||'').toLowerCase();
-                        const d = (item.snippet.description||'').toLowerCase();
-                        if(t.includes('#shorts') || t.includes('shorts ') || t.endsWith('shorts') || d.includes('#shorts') || d.includes('shorts ')) return;
-                        const cid = item.snippet.channelId;
-                        if(cid) chanIds.add(cid);
-                    });
-                    
-                    pageToken = data.nextPageToken || '';
-                    done++;
-                    setProgress(done/totalSteps * 0.65);
-                    await sleep(180);
-                }
-            }
-            
-            if(chanIds.size===0){ setStatus('No channels found'); setProgress(1); return; }
-            
-            setStatus(`Found ${chanIds.size} channels – fetching details...`);
-            
-            const ids = Array.from(chanIds);
-            const minSubs = Number($('minSubs').value||0);
-            const maxSubsRaw = Number($('maxSubs').value||0);
-            const maxSubs = maxSubsRaw > 0 ? maxSubsRaw : Infinity;
+            const apiKey = $('apiKey').value;
+            const allChannels = new Map();
+            let totalProcessed = 0;
+            let totalQueries = queries.length;
 
-            for(let i=0;i<ids.length;i+=50){
-                const batch = ids.slice(i,i+50);
-                const chURL = new URL('https://www.googleapis.com/youtube/v3/channels');
-                chURL.searchParams.set('part','snippet,statistics');
-                chURL.searchParams.set('id', batch.join(','));
-                chURL.searchParams.set('key', apiKey);
-                
-                let resp;
-                try { resp = await fetch(chURL.toString()); }
-                catch(e){ console.error(e); showMessage('Network Error', 'A network error occurred while fetching channel details.'); return; }
-                
-                if(!resp.ok){
-                    const t = await resp.text();
-                    showMessage('Channels API Error', `YouTube API returned an error: ${resp.status}\n${t}`);
-                    return;
+            try {
+                for(let i=0; i<totalQueries; i++){
+                    const q = queries[i];
+                    setStatus(`Searching for "${q}"...`);
+                    
+                    let nextPageToken = null;
+                    for(let p=0; p<pages; p++){
+                        try {
+                            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(q)}&type=channel&maxResults=${perPage}&key=${apiKey}&pageToken=${nextPageToken || ''}`;
+                            const res = await fetch(url);
+                            const data = await res.json();
+
+                            if (data.error) throw new Error(data.error.message);
+
+                            if(data.items.length === 0){
+                                showMessage('Search Complete', `No more channels found for "${q}".`);
+                                break;
+                            }
+                            
+                            const channelIds = data.items.map(item => item.snippet.channelId).filter(Boolean);
+                            if (channelIds.length > 0) {
+                                // Fetch channel details in batches of 50
+                                for (let j = 0; j < channelIds.length; j += 50) {
+                                    const batchIds = channelIds.slice(j, j + 50);
+                                    const channelDetailsUrl = `https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet&id=${batchIds.join(',')}&key=${apiKey}`;
+                                    const detailsRes = await fetch(channelDetailsUrl);
+                                    const detailsData = await detailsRes.json();
+                                    
+                                    if (detailsData.error) throw new Error(detailsData.error.message);
+
+                                    detailsData.items.forEach(channel => {
+                                        const subs = parseInt(channel.statistics.subscriberCount);
+                                        const minSubs = parseInt($('minSubs').value) || 0;
+                                        const maxSubs = parseInt($('maxSubs').value) || Infinity;
+                                        
+                                        if (subs >= minSubs && subs <= maxSubs) {
+                                            const channelData = {
+                                                id: channel.id,
+                                                title: channel.snippet.title,
+                                                subscribers: subs,
+                                                videoCount: parseInt(channel.statistics.videoCount)
+                                            };
+                                            allChannels.set(channel.id, channelData);
+                                        }
+                                    });
+                                }
+                            }
+                            nextPageToken = data.nextPageToken;
+                            if(!nextPageToken) break;
+                            await sleep(1000); // Respect API rate limits
+                        } catch (error) {
+                            showMessage('API Error', `YouTube API error for query "${q}": ${error.message}`);
+                            console.error('API Error:', error);
+                            return;
+                        }
+                    }
+                    totalProcessed++;
+                    setProgress(totalProcessed / totalQueries);
                 }
                 
-                const data = await resp.json();
-                
-                (data.items||[]).forEach(ch => {
-                    const stats = ch.statistics || {};
-                    const subs = Number(stats.subscriberCount||0);
-                    
-                    if(subs >= minSubs && subs <= maxSubs) {
-                        LIB.push({
-                            title: ch.snippet.title,
-                            channelId: ch.id,
-                            subs: subs,
-                            views: Number(stats.viewCount||0),
-                            videos: Number(stats.videoCount||0),
-                            avatar: ch.snippet.thumbnails?.high?.url || ''
-                        });
-                    }
-                    
-                    done++;
-                    setProgress(0.65 + (done/totalSteps * 0.35));
-                });
-                await sleep(180);
-            }
-
-            if(LIB.length===0){
-                setStatus('No channels found matching filters.');
-            } else {
+                LIB = Array.from(allChannels.values());
                 renderResults(LIB);
-                setStatus(`Found ${LIB.length} channels.`);
+                updateMetrics();
+                setStatus('Search complete!');
+
+            } catch(e){
+                console.error(e);
+                showMessage('Search Failed', 'An unexpected error occurred. Please check the console for details.');
+                setStatus('Error');
             }
-            setProgress(1);
-            updateMetrics();
         }
 
         function resetResults(){
             LIB = [];
-            $('resultsTbody').innerHTML=`
-                <tr><td colspan="4" class="p-4"><div class="h-4 skeleton rounded-full w-full"></div></td></tr>
-                <tr><td colspan="4" class="p-4"><div class="h-4 skeleton rounded-full w-4/5"></div></td></tr>
-                <tr><td colspan="4" class="p-4"><div class="h-4 skeleton rounded-full w-3/4"></div></td></tr>
-                <tr><td colspan="4" class="p-4"><div class="h-4 skeleton rounded-full w-full"></div></td></tr>
-                <tr><td colspan="4" class="p-4"><div class="h-4 skeleton rounded-full w-1/2"></div></td></tr>
-            `; 
-            $('count').innerText='0 channels';
-            setProgress(0);
-            setStatus('Online');
+            $('resultsTbody').innerHTML = '';
+            $('count').innerText = '0 channels';
             updateMetrics();
+            setProgress(0);
         }
 
-        // =========================
-        // RENDER RESULTS
-        // =========================
-        function renderResults(list){
-            const tbody = $('resultsTbody');
-            tbody.innerHTML = '';
-            if(!list.length){
-                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">No channels match your filters.</td></tr>`;
-                return;
-            }
-            list.forEach((c, idx) => {
+        function renderResults(channels) {
+            $('resultsTbody').innerHTML = '';
+            const frag = document.createDocumentFragment();
+            channels.forEach(channel => {
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-white/5 transition-colors duration-200 cursor-pointer border-b border-gray-700 last:border-b-0";
+                tr.className = "hover:bg-white/5 transition-colors duration-200";
                 tr.innerHTML = `
-                    <td class="p-4 rounded-l-xl"><input type="checkbox" class="sel rounded-sm bg-gray-700 border-gray-500 text-purple-600 focus:ring-purple-500" data-idx="${idx}"></td>
+                    <td class="p-4">
+                        <input type="checkbox" class="sel rounded-sm bg-gray-700 border-gray-500 text-purple-600 focus:ring-purple-500">
+                    </td>
                     <td class="p-4">
                         <div class="flex items-center gap-3">
-                            <img src="${c.avatar}" class="w-12 h-12 rounded-lg object-cover" alt="">
-                            <div>
-                                <strong class="text-white">${c.title}</strong>
-                                <span class="block text-xs text-gray-400">${c.channelId}</span>
-                            </div>
+                            <img src="${channel.thumbnail || 'https://placehold.co/40x40/5c5c5c/E2E8F0?text=CH'}" alt="Channel Thumbnail" class="w-10 h-10 rounded-full object-cover">
+                            <a href="https://www.youtube.com/channel/${channel.id}" target="_blank" class="text-gray-200 hover:underline hover:text-purple-400 transition-colors">${channel.title}</a>
                         </div>
                     </td>
-                    <td class="p-4">${c.subs.toLocaleString()}</td>
-                    <td class="p-4 rounded-r-xl">${c.videos.toLocaleString()}</td>
+                    <td class="p-4">${formatNumber(channel.subscribers)}</td>
+                    <td class="p-4">${formatNumber(channel.videoCount)}</td>
                 `;
-                tbody.appendChild(tr);
+                frag.appendChild(tr);
             });
-            $('count').innerText = `${list.length} channels`;
+            $('resultsTbody').appendChild(frag);
+            $('count').innerText = `${channels.length} channels`;
         }
-        
-        // =========================
-        // NEW FEATURE: METRICS
-        // =========================
+
         function updateMetrics() {
-            const totalChannels = LIB.length;
-            const totalSubs = LIB.reduce((sum, c) => sum + c.subs, 0);
-            const totalVideos = LIB.reduce((sum, c) => sum + c.videos, 0);
-
-            $('metric-channels').innerText = totalChannels.toLocaleString();
-            $('metric-subs').innerText = totalSubs.toLocaleString();
-            $('metric-videos').innerText = totalVideos.toLocaleString();
+            const totalSubs = LIB.reduce((sum, c) => sum + (c.subscribers || 0), 0);
+            const totalVideos = LIB.reduce((sum, c) => sum + (c.videoCount || 0), 0);
+            
+            $('metric-channels').innerText = formatNumber(LIB.length);
+            $('metric-subs').innerText = formatNumber(totalSubs);
+            $('metric-videos').innerText = formatNumber(totalVideos);
         }
-        
-        // =========================
-        // NEW FEATURE: SEARCH HISTORY
-        // =========================
-        async function logSearch(query) {
+
+        function formatNumber(num) {
+            if (num >= 1000000000) return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
+            if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+            return num;
+        }
+
+        function logSearch(queryText) {
             if (!currentUser) return;
-            try {
-                const userLogsRef = doc(db, SEARCH_LOGS_COLLECTION, currentUser.uid);
-                const logsCollection = collection(userLogsRef, "searchLogs");
-                await setDoc(doc(logsCollection), {
-                    query: query,
-                    timestamp: new Date().toISOString()
-                });
-            } catch (e) {
-                console.error("Failed to log search:", e);
-            }
+            const logsRef = collection(db, `users`, currentUser.uid, 'searchLogs');
+            addDoc(logsRef, {
+                query: queryText,
+                timestamp: new Date().toISOString()
+            }).catch(e => console.error("Failed to log search:", e));
+        }
+
+        function listenToSearchHistory() {
+            if (!currentUser) return;
+            const historyRef = collection(db, `users`, currentUser.uid, 'searchLogs');
+            const q = query(historyRef, orderBy('timestamp', 'desc'), limit(10));
+            onSnapshot(q, (snapshot) => {
+                $('searchHistoryContainer').innerHTML = '';
+                if(snapshot.empty) {
+                    $('searchHistoryContainer').innerHTML = '<p class="text-gray-500 text-sm">No recent searches.</p>';
+                } else {
+                    snapshot.forEach(doc => {
+                        const search = doc.data();
+                        const item = document.createElement('div');
+                        item.className = 'recent-search-item p-3 rounded-lg border border-white/10 text-gray-200 text-sm';
+                        item.innerText = search.query;
+                        item.onclick = () => {
+                            $('query').value = search.query;
+                            searchAll();
+                        };
+                        $('searchHistoryContainer').appendChild(item);
+                    });
+                }
+            }, (error) => {
+                console.error("Error listening to search history:", error);
+            });
         }
         
-        function listenToSearchHistory() {
-             if (!currentUser) return;
-             const userLogsRef = doc(db, SEARCH_LOGS_COLLECTION, currentUser.uid);
-             const logsCollection = collection(userLogsRef, "searchLogs");
-             const q = query(logsCollection, orderBy("timestamp", "desc"), limit(5));
-             
-             onSnapshot(q, (snapshot) => {
-                 const historyContainer = $('searchHistoryContainer');
-                 historyContainer.innerHTML = '';
-                 
-                 if (snapshot.empty) {
-                     historyContainer.innerHTML = `<span class="text-gray-500 text-sm">No recent searches.</span>`;
-                     return;
-                 }
-                 
-                 snapshot.forEach(doc => {
-                     const data = doc.data();
-                     const item = document.createElement('div');
-                     item.className = "p-3 rounded-xl bg-white/5 recent-search-item";
-                     item.innerHTML = `
-                         <p class="text-sm font-medium text-white">${data.query}</p>
-                         <p class="text-xs text-gray-500">${new Date(data.timestamp).toLocaleString()}</p>
-                     `;
-                     historyContainer.appendChild(item);
-                     
-                     item.addEventListener('click', () => {
-                         $('query').value = data.query;
-                         searchAll(false);
-                     });
-                 });
-             }, (error) => {
-                 console.error("Error listening to search history:", error);
-                 $('searchHistoryContainer').innerHTML = `<span class="text-red-400 text-sm">Error loading history.</span>`;
-             });
-        }
-
-
-        // =========================
-        // DATA PERSISTENCE & EXPORT
-        // =========================
-        function toCSV(arr){
-            const fields = ['title', 'subs', 'videos', 'views', 'channelId'];
-            let out = fields.map(f=>`"${f}"`).join(',')+'\n';
-            arr.forEach(r => {
-                out += `"${esc(r.title)}",${r.subs},${r.videos},${r.views},"${r.channelId}"\n`;
-            });
-            return out;
-        }
-
-        function downloadText(text, filename, type){
-            const blob = new Blob([text], {type: type});
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = filename;
-            link.click();
-        }
-
         $('btnExportCSV').addEventListener('click', () => {
-            if(!LIB.length) return showMessage('Export Failed', 'No results to export');
-            downloadText(toCSV(LIB), 'channels.csv', 'text/csv');
+            const data = getSelectedData();
+            if (data.length === 0) {
+                return showMessage('Export Failed', 'Please select at least one channel to export.');
+            }
+            const csvRows = [];
+            const headers = ['Channel ID', 'Title', 'Subscribers', 'Video Count'];
+            csvRows.push(headers.map(esc).join(','));
+
+            for (const row of data) {
+                const values = [row.id, row.title, row.subscribers, row.videoCount];
+                csvRows.push(values.map(esc).join(','));
+            }
+            const csvString = csvRows.join('\n');
+            downloadFile('channels.csv', 'text/csv', csvString);
         });
 
         $('btnExportJSON').addEventListener('click', () => {
-            if(!LIB.length) return showMessage('Export Failed', 'No results to export');
-            downloadText(JSON.stringify(LIB, null, 2), 'channels.json', 'application/json');
+            const data = getSelectedData();
+            if (data.length === 0) {
+                return showMessage('Export Failed', 'Please select at least one channel to export.');
+            }
+            const jsonString = JSON.stringify(data, null, 2);
+            downloadFile('channels.json', 'application/json', jsonString);
         });
 
+        function getSelectedData() {
+            const selectedChannels = [];
+            document.querySelectorAll('.sel:checked').forEach(checkbox => {
+                const row = checkbox.closest('tr');
+                const title = row.querySelector('a').innerText;
+                const id = row.querySelector('a').href.split('/').pop();
+                const subs = parseInt(row.children[2].innerText.replace(/[^0-9.]/g, '') * (row.children[2].innerText.includes('M') ? 1000000 : row.children[2].innerText.includes('K') ? 1000 : 1));
+                const videos = parseInt(row.children[3].innerText.replace(/[^0-9.]/g, '') * (row.children[3].innerText.includes('M') ? 1000000 : row.children[3].innerText.includes('K') ? 1000 : 1));
+                selectedChannels.push({ id, title, subscribers: subs, videoCount: videos });
+            });
+            return selectedChannels;
+        }
+
+        function downloadFile(filename, mimeType, content) {
+            const blob = new Blob([content], { type: mimeType });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        const PUBLIC_LIBRARIES_COLLECTION = `artifacts/${__app_id}/public/data/libraries`;
+        
         $('btnSaveLib').addEventListener('click', async () => {
-            if(!LIB.length) return showMessage('Save Failed', 'No channels to save.');
-            try {
+            if (!currentUser) {
+                return showMessage('Save Failed', 'Please sign in to save your library.');
+            }
+            try{
                 const userDocRef = doc(db, PUBLIC_LIBRARIES_COLLECTION, currentUser.uid);
                 await setDoc(userDocRef, {
                     library: LIB,
