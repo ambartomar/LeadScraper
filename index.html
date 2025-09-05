@@ -956,25 +956,6 @@
             loadLatestVideos(c.channelId);
         }
 
-        function getSocialLinksFromDesc(c){
-            let links = [];
-            const desc = (c.description||'') + ' ' + (c.brandingSettings?.channel?.description||'');
-            const regex = /(https?:\/\/[w.-]+\.[a-z]{2,}(?:[w\-_~:/?#[\]@!$&'()*+,;=%]*)?)/gi;
-            let m; while((m=regex.exec(desc))!==null){ links.push(m[1]); }
-            // deduplicate
-            const uniq = Array.from(new Set(links));
-            const socials = {};
-            uniq.forEach(u=>{
-                if(/twitter\.com/i.test(u)) socials.twitter=u;
-                else if(/instagram\.com/i.test(u)) socials.instagram=u;
-                else if(/facebook\.com/i.test(u)) socials.facebook=u;
-                else if(/tiktok\.com/i.test(u)) socials.tiktok=u;
-                else if(/linkedin\.com/i.test(u)) socials.linkedin=u;
-                else if(!socials.website) socials.website=u;
-            });
-            return socials;
-        }
-
         /* ========================= UTIL ========================= */
         function resetResults(){
             LIB = []; VIEW = []; lastExport = [];
