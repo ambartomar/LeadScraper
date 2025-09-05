@@ -1,476 +1,669 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Lead Studio Pro — YouTube Channel Finder</title>
-<style>
-  /* =========================
-     THEME — Apple-ish + Purple
-     ========================= */
-  :root{
-    --bg-0:#07080c;            /* page base */
-    --bg-1:#0b0d14;            /* panels */
-    --bg-2:#0f1320;            /* deeper */
-    --glass: rgba(255,255,255,.06);
-    --glass-2: rgba(255,255,255,.08);
-    --muted:#a6b0c3;
-    --text:#f5f7ff;
-    --accent:#7c3aed;          /* purple */
-    --accent-2:#a78bfa;        /* light purple */
-    --ok:#22c55e;              /* green */
-    --warn:#f59e0b;            /* amber */
-    --danger:#ef4444;
-    --radius:14px;
-    --radius-sm:10px;
-    --shadow: 0 30px 70px rgba(0,0,0,.45);
-  }
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Lead Studio Pro — YouTube Channel Finder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* =========================
+           GLOBAL STYLES
+           ========================= */
+        :root {
+            --bg-primary: #0A0A0E;
+            --bg-secondary: #1C1C21;
+            --panel-bg: rgba(255, 255, 255, 0.05);
+            --panel-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #E0E0E0;
+            --text-secondary: #A0A0A0;
+            --accent-purple: #8B5CF6; /* New vibrant purple */
+            --accent-purple-light: #A78BFA;
+            --accent-green: #10B981;
+            --accent-red: #EF4444;
+            --panel-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --border-radius: 16px;
+            --border-radius-sm: 8px;
+            --transition-duration: 0.2s;
+        }
 
-  /* Base reset */
-  * { box-sizing:border-box; }
-  html,body { height:100%; }
-  body {
-    margin:0;
-    font-family: ui-sans-serif, -apple-system, system-ui, "Segoe UI", Roboto, Inter, Arial;
-    color: var(--text);
-    background:
-      radial-gradient(1200px 800px at 10% -20%, #24103e 0%, transparent 60%),
-      radial-gradient(1200px 800px at 110% 120%, #1f1440 0%, transparent 60%),
-      linear-gradient(180deg, #080910, #0a0c14 60%, #090b12);
-    overflow:hidden;
-    overscroll-behavior:none;
-    display: flex;
-    flex-direction: column;
-  }
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
 
-  a { color: var(--accent-2); text-decoration: none; }
-  a:hover { text-decoration: underline; }
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        a { color: var(--accent-purple-light); text-decoration: none; }
+        a:hover { text-decoration: underline; }
 
-  /* ===== App shell ===== */
-  .app {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    height: 100vh;
-  }
+        .app-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            gap: 24px;
+            max-width: 1600px;
+            width: 100%;
+            margin: 0 auto;
+        }
 
-  /* ===== Topbar ===== */
-  .topbar {
-    display:flex; gap:16px; align-items:center;
-    padding: 16px;
-    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-    border: 1px solid rgba(255,255,255,.06);
-    border-radius: var(--radius);
-    backdrop-filter: blur(10px);
-    box-shadow: var(--shadow);
-  }
-  .brand { display:flex; gap:4px; flex-direction:column; min-width: 250px; }
-  .brand h1 { margin:0; font-size:20px; letter-spacing:.2px; color:#e9e8ff; }
-  .brand p { margin:0; color: var(--muted); font-size:13px; }
+        /* =========================
+           HEADER
+           ========================= */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            padding: 20px 30px;
+            border-radius: var(--border-radius);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--panel-shadow);
+        }
 
-  .bar-controls { display:flex; gap:12px; align-items:center; flex:1; }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
 
-  input[type="text"], input[type="number"], input[type="url"], select, textarea {
-    background: var(--glass);
-    border: 1px solid rgba(255,255,255,.07);
-    color: var(--text);
-    padding: 12px 14px;
-    border-radius: var(--radius-sm);
-    outline: none;
-    transition: box-shadow .18s ease, transform .12s ease, border-color .18s ease;
-  }
-  textarea { min-height: 48px; resize: vertical; }
-  input::placeholder, textarea::placeholder { color: #8f9ab2; }
+        .app-logo h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
 
-  input:focus, select:focus, textarea:focus {
-    box-shadow: 0 10px 26px rgba(124,58,237,.18);
-    border-color: rgba(124,58,237,.35);
-    transform: translateY(-1px);
-  }
+        .app-logo p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .header-controls {
+            display: flex;
+            gap: 15px;
+        }
 
-  .btn {
-    padding: 12px 18px;
-    border-radius: var(--radius-sm);
-    border: 1px solid rgba(255,255,255,.08);
-    background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
-    color: var(--text);
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
-  }
-  .btn:hover { transform: translateY(-1px); }
-  .btn:active { transform: translateY(0); }
-  .btn-primary {
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    border-color: transparent;
-    color:#0b0d14;
-    box-shadow: 0 12px 28px rgba(124,58,237,.25);
-  }
-  .btn-danger {
-    background: linear-gradient(90deg, #d83a56, #ef4444);
-    border-color: transparent;
-  }
-  
-  /* =========================
-     CUSTOM BUTTON ALIGNMENT
-     ========================= */
-  .button-group {
-      display: flex;
-      gap: 10px;
-  }
-  .button-group .btn {
-      flex: 1;
-      text-align: center;
-  }
+        /* =========================
+           FORM INPUTS & BUTTONS
+           ========================= */
+        input[type="text"], input[type="number"], input[type="email"], input[type="password"], textarea, select {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--panel-border);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            border-radius: var(--border-radius-sm);
+            font-size: 15px;
+            outline: none;
+            transition: border-color var(--transition-duration), box-shadow var(--transition-duration);
+        }
 
-  /* ===== Main layout (3 columns) ===== */
-  .main {
-    display: grid;
-    gap: 16px;
-    grid-template-columns: 380px 1fr 450px;
-    grid-template-rows: 1fr;
-    min-height: 0; /* enable child overflow scrolling */
-    flex: 1;
-  }
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.25);
+        }
+        
+        textarea {
+            min-height: 50px;
+            flex-grow: 1;
+        }
 
-  .panel {
-    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-    border: 1px solid rgba(255,255,255,.06);
-    border-radius: var(--radius);
-    backdrop-filter: blur(10px);
-    box-shadow: var(--shadow);
-    padding: 20px;
-    min-height: 0; /* important for overflow children */
-    overflow: hidden; /* contain */
-  }
+        .btn {
+            padding: 12px 24px;
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: transform var(--transition-duration), box-shadow var(--transition-duration);
+        }
 
-  /* Filters panel (left) */
-  .filters { display:grid; gap:12px; grid-template-columns: 1fr 1fr; }
-  .filters .full { grid-column: 1/-1; }
-  .filters small { color: var(--muted); }
-  .switch { display:flex; gap:8px; align-items:center; }
-  .row { display:flex; gap:10px; align-items:center; flex-wrap: wrap; }
+        .btn-primary {
+            background-color: var(--accent-purple);
+            color: white;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+        .btn-primary:hover {
+            background-color: #9f7aea;
+        }
 
-  /* Results panel (center) */
-  .results-wrap {
-    height: 100%;
-    display:grid;
-    grid-template-rows: auto auto 1fr auto;
-    gap: 12px;
-    min-height:0;
-  }
-  .results-toolbar { display:flex; gap:10px; align-items:center; justify-content:space-between; }
-  .results-toolbar .left { display:flex; gap:10px; align-items:center; }
-  .results-toolbar .right{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+        .btn-secondary {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--panel-border);
+        }
+        .btn-secondary:hover {
+            border-color: var(--accent-purple);
+        }
 
-  .progress {
-    width:220px; height:10px; border-radius: 999px;
-    background: rgba(255,255,255,.07);
-    overflow:hidden;
-  }
-  .progress > i {
-    display:block; height:100%; width:0%;
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    transition: width .25s ease;
-  }
+        .btn-danger {
+            background-color: var(--accent-red);
+            color: white;
+        }
 
-  .table-wrap {
-    overflow:auto;
-    border-radius: calc(var(--radius) - 6px);
-    border: 1px solid rgba(255,255,255,.06);
-  }
-  table {
-    width:100%;
-    border-collapse: collapse;
-    background: transparent;
-  }
-  thead th {
-    position: sticky; top: 0; backdrop-filter: blur(10px);
-    background: rgba(16,18,30,.6);
-    color: var(--muted);
-    font-weight: 600;
-    font-size: 14px;
-    text-align: left;
-    padding: 14px;
-    border-bottom: 1px solid rgba(255,255,255,.08);
-  }
-  tbody td {
-    padding: 14px;
-    border-bottom: 1px solid rgba(255,255,255,.06);
-    vertical-align: middle;
-    font-size: 14px;
-  }
-  tbody tr {
-    transition: background .18s ease, transform .14s ease;
-  }
-  tbody tr:hover {
-    background: rgba(124,58,237,.12);
-    transform: translateY(-1px);
-    cursor: pointer;
-  }
-  .avatar { width:48px; height:48px; border-radius: 12px; object-fit: cover; margin-right:12px; }
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
 
-  /* Details panel (right) */
-  .details {
-    height: 100%;
-    display:grid;
-    grid-template-rows: auto auto 1fr;
-    gap:12px; min-height:0;
-  }
-  .banner {
-    height: 150px; border-radius: 12px; background-size: cover; background-position: center;
-    border:1px solid rgba(255,255,255,.06);
-  }
-  .about { overflow:auto; }
-  .meta { color: var(--muted); font-size: 14px; }
-  .stats { display:grid; grid-template-columns: repeat(3,1fr); gap:12px; }
-  .stat {
-    text-align:center; padding:12px; border-radius:12px; background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.08);
-  }
-  .stat b { display:block; font-size: 18px; color: #eef; }
+        /* =========================
+           MAIN LAYOUT
+           ========================= */
+        .main-content {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            grid-template-rows: 1fr;
+            gap: 24px;
+            min-height: 0;
+        }
 
-  .videos-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
-  .video-card { background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:10px; }
-  .video-card img { width:100%; height:120px; object-fit:cover; border-radius:10px; }
-  .video-card h4 { font-size: 14px; margin:10px 0 6px; }
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: var(--border-radius);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--panel-shadow);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-height: 0;
+            overflow: hidden;
+        }
+        
+        /* =========================
+           LEFT FILTERS PANEL
+           ========================= */
+        .filters-panel {
+            grid-column: 1;
+        }
+        
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .filters-grid select {
+            width: 100%;
+        }
+        
+        .filters-grid .full-span {
+            grid-column: 1 / -1;
+        }
 
-  /* Custom selects + scrollbar (subtle) */
-  select {
-    appearance: none;
-    background-image:
-      linear-gradient(45deg, transparent 50%, #cfd6ea 50%),
-      linear-gradient(135deg, #cfd6ea 50%, transparent 50%),
-      linear-gradient(to right, transparent, transparent);
-    background-position:
-      calc(100% - 18px) calc(50% - 3px),
-      calc(100% - 12px) calc(50% - 3px),
-      calc(100% - 2.5em) 0.5em;
-    background-size: 6px 6px, 6px 6px, 1px 1.8em;
-    background-repeat: no-repeat;
-  }
+        .range-inputs {
+            display: flex;
+            gap: 10px;
+        }
 
-  ::-webkit-scrollbar { width: 10px; height:10px; }
-  ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--accent), var(--accent-2));
-    border-radius: 999px;
-    border: 3px solid rgba(0,0,0,.25);
-  }
-  ::-webkit-scrollbar-track { background: transparent; }
+        .range-inputs input {
+            flex-grow: 1;
+        }
 
-  /* Responsive */
-  @media (max-width: 1200px){
-    .main { grid-template-columns: 1fr; grid-template-rows: 420px 1fr 520px; }
-    .details { grid-template-rows: auto 1fr 1fr; }
-  }
-  
-  /* Additional styles for authentication and admin controls */
-  .auth-form {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      width: 400px;
-      margin: 10vh auto;
-      padding: 32px;
-      background: var(--bg-1);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-  }
-  .auth-form h2 {
-      text-align: center;
-      margin-bottom: 16px;
-      font-size: 28px;
-  }
-  .auth-form input {
-      width: 100%;
-  }
-  .auth-form button {
-      width: 100%;
-  }
-  .user-info {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-  }
-  
-  /* Message Box Styling */
-  .message-box-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-  }
-  .message-box {
-      background: var(--bg-1);
-      padding: 32px;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      max-width: 450px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-  }
+        .progress-bar-container {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--accent-purple);
+            transition: width 0.3s ease;
+        }
+        
+        .status-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-  /* =========================
-     CUSTOM CHECKBOX
-     ========================= */
-  .switch input[type="checkbox"] {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-  .switch {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    cursor: pointer;
-  }
-  .switch-visual {
-    width: 32px;
-    height: 18px;
-    background: rgba(255, 255, 255, .1);
-    border-radius: 999px;
-    position: relative;
-    transition: background .2s ease;
-  }
-  .switch-visual::before {
-    content: '';
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 12px;
-    height: 12px;
-    background-color: var(--text);
-    border-radius: 50%;
-    transition: transform .2s ease;
-  }
-  .switch input[type="checkbox"]:checked + .switch-visual {
-    background: var(--accent);
-  }
-  .switch input[type="checkbox"]:checked + .switch-visual::before {
-    transform: translateX(14px);
-    background-color: #fff;
-  }
-  .switch input[type="checkbox"]:focus + .switch-visual {
-    box-shadow: 0 0 0 2px rgba(124, 58, 237, .5);
-  }
+        /* =========================
+           RIGHT RESULTS PANEL
+           ========================= */
+        .results-panel {
+            grid-column: 2;
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 20px;
+            min-height: 0;
+        }
 
-  /* =========================
-     CUSTOM SELECT
-     ========================= */
-  select {
-      appearance: none;
-      background: var(--glass);
-      border: 1px solid rgba(255,255,255,.07);
-      color: var(--text);
-      padding: 12px 14px;
-      border-radius: var(--radius-sm);
-      outline: none;
-      transition: box-shadow .18s ease, transform .12s ease, border-color .18s ease;
-      cursor: pointer;
-      background-image:
-          linear-gradient(45deg, transparent 50%, #cfd6ea 50%),
-          linear-gradient(135deg, #cfd6ea 50%, transparent 50%);
-      background-position:
-          calc(100% - 18px) calc(50% + 1px),
-          calc(100% - 12px) calc(50% + 1px);
-      background-size: 6px 6px, 6px 6px;
-      background-repeat: no-repeat;
-  }
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .results-header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        .results-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .results-table-container {
+            overflow: auto;
+        }
+        
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .results-table th, .results-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--panel-border);
+        }
+        
+        .results-table th {
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 14px;
+            position: sticky;
+            top: -24px;
+            backdrop-filter: blur(5px);
+            z-index: 10;
+        }
+        
+        .results-table tbody tr:hover {
+            background-color: rgba(139, 92, 246, 0.1);
+            cursor: pointer;
+        }
+        
+        .channel-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .channel-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+        
+        .channel-info-text strong {
+            display: block;
+            font-weight: 600;
+        }
+        
+        .channel-info-text span {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
 
-  select:hover {
-    border-color: rgba(124,58,237,.35);
-    box-shadow: 0 4px 12px rgba(124,58,237,.12);
-    transform: translateY(-1px);
-  }
-</style>
+        /* =========================
+           DETAILS PANEL
+           ========================= */
+        .details-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-height: 0;
+            overflow: hidden;
+        }
+        
+        .details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .details-header h3 {
+            margin: 0;
+        }
+        
+        .banner-image {
+            width: 100%;
+            height: 180px;
+            border-radius: var(--border-radius-sm);
+            background-size: cover;
+            background-position: center;
+            display: none;
+        }
+
+        .channel-meta {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .channel-description {
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-card {
+            background-color: var(--bg-secondary);
+            border-radius: var(--border-radius-sm);
+            padding: 15px;
+            text-align: center;
+            border: 1px solid var(--panel-border);
+        }
+        
+        .stat-card strong {
+            font-size: 20px;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card span {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .social-link-btn {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--panel-border);
+            padding: 8px 16px;
+            border-radius: var(--border-radius-sm);
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .social-link-btn:hover {
+            background-color: rgba(139, 92, 246, 0.1);
+            color: white;
+            border-color: var(--accent-purple);
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .video-card {
+            background-color: var(--bg-secondary);
+            border-radius: var(--border-radius-sm);
+            padding: 10px;
+            border: 1px solid var(--panel-border);
+        }
+        
+        .video-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .video-card h4 {
+            margin: 10px 0 5px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
+        /* =========================
+           AUTHENTICATION & MESSAGES
+           ========================= */
+        .auth-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            background: var(--bg-secondary);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--panel-shadow);
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+            z-index: 50;
+        }
+
+        .auth-container h2 {
+            margin: 0 0 10px;
+        }
+        
+        .auth-container input {
+            width: 100%;
+        }
+
+        .message-box-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .message-box {
+            background-color: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--panel-shadow);
+            max-width: 450px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message-box h4 {
+            margin: 0;
+            font-size: 20px;
+        }
+        
+        .message-box p {
+            margin: 0;
+            color: var(--text-secondary);
+        }
+        
+        /* CUSTOM SWITCH */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 38px;
+            height: 20px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #3C3C43;
+            transition: .4s;
+            border-radius: 20px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--accent-purple);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(18px);
+        }
+
+    </style>
 </head>
 <body>
-    <div id="auth-view" class="auth-form">
+    <div id="auth-view" class="auth-container">
         <h2>Welcome to Lead Studio Pro</h2>
         <input id="authEmail" type="email" placeholder="Email" autocomplete="username">
         <input id="authPass" type="password" placeholder="Password" autocomplete="current-password">
-        <button class="btn btn-primary" id="btnSignIn">Sign In</button>
-        <button class="btn" id="btnSignUp">Sign Up</button>
+        <div class="button-group">
+          <button class="btn btn-primary" id="btnSignIn">Sign In</button>
+          <button class="btn btn-secondary" id="btnSignUp">Sign Up</button>
+        </div>
         <div id="authStatus" class="meta" style="text-align: center;"></div>
     </div>
 
-    <div id="app-view" class="app" style="display:none">
-        <div class="topbar">
-            <div class="brand">
-                <h1>Lead Studio Pro</h1>
-                <p>Apple-grade UI • Advanced YouTube lead extractor</p>
+    <div id="app-view" class="app-container" style="display:none">
+        <header class="app-header">
+            <div class="header-left">
+                <div class="app-logo">
+                    <h1>Lead Studio Pro</h1>
+                    <p>Advanced YouTube Channel Finder</p>
+                </div>
+                <div id="status" class="channel-meta" style="margin-left: 20px;">Idle</div>
             </div>
-            <div class="bar-controls">
+            
+            <div class="header-controls">
                 <input id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA"/>
-                <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)"></textarea>
-                <div class="button-group" style="margin-left:auto;">
-                  <button class="btn btn-primary" id="btnSearch">Search</button>
-                  <button class="btn btn-primary" id="btnDeepSearch" style="background: linear-gradient(90deg, #d946ef, #a855f7);">Deep Search</button>
-                  <button class="btn" id="btnClear">Clear</button>
-                </div>
+                <button class="btn btn-secondary" id="btnSignOut">Sign Out</button>
             </div>
-        </div>
+        </header>
 
-        <div class="main">
-            <div class="panel">
-                <div class="row" style="justify-content:space-between;margin-bottom:8px">
-                    <div class="meta">Advanced Filters</div>
-                    <div class="meta" id="status">Idle</div>
+        <main class="main-content">
+            <aside class="panel filters-panel">
+                <h3>Search Filters</h3>
+                <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)"></textarea>
+                <div class="button-group full-span">
+                    <button class="btn btn-primary" id="btnSearch">Search</button>
+                    <button class="btn btn-primary" id="btnDeepSearch">Deep Search</button>
+                    <button class="btn btn-secondary" id="btnClear">Clear</button>
                 </div>
-                <div class="filters">
-                    <select id="order"><option value="relevance">Order: Relevance</option><option value="date">Order: Date</option><option value="viewCount">Order: Views</option><option value="rating">Order: Rating</option></select>
-                    <select id="duration"><option value="">Duration: Any</option><option value="short">Short (<4m)</option><option value="medium">Medium (4–20m)</option><option value="long">Long (>20m)</option></select>
-                    <select id="upload"><option value="">Upload Time: Any</option><option value="hour">Last hour</option><option value="today">Today</option><option value="week">This week</option><option value="month">This month</option></select>
-                    <select id="region"><option value="">Region: Any</option><option>US</option><option>IN</option><option>GB</option><option>CA</option><option>AU</option><option>DE</option></select>
-                    <select id="definition"><option value="">Definition: Any</option><option value="high">HD</option><option value="standard">SD</option></select>
-                    <select id="safe"><option value="">Safe: Any</option><option value="none">None</option><option value="moderate">Moderate</option><option value="strict">Strict</option></select>
-
-                    <input id="perPage" class="full" type="number" min="1" max="50" value="25" placeholder="Results per page (1–50)"/>
-                    <input id="pages" class="full" type="number" min="1" max="10" value="2" placeholder="Pages per query (1–10)"/>
-
-                    <div class="full row">
+                
+                <div class="filters-grid">
+                    <select id="order">
+                        <option value="relevance">Order: Relevance</option>
+                        <option value="date">Order: Date</option>
+                        <option value="viewCount">Order: Views</option>
+                        <option value="rating">Order: Rating</option>
+                    </select>
+                    <select id="duration">
+                        <option value="">Duration: Any</option>
+                        <option value="short">Short (&lt;4m)</option>
+                        <option value="medium">Medium (4–20m)</option>
+                        <option value="long">Long (&gt;20m)</option>
+                    </select>
+                    <select id="upload">
+                        <option value="">Upload Time: Any</option>
+                        <option value="hour">Last hour</option>
+                        <option value="today">Today</option>
+                        <option value="week">This week</option>
+                        <option value="month">This month</option>
+                    </select>
+                    <select id="region">
+                        <option value="">Region: Any</option>
+                        <option>US</option>
+                        <option>IN</option>
+                        <option>GB</option>
+                        <option>CA</option>
+                        <option>AU</option>
+                        <option>DE</option>
+                    </select>
+                    <select id="definition">
+                        <option value="">Definition: Any</option>
+                        <option value="high">HD</option>
+                        <option value="standard">SD</option>
+                    </select>
+                    <select id="safe">
+                        <option value="">Safe: Any</option>
+                        <option value="none">None</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="strict">Strict</option>
+                    </select>
+                    <input class="full-span" id="perPage" type="number" min="1" max="50" value="25" placeholder="Results per page (1–50)"/>
+                    <input class="full-span" id="pages" type="number" min="1" max="10" value="2" placeholder="Pages per query (1–10)"/>
+                    <div class="full-span range-inputs">
                         <input id="minSubs" type="number" placeholder="Min subs"/>
                         <input id="maxSubs" type="number" placeholder="Max subs"/>
-                        <input id="searchInResults" type="text" placeholder="Search within results (title / ID)"/>
                     </div>
-
-                    <div class="full row">
-                        <input id="corsProxy" type="url" placeholder="Optional CORS proxy for verification (best-effort)"/>
+                    <input class="full-span" id="searchInResults" type="text" placeholder="Search within results (title / ID)"/>
+                    <div class="full-span">
+                        <input id="corsProxy" type="url" placeholder="Optional CORS proxy for verification"/>
+                    </div>
+                    <div class="full-span" style="display:flex; justify-content: space-between; align-items: center;">
+                        <span class="channel-meta">Attempt verify check</span>
                         <label class="switch">
                             <input id="doVerify" type="checkbox"/>
-                            <span class="switch-visual"></span>
-                            <small>Attempt verify check</small>
+                            <span class="slider"></span>
                         </label>
                     </div>
-
-                    <div class="full row" style="justify-content:space-between;margin-top:2px">
-                        <div class="progress"><i id="progressBar"></i></div>
-                        <small id="count">0 channels</small>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" id="progressBar"></div>
+                    </div>
+                    <div class="status-text">
+                        <span>Progress</span>
+                        <span id="count">0 channels</span>
                     </div>
                 </div>
-            </div>
+            </aside>
 
-            <div class="panel results-wrap">
-                <div class="results-toolbar">
-                    <div class="left button-group">
-                        <button class="btn" id="btnSelectAll">Select All</button>
-                        <button class="btn" id="btnDeselectAll">Deselect</button>
-                        <button class="btn" id="btnSaveLib">Save Library</button>
-                        <button class="btn" id="btnLoadLib">Load Library</button>
-                    </div>
-                    <div class="right button-group">
+            <section class="results-panel">
+                <div class="results-header">
+                    <h2>Search Results</h2>
+                    <div class="results-actions">
                         <select id="clientSort">
                             <option value="subs-desc">Sort: Subs ↓</option>
                             <option value="subs-asc">Sort: Subs ↑</option>
@@ -479,18 +672,21 @@
                             <option value="title-asc">Sort: Title A→Z</option>
                             <option value="title-desc">Sort: Title Z→A</option>
                         </select>
+                        <button class="btn btn-secondary" id="btnSelectAll">Select All</button>
+                        <button class="btn btn-secondary" id="btnDeselectAll">Deselect</button>
+                        <button class="btn btn-secondary" id="btnSaveLib">Save Library</button>
+                        <button class="btn btn-secondary" id="btnLoadLib">Load Library</button>
                         <button class="btn btn-primary" id="btnExportCSV">Export CSV</button>
-                        <button class="btn" id="btnExportJSON">Export JSON</button>
-                        <button class="btn" id="btnCopyIDs">Copy Channel IDs</button>
-                        <button class="btn btn-danger" id="btnClearResults">Clear</button>
+                        <button class="btn btn-secondary" id="btnExportJSON">Export JSON</button>
+                        <button class="btn btn-secondary" id="btnCopyIDs">Copy IDs</button>
+                        <button class="btn btn-danger" id="btnClearResults">Clear Results</button>
                     </div>
                 </div>
-
-                <div class="table-wrap" id="resultsScroller">
-                    <table aria-label="Channel results">
+                <div class="results-table-container" id="resultsScroller">
+                    <table class="results-table">
                         <thead>
                             <tr>
-                                <th style="width:42px"></th>
+                                <th style="width: 40px;"></th>
                                 <th>Channel</th>
                                 <th>Subs</th>
                                 <th>Videos</th>
@@ -501,38 +697,27 @@
                         <tbody id="resultsTbody"></tbody>
                     </table>
                 </div>
-
-                <div class="row" style="justify-content:flex-end">
-                    <small class="meta">Tip: Click a row to open full details in the panel on the right.</small>
+            </section>
+        </main>
+        
+        <aside class="panel details-panel">
+            <div class="details-header">
+                <h3 id="detailTitle">Select a channel</h3>
+                <div class="button-group">
+                    <button class="btn btn-primary" id="btnExportSelected">Export Selected</button>
+                    <button class="btn btn-secondary" id="btnCopySelected">Copy Selected CSV</button>
                 </div>
             </div>
-
-            <div class="panel details">
-                <div>
-                    <div class="row" style="justify-content:space-between">
-                        <div>
-                            <div class="meta">Channel Details</div>
-                            <h3 id="detailTitle" style="margin:6px 0 0">Select a channel</h3>
-                        </div>
-                        <div class="row button-group">
-                            <button class="btn" id="btnExportSelected">Export Selected</button>
-                            <button class="btn" id="btnCopySelected">Copy Selected CSV</button>
-                        </div>
-                    </div>
-                </div>
-                <div id="banner" class="banner" style="display:none"></div>
-                <div class="about" id="detailContent">
-                    <div class="meta">No channel selected.</div>
-                </div>
-                <div class="meta">
-                    <div class="row" style="justify-content:space-between;align-items:flex-end">
-                        <div class="user-info">
-                            <div id="userEmail"></div>
-                        </div>
-                        <button class="btn" id="btnSignOut">Sign Out</button>
-                    </div>
-                </div>
+            
+            <div id="banner" class="banner-image"></div>
+            
+            <div id="detailContent" style="overflow-y: auto;">
+                <p class="channel-meta">No channel selected. Click a channel from the search results to see details here.</p>
             </div>
+        </aside>
+
+        <div id="user-footer" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; padding: 10px; text-align: right; background: rgba(0,0,0,0.5);">
+            <span id="userEmail" class="channel-meta"></span>
         </div>
     </div>
     
@@ -606,7 +791,7 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                $('app-view').style.display = 'grid';
+                $('app-view').style.display = 'flex';
                 $('auth-view').style.display = 'none';
                 $('userEmail').innerText = `Logged in as: ${user.email}`;
 
@@ -678,7 +863,7 @@
           });
           
           const cancelButton = document.createElement('button');
-          cancelButton.className = 'btn';
+          cancelButton.className = 'btn btn-secondary';
           cancelButton.innerText = 'Cancel';
           cancelButton.addEventListener('click', () => {
             $('messageBoxOverlay').style.display = 'none';
@@ -890,7 +1075,7 @@
             const tbody = $('resultsTbody');
             tbody.innerHTML = '';
             if(!list.length){
-                tbody.innerHTML = `<tr><td colspan="6" class="meta">No channels match your filters.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="channel-meta" style="text-align: center;">No channels match your filters.</td></tr>`;
                 return;
             }
             list.forEach((c, idx) => {
@@ -898,11 +1083,11 @@
                 tr.innerHTML = `
                     <td><input type="checkbox" class="sel" data-idx="${idx}"/></td>
                     <td>
-                        <div style="display:flex;align-items:center;gap:10px">
-                            <img class="avatar" src="${sanitize(c.avatar)}" alt="">
-                            <div>
-                                <div style="font-weight:700">${sanitize(c.title)}</div>
-                                <div class="meta">${sanitize(c.channelId)}</div>
+                        <div class="channel-info">
+                            <img src="${sanitize(c.avatar)}" alt="">
+                            <div class="channel-info-text">
+                                <strong>${sanitize(c.title)}</strong>
+                                <span>${sanitize(c.channelId)}</span>
                             </div>
                         </div>
                     </td>
@@ -925,28 +1110,27 @@
             const socialLinks = await getSocialLinksFromAboutPage(c.channelId);
 
             $('detailContent').innerHTML = `
-                <div class="meta">Channel ID: ${c.channelId} • ${c.country} • Created: ${c.createdAt}</div>
-                <p style="margin-top:10px;line-height:1.5;font-size:14px;color:var(--muted)">${sanitize(c.description)}</p>
-                <div class="stats" style="margin-top:14px">
-                    <div class="stat"><b>${c.subs.toLocaleString()}</b><div class="meta">Subscribers</div></div>
-                    <div class="stat"><b>${c.views.toLocaleString()}</b><div class="meta">Total Views</div></div>
-                    <div class="stat"><b>${c.videos.toLocaleString()}</b><div class="meta">Total Videos</div></div>
+                <p class="channel-meta">Channel ID: ${c.channelId} • ${c.country} • Created: ${c.createdAt}</p>
+                <p class="channel-description">${sanitize(c.description)}</p>
+                <div class="stats-grid">
+                    <div class="stat-card"><strong>${c.subs.toLocaleString()}</strong><span>Subscribers</span></div>
+                    <div class="stat-card"><strong>${c.views.toLocaleString()}</strong><span>Total Views</span></div>
+                    <div class="stat-card"><strong>${c.videos.toLocaleString()}</strong><span>Total Videos</span></div>
                 </div>
                 
                 <h4 style="margin:20px 0 8px">Social Links</h4>
-                <div class="row" style="flex-wrap:nowrap;justify-content:space-between">
-                    <div class="row button-group" id="socialLinksContainer">
-                        ${socialLinks.website?`<a href="${sanitize(socialLinks.website)}" target="_blank" class="btn">Website</a>`:''}
-                        ${socialLinks.twitter?`<a href="${sanitize(socialLinks.twitter)}" target="_blank" class="btn">Twitter</a>`:''}
-                        ${socialLinks.instagram?`<a href="${sanitize(socialLinks.instagram)}" target="_blank" class="btn">Instagram</a>`:''}
-                        ${socialLinks.facebook?`<a href="${sanitize(socialLinks.facebook)}" target="_blank" class="btn">Facebook</a>`:''}
-                        ${socialLinks.tiktok?`<a href="${sanitize(socialLinks.tiktok)}" target="_blank" class="btn">TikTok</a>`:''}
-                        ${socialLinks.linkedin?`<a href="${sanitize(socialLinks.linkedin)}" target="_blank" class="btn">LinkedIn</a>`:''}
-                    </div>
+                <div class="social-links">
+                    ${socialLinks.website?`<a href="${sanitize(socialLinks.website)}" target="_blank" class="social-link-btn">Website</a>`:''}
+                    ${socialLinks.twitter?`<a href="${sanitize(socialLinks.twitter)}" target="_blank" class="social-link-btn">Twitter</a>`:''}
+                    ${socialLinks.instagram?`<a href="${sanitize(socialLinks.instagram)}" target="_blank" class="social-link-btn">Instagram</a>`:''}
+                    ${socialLinks.facebook?`<a href="${sanitize(socialLinks.facebook)}" target="_blank" class="social-link-btn">Facebook</a>`:''}
+                    ${socialLinks.tiktok?`<a href="${sanitize(socialLinks.tiktok)}" target="_blank" class="social-link-btn">TikTok</a>`:''}
+                    ${socialLinks.linkedin?`<a href="${sanitize(socialLinks.linkedin)}" target="_blank" class="social-link-btn">LinkedIn</a>`:''}
                 </div>
-                <h4 style="margin:20px 0 8px">Latest Videos <small class="meta">(up to 6)</small></h4>
-                <div class="videos-grid" id="latestVideos">
-                    <div class="meta">Loading...</div>
+                
+                <h4 style="margin:20px 0 8px">Latest Videos <span class="channel-meta">(up to 6)</span></h4>
+                <div class="video-grid" id="latestVideos">
+                    <p class="channel-meta">Loading...</p>
                 </div>
             `;
             if(c.banner){
@@ -962,9 +1146,10 @@
         /* ========================= UTIL ========================= */
         function resetResults(){
             LIB = []; VIEW = []; lastExport = [];
-            $('resultsTbody').innerHTML=''; $('count').innerText='0 channels';
+            $('resultsTbody').innerHTML='<tr><td colspan="6" class="channel-meta" style="text-align: center;">No channels match your filters.</td></tr>'; 
+            $('count').innerText='0 channels';
             $('detailTitle').innerText = 'Select a channel';
-            $('detailContent').innerHTML = '<div class="meta">No channel selected.</div>';
+            $('detailContent').innerHTML = '<p class="channel-meta">No channel selected. Click a channel from the search results to see details here.</p>';
             $('banner').style.display='none'; $('banner').style.backgroundImage='none';
             setProgress(0); setStatus('Idle');
         }
@@ -984,12 +1169,12 @@
                 u.searchParams.set('key', apiKey);
                 const r = await fetch(u.toString());
                 if(!r.ok){
-                    box.innerHTML = '<div class="meta">Cannot load videos.</div>';
+                    box.innerHTML = '<p class="channel-meta">Cannot load videos.</p>';
                     return;
                 }
                 const data = await r.json();
                 if(!data.items?.length){
-                    box.innerHTML = '<div class="meta">No recent videos.</div>';
+                    box.innerHTML = '<p class="channel-meta">No recent videos.</p>';
                     return;
                 }
                 box.innerHTML='';
@@ -1002,16 +1187,16 @@
                     card.innerHTML = `
                         <img src="${sanitize(thumb)}" alt="">
                         <h4>${sanitize(title)}</h4>
-                        <div class="row" style="margin-top:6px">
+                        <div class="button-group" style="margin-top:6px">
                             <button class="btn btn-primary" onclick="window.open('https://www.youtube.com/watch?v=${vid}')">Open</button>
-                            <button class="btn" onclick="embed('${vid}')">Preview</button>
+                            <button class="btn btn-secondary" onclick="embed('${vid}')">Preview</button>
                         </div>
                     `;
                     box.appendChild(card);
                 });
             }catch(e){
                 console.error(e);
-                box.innerHTML = '<div class="meta">Error loading videos.</div>';
+                box.innerHTML = '<p class="channel-meta">Error loading videos.</p>';
             }
         }
         
