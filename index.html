@@ -7,14 +7,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* =========================
+           Custom CSS & Animations
+           ========================= */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes ripple {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
         @keyframes pulse-ring {
             0% { transform: scale(0.33); opacity: 1; }
             100% { transform: scale(2); opacity: 0; }
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes skeleton-loading {
+            0% { background-position: -200px 0; }
+            100% { background-position: 200px 0; }
         }
 
         body {
@@ -41,17 +51,14 @@
         .custom-scroll::-webkit-scrollbar {
             width: 8px;
         }
-
         .custom-scroll::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
         }
-
         .custom-scroll::-webkit-scrollbar-thumb {
             background: rgba(139, 92, 246, 0.5);
             border-radius: 10px;
         }
-
         .custom-scroll::-webkit-scrollbar-thumb:hover {
             background: rgba(139, 92, 246, 0.7);
         }
@@ -65,7 +72,6 @@
             width: 1rem;
             height: 1rem;
         }
-
         .status-led {
             width: 0.5rem;
             height: 0.5rem;
@@ -73,25 +79,38 @@
             border-radius: 50%;
             transition: background-color 0.3s;
         }
-
         .status-led-pulse {
             position: absolute;
             background-color: #f59e0b;
             border-radius: 50%;
             animation: pulse-ring 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
         }
-
         .status-led-active {
             background-color: #22c55e; /* green for active */
         }
-
         .status-led-error {
             background-color: #ef4444; /* red for error */
         }
-
-        /* Custom buttons */
+        
+        /* Button Ripple Effect */
         .btn {
-            @apply transition-transform transform hover:scale-105 active:scale-95 duration-200;
+            position: relative;
+            overflow: hidden;
+            transition-transform transform hover:scale-105 active:scale-95 duration-200;
+        }
+        .btn .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            animation: ripple 0.6s linear;
+            transform: scale(0);
+        }
+        
+        /* Loading Skeleton */
+        .skeleton {
+            animation: skeleton-loading 1.5s infinite linear;
+            background: linear-gradient(90deg, #1f2937 25%, #2a3442 50%, #1f2937 75%);
+            background-size: 200% 100%;
         }
     </style>
 </head>
@@ -137,9 +156,9 @@
                 <h3 class="text-xl font-bold text-white">Search Filters</h3>
                 <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)" class="flex-1 min-h-24 bg-white/5 rounded-lg border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors duration-200"></textarea>
                 <div class="grid grid-cols-2 gap-3">
-                    <button class="btn bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg col-span-1" id="btnSearch">Search</button>
-                    <button class="btn bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg col-span-1" id="btnDeepSearch">Deep Search</button>
-                    <button class="btn bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-3 rounded-lg border border-gray-600 col-span-2" id="btnClear">Clear Search</button>
+                    <button class="btn flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg col-span-1" id="btnSearch">Search</button>
+                    <button class="btn flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg col-span-1" id="btnDeepSearch">Deep Search</button>
+                    <button class="btn flex-1 bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-3 rounded-lg border border-gray-600 col-span-2" id="btnClear">Clear Search</button>
                 </div>
                 
                 <div class="grid grid-cols-2 gap-4 items-center">
@@ -247,7 +266,14 @@
                                 <th class="p-4 rounded-tr-xl">Verified</th>
                             </tr>
                         </thead>
-                        <tbody id="resultsTbody"></tbody>
+                        <tbody id="resultsTbody">
+                            <!-- Loading Skeleton -->
+                            <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-full"></div></td></tr>
+                            <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-4/5"></div></td></tr>
+                            <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-3/4"></div></td></tr>
+                            <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-full"></div></td></tr>
+                            <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-1/2"></div></td></tr>
+                        </tbody>
                     </table>
                 </div>
                 <div class="flex gap-4">
@@ -275,7 +301,8 @@
             </div>
         </main>
         
-        <div id="user-footer" class="fixed bottom-0 left-0 right-0 p-4 bg-gray-900/50 backdrop-blur-sm z-50 text-right">
+        <div id="user-footer" class="fixed bottom-0 left-0 right-0 p-4 bg-gray-900/50 backdrop-blur-sm z-50 flex items-center justify-between">
+            <span id="userIdDisplay" class="text-gray-400 text-sm"></span>
             <span id="userEmail" class="text-gray-400 text-sm"></span>
         </div>
     </div>
@@ -290,10 +317,10 @@
     </div>
     
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-functions.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDocs, collection, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-functions.js";
         
         /* =========================
            STATE + HELPERS
@@ -301,9 +328,34 @@
         const $ = id => document.getElementById(id);
         const sleep = ms => new Promise(r => setTimeout(r, ms));
         const esc = s => String(s ?? '').replace(/"/g,'""');
+        
+        // Provided by the hosting environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-        const savedLibraryKey = 'lead_studio_pro_lib_v1';
         let currentUser = null;
+        
+        // Add ripple effect listener to all buttons
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const rect = button.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple-effect';
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                
+                button.appendChild(ripple);
+                
+                // Remove the ripple element after the animation
+                ripple.addEventListener('animationend', () => {
+                    ripple.remove();
+                });
+            });
+        });
         
         function setStatus(t){ 
             $('status').innerText = t; 
@@ -327,9 +379,13 @@
         let lastExport = [];
         let lastSearch = {};
         
-        function showMessage(title, message) {
+        function showMessage(title, message, isHtml=false) {
             $('messageTitle').innerText = title;
-            $('messageText').innerText = message;
+            if (isHtml) {
+                $('messageText').innerHTML = message;
+            } else {
+                $('messageText').innerText = message;
+            }
             $('messageBoxOverlay').classList.remove('opacity-0', 'pointer-events-none');
             $('messageBox').classList.remove('scale-95');
             $('messageBox').classList.add('scale-100');
@@ -341,21 +397,14 @@
         });
 
         // === FIREBASE CONFIGURATION ===
-        const firebaseConfig = {
-          apiKey: "AIzaSyBvU3_Njbi1JQr_wD1a16h5coTW2ifaRDU",
-          authDomain: "youleadmax.firebaseapp.com",
-          projectId: "youleadmax",
-          storageBucket: "youleadmax.firebasestorage.app",
-          messagingSenderId: "710806971072",
-          appId: "1:710806971072:web:ced903befe8693f886c325",
-          measurementId: "G-JW9W20C1LQ"
-        };
-
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const functions = getFunctions(app);
         const logSearchCallable = httpsCallable(functions, 'logSearch');
+        
+        // --- Firestore Paths ---
+        const PUBLIC_LIBRARIES_COLLECTION = `artifacts/${appId}/public/data/libraries`;
 
         /* ========================= AUTHENTICATION ========================= */
         onAuthStateChanged(auth, async (user) => {
@@ -364,9 +413,10 @@
                 $('app-view').style.display = 'flex';
                 $('auth-view').style.display = 'none';
                 $('userEmail').innerText = `Logged in as: ${user.email}`;
+                $('userIdDisplay').innerText = `User ID: ${user.uid}`;
 
                 // Log user usage for tracking purposes
-                const userRef = doc(db, 'users', user.uid);
+                const userRef = doc(db, `users`, user.uid);
                 await setDoc(userRef, {
                     lastLogin: new Date().toISOString()
                 }, { merge: true });
@@ -377,6 +427,16 @@
                 $('auth-view').style.display = 'flex';
             }
         });
+        
+        // Initial anonymous login
+        if (initialAuthToken) {
+             signInWithCustomToken(auth, initialAuthToken).catch(e => {
+                console.error("Custom token sign-in failed. Attempting anonymous.", e);
+                signInAnonymously(auth);
+            });
+        } else {
+            signInAnonymously(auth);
+        }
 
         $('btnSignIn').addEventListener('click', async () => {
             const email = $('authEmail').value;
@@ -425,6 +485,12 @@
           }
           
           showMessage('Deep Search Confirmation', 'Deep Search will consume more API credits by searching more pages. Do you want to continue?');
+          $('messageBoxOk').onclick = () => {
+            searchAll(true);
+            $('messageBoxOverlay').classList.add('opacity-0', 'pointer-events-none');
+            $('messageBox').classList.remove('scale-100');
+            $('messageBox').classList.add('scale-95');
+          };
         });
         
         $('btnClear').addEventListener('click', () => { $('query').value=''; resetResults(); });
@@ -438,13 +504,7 @@
 
             if(!queries.length){ showMessage('Search Error', 'Please enter at least one query'); return; }
             if(!currentUser){ showMessage('Authentication Required', 'Please sign in first.'); return; }
-
-            try {
-              await logSearchCallable({ query: queryRaw });
-            } catch (error) {
-              console.error('Failed to log search:', error);
-            }
-
+            
             resetResults();
             lastSearch = { queryRaw, queries, perPage, pages };
             
@@ -459,6 +519,12 @@
             let totalSteps = queries.length * pages;
             let done = 0;
             let chanIds = new Set();
+            
+            try {
+              await logSearchCallable({ query: queryRaw });
+            } catch (error) {
+              console.error('Failed to log search:', error);
+            }
             
             for(const q of queries){
                 let pageToken = '';
@@ -628,7 +694,7 @@
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-white/5 transition-colors duration-200 cursor-pointer border-b border-gray-700 last:border-b-0";
                 tr.innerHTML = `
-                    <td class="p-4 rounded-l-xl"><input type="checkbox" class="sel rounded-sm bg-gray-700 border-gray-500 text-purple-600 focus:ring-purple-500" data-idx="${idx}"/></td>
+                    <td class="p-4 rounded-l-xl"><input type="checkbox" class="sel rounded-sm bg-gray-700 border-gray-500 text-purple-600 focus:ring-purple-500"></td>
                     <td class="p-4">
                         <div class="flex items-center gap-3">
                             <img src="${sanitize(c.avatar)}" class="w-12 h-12 rounded-lg object-cover" alt="">
@@ -705,7 +771,13 @@
         /* ========================= UTIL ========================= */
         function resetResults(){
             LIB = []; VIEW = []; lastExport = [];
-            $('resultsTbody').innerHTML='<tr><td colspan="6" class="p-4 text-center text-gray-500">No channels match your filters.</td></tr>'; 
+            $('resultsTbody').innerHTML=`
+                <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-full"></div></td></tr>
+                <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-4/5"></div></td></tr>
+                <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-3/4"></div></td></tr>
+                <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-full"></div></td></tr>
+                <tr><td colspan="6" class="p-4"><div class="h-2 skeleton rounded-full w-1/2"></div></td></tr>
+            `; 
             $('count').innerText='0 channels';
             $('detailTitle').innerText = 'Select a channel';
             $('detailContent').innerHTML = '<p class="text-gray-400">No channel selected. Click a channel from the search results to see details here.</p>';
@@ -853,26 +925,39 @@
             };
         }
 
-        $('btnSaveLib').addEventListener('click', () => {
+        $('btnSaveLib').addEventListener('click', async () => {
             if(!LIB.length) return showMessage('Save Failed', 'No channels to save.');
             try {
-                localStorage.setItem(savedLibraryKey, JSON.stringify(LIB));
-                showMessage('Save Success', `Saved ${LIB.length} channels to local storage.`);
+                const userDocRef = doc(db, PUBLIC_LIBRARIES_COLLECTION, currentUser.uid);
+                await setDoc(userDocRef, {
+                    library: LIB,
+                    timestamp: new Date().toISOString()
+                }, { merge: true });
+                showMessage('Save Success', `Saved ${LIB.length} channels to your library in Firestore.`);
             } catch(e){
-                showMessage('Save Failed', 'Failed to save library. Local storage might be full.');
+                console.error(e);
+                showMessage('Save Failed', 'Failed to save library to Firestore. Check console for details.');
             }
         });
 
-        $('btnLoadLib').addEventListener('click', () => {
-            const data = localStorage.getItem(savedLibraryKey);
-            if(!data) return showMessage('Load Failed', 'No saved library found.');
+        $('btnLoadLib').addEventListener('click', async () => {
+            if (!currentUser) {
+                return showMessage('Load Failed', 'Please sign in to load your library.');
+            }
             try{
-                const loaded = JSON.parse(data);
-                LIB = loaded;
-                applyClientFiltersAndRender();
-                showMessage('Load Success', `Loaded ${LIB.length} channels from local storage.`);
+                const userDocRef = doc(db, PUBLIC_LIBRARIES_COLLECTION, currentUser.uid);
+                const docSnap = await getDoc(userDocRef);
+                
+                if (docSnap.exists() && docSnap.data().library) {
+                    LIB = docSnap.data().library;
+                    applyClientFiltersAndRender();
+                    showMessage('Load Success', `Loaded ${LIB.length} channels from your Firestore library.`);
+                } else {
+                    showMessage('Load Failed', 'No saved library found in Firestore.');
+                }
             } catch(e){
-                showMessage('Load Failed', 'Failed to load library. Data may be corrupted.');
+                console.error(e);
+                showMessage('Load Failed', 'Failed to load library from Firestore. Data may be corrupted or permission denied.');
             }
         });
 
