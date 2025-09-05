@@ -317,7 +317,7 @@
       flex-direction: column;
       gap: 16px;
   }
-  
+
   /* =========================
      CUSTOM CHECKBOX
      ========================= */
@@ -362,7 +362,7 @@
   .switch input[type="checkbox"]:focus + .switch-visual {
     box-shadow: 0 0 0 2px rgba(124, 58, 237, .5);
   }
-  
+
   /* =========================
      CUSTOM SELECT
      ========================= */
@@ -410,7 +410,7 @@
                 <p>Apple-grade UI • Advanced YouTube lead extractor</p>
             </div>
             <div class="bar-controls">
-                <input id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyA0pBpYIdm3l-qcgjojNSXE-rOC45afyGI"/>
+                <input id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA"/>
                 <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)"></textarea>
                 <div class="button-group" style="margin-left:auto;">
                   <button class="btn btn-primary" id="btnSearch">Search</button>
@@ -428,7 +428,7 @@
                 </div>
                 <div class="filters">
                     <select id="order"><option value="relevance">Order: Relevance</option><option value="date">Order: Date</option><option value="viewCount">Order: Views</option><option value="rating">Order: Rating</option></select>
-                    <select id="duration"><option value="">Duration: Any</option><option value="short">Short (&lt;4m)</option><option value="medium">Medium (4–20m)</option><option value="long">Long (&gt;20m)</option></select>
+                    <select id="duration"><option value="">Duration: Any</option><option value="short">Short (<4m)</option><option value="medium">Medium (4–20m)</option><option value="long">Long (>20m)</option></select>
                     <select id="upload"><option value="">Upload Time: Any</option><option value="hour">Last hour</option><option value="today">Today</option><option value="week">This week</option><option value="month">This month</option></select>
                     <select id="region"><option value="">Region: Any</option><option>US</option><option>IN</option><option>GB</option><option>CA</option><option>AU</option><option>DE</option></select>
                     <select id="definition"><option value="">Definition: Any</option><option value="high">HD</option><option value="standard">SD</option></select>
@@ -445,7 +445,11 @@
 
                     <div class="full row">
                         <input id="corsProxy" type="url" placeholder="Optional CORS proxy for verification (best-effort)"/>
-                        <label class="switch"><input id="doVerify" type="checkbox"/><span class="switch-visual"></span> <small>Attempt verify check</small></label>
+                        <label class="switch">
+                            <input id="doVerify" type="checkbox"/>
+                            <span class="switch-visual"></span>
+                            <small>Attempt verify check</small>
+                        </label>
                     </div>
 
                     <div class="full row" style="justify-content:space-between;margin-top:2px">
@@ -928,7 +932,7 @@
                 
                 <h4 style="margin:20px 0 8px">Social Links</h4>
                 <div class="row" style="flex-wrap:nowrap;justify-content:space-between">
-                    <div class="row button-group">
+                    <div class="row button-group" id="socialLinksContainer">
                         ${socialLinks.website?`<a href="${sanitize(socialLinks.website)}" target="_blank" class="btn">Website</a>`:''}
                         ${socialLinks.twitter?`<a href="${sanitize(socialLinks.twitter)}" target="_blank" class="btn">Twitter</a>`:''}
                         ${socialLinks.instagram?`<a href="${sanitize(socialLinks.instagram)}" target="_blank" class="btn">Instagram</a>`:''}
@@ -1155,6 +1159,37 @@
                 showMessage('Load Failed', 'Failed to load library. Data may be corrupted.');
             }
         });
+
+        // Function to reliably retrieve social links from the channel's About page
+        async function getSocialLinksFromAboutPage(channelId) {
+            const proxyUrl = $('corsProxy').value || '';
+            const aboutUrl = `${proxyUrl}https://www.youtube.com/channel/${channelId}/about`;
+            
+            try {
+                const response = await fetch(aboutUrl);
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                const socialLinks = {};
+                const linkElements = doc.querySelectorAll('.yt-formatted-string a');
+                
+                linkElements.forEach(link => {
+                    const url = link.href;
+                    if (url.includes('twitter.com')) socialLinks.twitter = url;
+                    else if (url.includes('instagram.com')) socialLinks.instagram = url;
+                    else if (url.includes('facebook.com')) socialLinks.facebook = url;
+                    else if (url.includes('tiktok.com')) socialLinks.tiktok = url;
+                    else if (url.includes('linkedin.com')) socialLinks.linkedin = url;
+                    else if (!socialLinks.website) socialLinks.website = url;
+                });
+                
+                return socialLinks;
+            } catch (error) {
+                console.error('Failed to retrieve social links:', error);
+                return {};
+            }
+        }
     </script>
 </body>
 </html>
