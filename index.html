@@ -401,9 +401,12 @@
     height:100%;
     background-color:rgba(0,0,0,.8);
     z-index:1000;
-    display:flex;
+    display: none; /* This is a key fix, it's hidden by default */
     justify-content:center;
     align-items:center;
+  }
+  .video-detail-panel.visible {
+    display: flex;
   }
   .video-detail-content {
     background-color:var(--bg-1);
@@ -569,7 +572,7 @@
         </div>
     </div>
     
-    <div id="videoDetailPanel" class="video-detail-panel hidden">
+    <div id="videoDetailPanel" class="video-detail-panel">
       <div class="video-detail-content">
         <button id="closeBtn" style="position:absolute; top:10px; right:10px; background:none; border:none; color:var(--muted); font-size:1.5rem; cursor:pointer;">×</button>
         <h3 id="videoTitle" style="margin-bottom:10px;"></h3>
@@ -680,7 +683,7 @@
         $('btnDeepSearch').addEventListener('click', () => {
             const queryRaw = $('query').value.trim();
             if (!queryRaw.length) {
-                showMessage('Search Error', 'Please enter at least one query');
+                showMessage('Search Error', 'Please enter at least one query.');
                 return;
             }
             if (!currentUser) {
@@ -904,10 +907,16 @@
                 $('videoTitle').innerText = video.title;
                 $('videoDescription').innerText = video.description;
                 $('videoPlayer').src = `https://www.youtube.com/embed/${video.id}?autoplay=1`;
-                $('videoDetailPanel').classList.remove('hidden');
+                $('videoDetailPanel').classList.add('visible'); // Show the panel
             } else {
                 showMessage('Video Not Found', 'Could not find a recent video for this channel.');
             }
+        }
+        
+        // NEW: Function to hide the video preview panel
+        function hideVideoPreview() {
+            $('videoDetailPanel').classList.remove('visible'); // Hide the panel
+            $('videoPlayer').src = ''; // Stop the video
         }
 
         function filterAndSort(channels) {
@@ -982,8 +991,7 @@
         });
 
         $('closeBtn').addEventListener('click', () => {
-            $('videoDetailPanel').classList.add('hidden');
-            $('videoPlayer').src = ''; // Stop the video from playing in the background
+            hideVideoPreview();
         });
 
         $('btnClear').addEventListener('click', resetResults);
