@@ -5,613 +5,164 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Lead Studio Pro — YouTube Channel Finder</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* =========================
-           GLOBAL STYLES
-           ========================= */
-        :root {
-            --bg-primary: #0A0A0E;
-            --bg-secondary: #1C1C21;
-            --panel-bg: rgba(255, 255, 255, 0.05);
-            --panel-border: rgba(255, 255, 255, 0.1);
-            --text-primary: #E0E0E0;
-            --text-secondary: #A0A0A0;
-            --accent-purple: #8B5CF6; /* New vibrant purple */
-            --accent-purple-light: #A78BFA;
-            --accent-green: #10B981;
-            --accent-red: #EF4444;
-            --panel-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --border-radius: 16px;
-            --border-radius-sm: 8px;
-            --transition-duration: 0.2s;
+        @keyframes pulse-ring {
+            0% { transform: scale(0.33); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
         }
 
-        * {
-            box-sizing: border-box;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
             font-family: 'Inter', sans-serif;
+            background-color: #0d121c;
+            color: #d1d5db;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden; /* Prevents scrolling */
+        }
+        
+        /* Glassmorphism Panels */
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.5rem; /* 24px */
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.8s ease-out;
         }
 
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        a { color: var(--accent-purple-light); text-decoration: none; }
-        a:hover { text-decoration: underline; }
-
-        .app-container {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 24px;
-            gap: 24px;
-            max-width: 1600px;
-            width: 100%;
-            margin: 0 auto;
+        /* Custom scrollbar for glassmorphism */
+        .custom-scroll::-webkit-scrollbar {
+            width: 8px;
         }
 
-        /* =========================
-           HEADER
-           ========================= */
-        .app-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--panel-bg);
-            border: 1px solid var(--panel-border);
-            padding: 20px 30px;
-            border-radius: var(--border-radius);
-            backdrop-filter: blur(10px);
-            box-shadow: var(--panel-shadow);
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.5);
+            border-radius: 10px;
         }
 
-        .app-logo h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            color: var(--text-primary);
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.7);
         }
 
-        .app-logo p {
-            margin: 0;
-            font-size: 14px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-        
-        .header-controls {
-            display: flex;
-            gap: 15px;
-        }
-
-        /* =========================
-           FORM INPUTS & BUTTONS
-           ========================= */
-        input[type="text"], input[type="number"], input[type="email"], input[type="password"], textarea, select {
-            background-color: var(--bg-secondary);
-            border: 1px solid var(--panel-border);
-            color: var(--text-primary);
-            padding: 12px 16px;
-            border-radius: var(--border-radius-sm);
-            font-size: 15px;
-            outline: none;
-            transition: border-color var(--transition-duration), box-shadow var(--transition-duration);
-        }
-
-        input:focus, textarea:focus, select:focus {
-            border-color: var(--accent-purple);
-            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.25);
-        }
-        
-        textarea {
-            min-height: 50px;
-            flex-grow: 1;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border-radius: var(--border-radius-sm);
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: transform var(--transition-duration), box-shadow var(--transition-duration);
-        }
-
-        .btn-primary {
-            background-color: var(--accent-purple);
-            color: white;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-        }
-        .btn-primary:hover {
-            background-color: #9f7aea;
-        }
-
-        .btn-secondary {
-            background-color: var(--bg-secondary);
-            color: var(--text-primary);
-            border: 1px solid var(--panel-border);
-        }
-        .btn-secondary:hover {
-            border-color: var(--accent-purple);
-        }
-
-        .btn-danger {
-            background-color: var(--accent-red);
-            color: white;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        /* =========================
-           MAIN LAYOUT
-           ========================= */
-        .main-content {
-            flex-grow: 1;
-            display: grid;
-            grid-template-columns: 350px 1fr;
-            grid-template-rows: 1fr;
-            gap: 24px;
-            min-height: 0;
-        }
-
-        .panel {
-            background: var(--panel-bg);
-            border: 1px solid var(--panel-border);
-            border-radius: var(--border-radius);
-            backdrop-filter: blur(10px);
-            box-shadow: var(--panel-shadow);
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            min-height: 0;
-            overflow: hidden;
-        }
-        
-        /* =========================
-           LEFT FILTERS PANEL
-           ========================= */
-        .filters-panel {
-            grid-column: 1;
-        }
-        
-        .filters-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-        
-        .filters-grid select {
-            width: 100%;
-        }
-        
-        .filters-grid .full-span {
-            grid-column: 1 / -1;
-        }
-
-        .range-inputs {
-            display: flex;
-            gap: 10px;
-        }
-
-        .range-inputs input {
-            flex-grow: 1;
-        }
-
-        .progress-bar-container {
-            margin-top: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .progress-bar {
-            height: 8px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 99px;
-            overflow: hidden;
-        }
-        
-        .progress-bar-fill {
-            height: 100%;
-            width: 0%;
-            background-color: var(--accent-purple);
-            transition: width 0.3s ease;
-        }
-        
-        .status-text {
-            color: var(--text-secondary);
-            font-size: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* =========================
-           RIGHT RESULTS PANEL
-           ========================= */
-        .results-panel {
-            grid-column: 2;
-            display: grid;
-            grid-template-rows: auto auto 1fr;
-            gap: 20px;
-            min-height: 0;
-        }
-
-        .results-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .results-header h2 {
-            margin: 0;
-            font-size: 24px;
-        }
-        
-        .results-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .results-table-container {
-            overflow: auto;
-        }
-        
-        .results-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .results-table th, .results-table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--panel-border);
-        }
-        
-        .results-table th {
-            background-color: var(--bg-secondary);
-            color: var(--text-secondary);
-            font-weight: 600;
-            font-size: 14px;
-            position: sticky;
-            top: -24px;
-            backdrop-filter: blur(5px);
-            z-index: 10;
-        }
-        
-        .results-table tbody tr:hover {
-            background-color: rgba(139, 92, 246, 0.1);
-            cursor: pointer;
-        }
-        
-        .channel-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .channel-info img {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            object-fit: cover;
-        }
-        
-        .channel-info-text strong {
-            display: block;
-            font-weight: 600;
-        }
-        
-        .channel-info-text span {
-            display: block;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        /* =========================
-           DETAILS PANEL
-           ========================= */
-        .details-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            min-height: 0;
-            overflow: hidden;
-        }
-        
-        .details-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .details-header h3 {
-            margin: 0;
-        }
-        
-        .banner-image {
-            width: 100%;
-            height: 180px;
-            border-radius: var(--border-radius-sm);
-            background-size: cover;
-            background-position: center;
-            display: none;
-        }
-
-        .channel-meta {
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-        
-        .channel-description {
-            line-height: 1.6;
-            color: var(--text-secondary);
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
-        
-        .stat-card {
-            background-color: var(--bg-secondary);
-            border-radius: var(--border-radius-sm);
-            padding: 15px;
-            text-align: center;
-            border: 1px solid var(--panel-border);
-        }
-        
-        .stat-card strong {
-            font-size: 20px;
-            display: block;
-            margin-bottom: 5px;
-        }
-        
-        .stat-card span {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .social-link-btn {
-            background-color: var(--bg-secondary);
-            border: 1px solid var(--panel-border);
-            padding: 8px 16px;
-            border-radius: var(--border-radius-sm);
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-        
-        .social-link-btn:hover {
-            background-color: rgba(139, 92, 246, 0.1);
-            color: white;
-            border-color: var(--accent-purple);
-        }
-
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-        
-        .video-card {
-            background-color: var(--bg-secondary);
-            border-radius: var(--border-radius-sm);
-            padding: 10px;
-            border: 1px solid var(--panel-border);
-        }
-        
-        .video-card img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-        
-        .video-card h4 {
-            margin: 10px 0 5px;
-            font-size: 15px;
-            font-weight: 600;
-        }
-        
-        /* =========================
-           AUTHENTICATION & MESSAGES
-           ========================= */
-        .auth-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 400px;
-            background: var(--bg-secondary);
-            padding: 40px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--panel-shadow);
-            display: none;
-            flex-direction: column;
-            gap: 20px;
-            text-align: center;
-            z-index: 50;
-        }
-
-        .auth-container h2 {
-            margin: 0 0 10px;
-        }
-        
-        .auth-container input {
-            width: 100%;
-        }
-
-        .message-box-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: none;
+        /* Status LED */
+        .status-led-container {
+            position: relative;
+            display: inline-flex;
             justify-content: center;
             align-items: center;
-            z-index: 100;
-        }
-        
-        .message-box {
-            background-color: var(--bg-secondary);
-            border-radius: var(--border-radius);
-            padding: 30px;
-            box-shadow: var(--panel-shadow);
-            max-width: 450px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            width: 1rem;
+            height: 1rem;
         }
 
-        .message-box h4 {
-            margin: 0;
-            font-size: 20px;
-        }
-        
-        .message-box p {
-            margin: 0;
-            color: var(--text-secondary);
-        }
-        
-        /* CUSTOM SWITCH */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 38px;
-            height: 20px;
-        }
-        
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #3C3C43;
-            transition: .4s;
-            border-radius: 20px;
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 14px;
-            width: 14px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
+        .status-led {
+            width: 0.5rem;
+            height: 0.5rem;
+            background-color: #f59e0b; /* amber for idle */
             border-radius: 50%;
-        }
-        
-        input:checked + .slider {
-            background-color: var(--accent-purple);
-        }
-        
-        input:checked + .slider:before {
-            transform: translateX(18px);
+            transition: background-color 0.3s;
         }
 
+        .status-led-pulse {
+            position: absolute;
+            background-color: #f59e0b;
+            border-radius: 50%;
+            animation: pulse-ring 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+        }
+
+        .status-led-active {
+            background-color: #22c55e; /* green for active */
+        }
+
+        .status-led-error {
+            background-color: #ef4444; /* red for error */
+        }
+
+        /* Custom buttons */
+        .btn {
+            @apply transition-transform transform hover:scale-105 active:scale-95 duration-200;
+        }
     </style>
 </head>
-<body>
-    <div id="auth-view" class="auth-container">
-        <h2>Welcome to Lead Studio Pro</h2>
-        <input id="authEmail" type="email" placeholder="Email" autocomplete="username">
-        <input id="authPass" type="password" placeholder="Password" autocomplete="current-password">
-        <div class="button-group">
-          <button class="btn btn-primary" id="btnSignIn">Sign In</button>
-          <button class="btn btn-secondary" id="btnSignUp">Sign Up</button>
+<body class="p-8 flex items-center justify-center">
+
+    <!-- Authentication View -->
+    <div id="auth-view" class="glass-panel p-10 flex flex-col gap-6 text-center max-w-lg w-full" style="display: none;">
+        <h2 class="text-3xl font-bold text-white">Welcome to Lead Studio Pro</h2>
+        <input id="authEmail" type="email" placeholder="Email" autocomplete="username" class="bg-white/5 rounded-lg border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors duration-200">
+        <input id="authPass" type="password" placeholder="Password" autocomplete="current-password" class="bg-white/5 rounded-lg border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors duration-200">
+        <div class="flex gap-4">
+            <button class="btn flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg" id="btnSignIn">Sign In</button>
+            <button class="btn flex-1 bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-3 rounded-lg border border-gray-600" id="btnSignUp">Sign Up</button>
         </div>
-        <div id="authStatus" class="meta" style="text-align: center;"></div>
+        <div id="authStatus" class="text-sm text-red-400"></div>
     </div>
 
-    <div id="app-view" class="app-container" style="display:none">
-        <header class="app-header">
-            <div class="header-left">
-                <div class="app-logo">
-                    <h1>Lead Studio Pro</h1>
-                    <p>Advanced YouTube Channel Finder</p>
+    <!-- Main App Dashboard View -->
+    <div id="app-view" class="h-full w-full flex flex-col gap-6" style="display: none;">
+        <!-- Header -->
+        <header class="glass-panel p-6 flex items-center justify-between animate-fadeIn">
+            <div class="flex items-center gap-4">
+                <div class="status-led-container">
+                    <span class="status-led-pulse" id="statusPulse"></span>
+                    <span class="status-led" id="statusLed"></span>
                 </div>
-                <div id="status" class="channel-meta" style="margin-left: 20px;">Idle</div>
+                <div>
+                    <h1 class="text-2xl font-bold text-white">Lead Studio Pro</h1>
+                    <p class="text-sm text-gray-400">Advanced YouTube Channel Finder</p>
+                </div>
             </div>
-            
-            <div class="header-controls">
-                <input id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA"/>
-                <button class="btn btn-secondary" id="btnSignOut">Sign Out</button>
+            <div class="flex items-center gap-4">
+                <div id="status" class="text-sm font-medium text-gray-300">Idle</div>
+                <input id="apiKey" type="text" placeholder="YouTube API Key" value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA" class="w-72 bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                <button class="btn bg-gray-700 hover:bg-gray-600 text-white font-semibold px-6 py-2 rounded-lg" id="btnSignOut">Sign Out</button>
             </div>
         </header>
 
-        <main class="main-content">
-            <aside class="panel filters-panel">
-                <h3>Search Filters</h3>
-                <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)"></textarea>
-                <div class="button-group full-span">
-                    <button class="btn btn-primary" id="btnSearch">Search</button>
-                    <button class="btn btn-primary" id="btnDeepSearch">Deep Search</button>
-                    <button class="btn btn-secondary" id="btnClear">Clear</button>
+        <!-- Main Content Grid -->
+        <main class="flex-1 grid grid-cols-3 gap-6">
+            <!-- Left Panel: Search & Filters -->
+            <div class="col-span-1 glass-panel p-6 flex flex-col gap-6 overflow-hidden animate-fadeIn" style="animation-delay: 0.1s;">
+                <h3 class="text-xl font-bold text-white">Search Filters</h3>
+                <textarea id="query" placeholder="Enter one or more queries (comma or newline separated)" class="flex-1 min-h-24 bg-white/5 rounded-lg border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors duration-200"></textarea>
+                <div class="grid grid-cols-2 gap-3">
+                    <button class="btn bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg col-span-1" id="btnSearch">Search</button>
+                    <button class="btn bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg col-span-1" id="btnDeepSearch">Deep Search</button>
+                    <button class="btn bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-3 rounded-lg border border-gray-600 col-span-2" id="btnClear">Clear Search</button>
                 </div>
                 
-                <div class="filters-grid">
-                    <select id="order">
+                <div class="grid grid-cols-2 gap-4 items-center">
+                    <select id="order" class="bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
                         <option value="relevance">Order: Relevance</option>
                         <option value="date">Order: Date</option>
                         <option value="viewCount">Order: Views</option>
                         <option value="rating">Order: Rating</option>
                     </select>
-                    <select id="duration">
+                    <select id="duration" class="bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
                         <option value="">Duration: Any</option>
                         <option value="short">Short (&lt;4m)</option>
                         <option value="medium">Medium (4–20m)</option>
                         <option value="long">Long (&gt;20m)</option>
                     </select>
-                    <select id="upload">
+                    <select id="upload" class="bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
                         <option value="">Upload Time: Any</option>
                         <option value="hour">Last hour</option>
                         <option value="today">Today</option>
                         <option value="week">This week</option>
                         <option value="month">This month</option>
                     </select>
-                    <select id="region">
+                    <select id="region" class="bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
                         <option value="">Region: Any</option>
                         <option>US</option>
                         <option>IN</option>
@@ -620,51 +171,56 @@
                         <option>AU</option>
                         <option>DE</option>
                     </select>
-                    <select id="definition">
+                    <select id="definition" class="bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
                         <option value="">Definition: Any</option>
                         <option value="high">HD</option>
                         <option value="standard">SD</option>
                     </select>
-                    <select id="safe">
+                    <select id="safe" class="bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
                         <option value="">Safe: Any</option>
                         <option value="none">None</option>
                         <option value="moderate">Moderate</option>
                         <option value="strict">Strict</option>
                     </select>
-                    <input class="full-span" id="perPage" type="number" min="1" max="50" value="25" placeholder="Results per page (1–50)"/>
-                    <input class="full-span" id="pages" type="number" min="1" max="10" value="2" placeholder="Pages per query (1–10)"/>
-                    <div class="full-span range-inputs">
-                        <input id="minSubs" type="number" placeholder="Min subs"/>
-                        <input id="maxSubs" type="number" placeholder="Max subs"/>
+                    <input class="col-span-2 bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500" id="perPage" type="number" min="1" max="50" value="25" placeholder="Results per page (1–50)"/>
+                    <input class="col-span-2 bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500" id="pages" type="number" min="1" max="10" value="2" placeholder="Pages per query (1–10)"/>
+                    <div class="col-span-2 flex gap-4">
+                        <input id="minSubs" type="number" placeholder="Min subs" class="flex-1 bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"/>
+                        <input id="maxSubs" type="number" placeholder="Max subs" class="flex-1 bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"/>
                     </div>
-                    <input class="full-span" id="searchInResults" type="text" placeholder="Search within results (title / ID)"/>
-                    <div class="full-span">
-                        <input id="corsProxy" type="url" placeholder="Optional CORS proxy for verification"/>
+                    <input class="col-span-2 bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500" id="searchInResults" type="text" placeholder="Search within results (title / ID)"/>
+                    <div class="col-span-2">
+                        <input id="corsProxy" type="url" placeholder="Optional CORS proxy for verification" class="w-full bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"/>
                     </div>
-                    <div class="full-span" style="display:flex; justify-content: space-between; align-items: center;">
-                        <span class="channel-meta">Attempt verify check</span>
-                        <label class="switch">
-                            <input id="doVerify" type="checkbox"/>
-                            <span class="slider"></span>
+                    <div class="col-span-2 flex justify-between items-center text-sm">
+                        <span>Attempt verify check</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input id="doVerify" type="checkbox" value="" class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
                         </label>
                     </div>
                 </div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar">
-                        <div class="progress-bar-fill" id="progressBar"></div>
-                    </div>
-                    <div class="status-text">
-                        <span>Progress</span>
-                        <span id="count">0 channels</span>
+
+                <!-- Progress Bar -->
+                <div class="pt-2">
+                    <div class="relative pt-1">
+                        <div class="flex mb-2 items-center justify-between text-xs">
+                            <div class="text-gray-400">Progress</div>
+                            <div id="count" class="text-gray-400">0 channels</div>
+                        </div>
+                        <div class="flex h-2 mb-4 overflow-hidden text-xs bg-gray-700 rounded-lg">
+                            <div id="progressBar" class="flex flex-col justify-center text-center text-white shadow-none whitespace-nowrap bg-purple-600 transition-all duration-300 ease-in-out" style="width: 0%;"></div>
+                        </div>
                     </div>
                 </div>
-            </aside>
+            </div>
 
-            <section class="results-panel">
-                <div class="results-header">
-                    <h2>Search Results</h2>
-                    <div class="results-actions">
-                        <select id="clientSort">
+            <!-- Middle Panel: Results Table -->
+            <div class="col-span-2 glass-panel p-6 flex flex-col gap-6 overflow-hidden animate-fadeIn" style="animation-delay: 0.2s;">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-white">Search Results</h2>
+                    <div class="flex gap-4 items-center">
+                        <select id="clientSort" class="bg-white/5 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
                             <option value="subs-desc">Sort: Subs ↓</option>
                             <option value="subs-asc">Sort: Subs ↑</option>
                             <option value="views-desc">Sort: Views ↓</option>
@@ -672,60 +228,64 @@
                             <option value="title-asc">Sort: Title A→Z</option>
                             <option value="title-desc">Sort: Title Z→A</option>
                         </select>
-                        <button class="btn btn-secondary" id="btnSelectAll">Select All</button>
-                        <button class="btn btn-secondary" id="btnDeselectAll">Deselect</button>
-                        <button class="btn btn-secondary" id="btnSaveLib">Save Library</button>
-                        <button class="btn btn-secondary" id="btnLoadLib">Load Library</button>
-                        <button class="btn btn-primary" id="btnExportCSV">Export CSV</button>
-                        <button class="btn btn-secondary" id="btnExportJSON">Export JSON</button>
-                        <button class="btn btn-secondary" id="btnCopyIDs">Copy IDs</button>
-                        <button class="btn btn-danger" id="btnClearResults">Clear Results</button>
+                        <button class="btn bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold px-4 py-2 rounded-lg" id="btnExportCSV">Export CSV</button>
+                        <button class="btn bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold px-4 py-2 rounded-lg" id="btnExportJSON">Export JSON</button>
+                        <button class="btn bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold px-4 py-2 rounded-lg" id="btnCopyIDs">Copy IDs</button>
                     </div>
                 </div>
-                <div class="results-table-container" id="resultsScroller">
-                    <table class="results-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 40px;"></th>
-                                <th>Channel</th>
-                                <th>Subs</th>
-                                <th>Videos</th>
-                                <th>Views</th>
-                                <th>Verified</th>
+                <div class="flex-1 overflow-y-auto custom-scroll">
+                    <table class="w-full text-sm">
+                        <thead class="sticky top-0 bg-[#0d121c]/90 backdrop-blur-sm z-10">
+                            <tr class="text-left text-gray-400 font-semibold border-b border-gray-700">
+                                <th class="p-4 rounded-tl-xl">
+                                    <input type="checkbox" id="selectAllCheckbox" class="rounded-sm bg-gray-700 border-gray-500 text-purple-600 focus:ring-purple-500">
+                                </th>
+                                <th class="p-4">Channel</th>
+                                <th class="p-4">Subs</th>
+                                <th class="p-4">Videos</th>
+                                <th class="p-4">Views</th>
+                                <th class="p-4 rounded-tr-xl">Verified</th>
                             </tr>
                         </thead>
                         <tbody id="resultsTbody"></tbody>
                     </table>
                 </div>
-            </section>
-        </main>
-        
-        <aside class="panel details-panel">
-            <div class="details-header">
-                <h3 id="detailTitle">Select a channel</h3>
-                <div class="button-group">
-                    <button class="btn btn-primary" id="btnExportSelected">Export Selected</button>
-                    <button class="btn btn-secondary" id="btnCopySelected">Copy Selected CSV</button>
+                <div class="flex gap-4">
+                    <button class="btn flex-1 bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-3 rounded-lg border border-gray-600" id="btnSaveLib">Save Library</button>
+                    <button class="btn flex-1 bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-3 rounded-lg border border-gray-600" id="btnLoadLib">Load Library</button>
+                    <button class="btn flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg" id="btnClearResults">Clear All</button>
                 </div>
             </div>
             
-            <div id="banner" class="banner-image"></div>
-            
-            <div id="detailContent" style="overflow-y: auto;">
-                <p class="channel-meta">No channel selected. Click a channel from the search results to see details here.</p>
+            <!-- Right Panel: Channel Details -->
+            <div class="col-span-1 glass-panel p-6 flex flex-col gap-6 animate-fadeIn" style="animation-delay: 0.3s;">
+                <div class="flex items-center justify-between">
+                    <h3 id="detailTitle" class="text-xl font-bold text-white">Select a channel</h3>
+                    <div class="flex gap-4">
+                        <button class="btn bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 rounded-lg" id="btnExportSelected">Export Selected</button>
+                        <button class="btn bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold px-4 py-2 rounded-lg" id="btnCopySelected">Copy CSV</button>
+                    </div>
+                </div>
+                
+                <div id="banner" class="w-full h-32 bg-gray-800 rounded-xl bg-center bg-cover overflow-hidden" style="display:none;"></div>
+                
+                <div id="detailContent" class="flex-1 overflow-y-auto custom-scroll text-sm flex flex-col gap-4">
+                    <p class="text-gray-400">No channel selected. Click a channel from the search results to see details here.</p>
+                </div>
             </div>
-        </aside>
-
-        <div id="user-footer" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; padding: 10px; text-align: right; background: rgba(0,0,0,0.5);">
-            <span id="userEmail" class="channel-meta"></span>
+        </main>
+        
+        <div id="user-footer" class="fixed bottom-0 left-0 right-0 p-4 bg-gray-900/50 backdrop-blur-sm z-50 text-right">
+            <span id="userEmail" class="text-gray-400 text-sm"></span>
         </div>
     </div>
-    
-    <div id="messageBoxOverlay" class="message-box-overlay">
-        <div id="messageBox" class="message-box">
-            <h4 id="messageTitle"></h4>
-            <p id="messageText"></p>
-            <button class="btn btn-primary" id="messageBoxOk">OK</button>
+
+    <!-- Message Box Overlay -->
+    <div id="messageBoxOverlay" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 transition-opacity duration-300 opacity-0 pointer-events-none">
+        <div id="messageBox" class="bg-gray-800 rounded-2xl p-8 max-w-lg text-center flex flex-col gap-6 transform scale-95 transition-transform duration-300">
+            <h4 id="messageTitle" class="text-xl font-semibold text-white"></h4>
+            <p id="messageText" class="text-gray-400"></p>
+            <button class="btn bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg" id="messageBoxOk">OK</button>
         </div>
     </div>
     
@@ -745,7 +305,21 @@
         const savedLibraryKey = 'lead_studio_pro_lib_v1';
         let currentUser = null;
         
-        function setStatus(t){ $('status').innerText = t; }
+        function setStatus(t){ 
+            $('status').innerText = t; 
+            $('statusLed').classList.remove('status-led-active', 'status-led-error');
+            $('statusPulse').classList.remove('status-led-pulse');
+
+            if (t === 'Idle') {
+                $('statusLed').style.backgroundColor = '#f59e0b';
+            } else if (t.includes('Error')) {
+                $('statusLed').style.backgroundColor = '#ef4444';
+            } else {
+                $('statusLed').style.backgroundColor = '#22c55e';
+                $('statusPulse').classList.add('status-led-pulse');
+            }
+        }
+
         function setProgress(p){ $('progressBar').style.width = Math.min(100, Math.round(p*100)) + '%'; }
 
         let LIB = []; // enriched channels
@@ -753,21 +327,17 @@
         let lastExport = [];
         let lastSearch = {};
         
-        // Custom message box to replace alert()
         function showMessage(title, message) {
             $('messageTitle').innerText = title;
             $('messageText').innerText = message;
-            
-            const messageBox = $('messageBox');
-            // Remove any existing dynamic buttons
-            const dynamicButtons = messageBox.querySelectorAll('.btn:not(#messageBoxOk)');
-            dynamicButtons.forEach(btn => btn.remove());
-            $('messageBoxOk').style.display = 'block';
-
-            $('messageBoxOverlay').style.display = 'flex';
+            $('messageBoxOverlay').classList.remove('opacity-0', 'pointer-events-none');
+            $('messageBox').classList.remove('scale-95');
+            $('messageBox').classList.add('scale-100');
         }
         $('messageBoxOk').addEventListener('click', () => {
-            $('messageBoxOverlay').style.display = 'none';
+            $('messageBoxOverlay').classList.add('opacity-0', 'pointer-events-none');
+            $('messageBox').classList.remove('scale-100');
+            $('messageBox').classList.add('scale-95');
         });
 
         // === FIREBASE CONFIGURATION ===
@@ -813,6 +383,7 @@
             const pass = $('authPass').value;
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
+                $('authStatus').innerText = '';
             } catch (error) {
                 $('authStatus').innerText = 'Sign-in failed: ' + error.message;
             }
@@ -823,6 +394,7 @@
             const pass = $('authPass').value;
             try {
                 await createUserWithEmailAndPassword(auth, email, pass);
+                $('authStatus').innerText = '';
             } catch (error) {
                 $('authStatus').innerText = 'Sign-up failed: ' + error.message;
             }
@@ -831,6 +403,11 @@
         $('btnSignOut').addEventListener('click', async () => {
             await signOut(auth);
             resetResults();
+        });
+        
+        $('selectAllCheckbox').addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            document.querySelectorAll('.sel').forEach(cb => cb.checked = isChecked);
         });
 
         /* ========================= SEARCH / FETCH ========================= */
@@ -847,32 +424,7 @@
             return;
           }
           
-          // Display a confirmation message box
-          $('messageTitle').innerText = 'Deep Search Confirmation';
-          $('messageText').innerText = 'Deep Search will consume more API credits by searching more pages. Do you want to continue?';
-          
-          const messageBox = $('messageBox');
-          const oldOkBtn = $('messageBoxOk');
-          
-          const confirmButton = document.createElement('button');
-          confirmButton.className = 'btn btn-primary';
-          confirmButton.innerText = 'Yes, Continue';
-          confirmButton.addEventListener('click', () => {
-            $('messageBoxOverlay').style.display = 'none';
-            searchAll(true);
-          });
-          
-          const cancelButton = document.createElement('button');
-          cancelButton.className = 'btn btn-secondary';
-          cancelButton.innerText = 'Cancel';
-          cancelButton.addEventListener('click', () => {
-            $('messageBoxOverlay').style.display = 'none';
-          });
-          
-          oldOkBtn.style.display = 'none';
-          messageBox.appendChild(confirmButton);
-          messageBox.appendChild(cancelButton);
-          $('messageBoxOverlay').style.display = 'flex';
+          showMessage('Deep Search Confirmation', 'Deep Search will consume more API credits by searching more pages. Do you want to continue?');
         });
         
         $('btnClear').addEventListener('click', () => { $('query').value=''; resetResults(); });
@@ -887,10 +439,7 @@
             if(!queries.length){ showMessage('Search Error', 'Please enter at least one query'); return; }
             if(!currentUser){ showMessage('Authentication Required', 'Please sign in first.'); return; }
 
-            // Call the logSearch Cloud Function to record the search action
             try {
-              // The CORS issue means we need to handle the error, but the app should still work.
-              // We will continue the search process even if logging fails.
               await logSearchCallable({ query: queryRaw });
             } catch (error) {
               console.error('Failed to log search:', error);
@@ -899,7 +448,7 @@
             resetResults();
             lastSearch = { queryRaw, queries, perPage, pages };
             
-            setStatus('Searching for channels...');
+            setStatus('Searching...');
             const apiKey = $('apiKey').value.trim();
             const order = $('order').value;
             const duration = $('duration').value;
@@ -942,7 +491,6 @@
                     const data = await resp.json();
                     
                     (data.items || []).forEach(item => {
-                        // Shorts filtering (multi-heuristic)
                         const t = (item.snippet.title||'').toLowerCase();
                         const d = (item.snippet.description||'').toLowerCase();
                         if(t.includes('#shorts') || t.includes('shorts ') || t.endsWith('shorts') || d.includes('#shorts') || d.includes('shorts ')) return;
@@ -959,9 +507,8 @@
             
             if(chanIds.size===0){ setStatus('No channels found'); setProgress(1); return; }
             
-            setStatus(`Found ${chanIds.size} channels — fetching details…`);
+            setStatus(`Found ${chanIds.size} channels – fetching details...`);
             
-            // fetch channels in batches of 50
             const ids = Array.from(chanIds);
             for(let i=0;i<ids.length;i+=50){
                 const batch = ids.slice(i,i+50);
@@ -983,7 +530,7 @@
                 const data = await resp.json();
                 
                 (data.items||[]).forEach(ch => {
-                    if(!ch.snippet || !ch.snippet.title) return; // junk
+                    if(!ch.snippet || !ch.snippet.title) return;
                     const stats = ch.statistics || {};
                     const title = ch.snippet.title;
                     
@@ -1048,7 +595,6 @@
                 return true;
             });
 
-            // client sort
             const sort = $('clientSort').value;
             VIEW.sort((a,b) => {
                 if(sort==='subs-desc') return (b.subs||0) - (a.subs||0);
@@ -1075,26 +621,27 @@
             const tbody = $('resultsTbody');
             tbody.innerHTML = '';
             if(!list.length){
-                tbody.innerHTML = `<tr><td colspan="6" class="channel-meta" style="text-align: center;">No channels match your filters.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-500">No channels match your filters.</td></tr>`;
                 return;
             }
             list.forEach((c, idx) => {
                 const tr = document.createElement('tr');
+                tr.className = "hover:bg-white/5 transition-colors duration-200 cursor-pointer border-b border-gray-700 last:border-b-0";
                 tr.innerHTML = `
-                    <td><input type="checkbox" class="sel" data-idx="${idx}"/></td>
-                    <td>
-                        <div class="channel-info">
-                            <img src="${sanitize(c.avatar)}" alt="">
-                            <div class="channel-info-text">
-                                <strong>${sanitize(c.title)}</strong>
-                                <span>${sanitize(c.channelId)}</span>
+                    <td class="p-4 rounded-l-xl"><input type="checkbox" class="sel rounded-sm bg-gray-700 border-gray-500 text-purple-600 focus:ring-purple-500" data-idx="${idx}"/></td>
+                    <td class="p-4">
+                        <div class="flex items-center gap-3">
+                            <img src="${sanitize(c.avatar)}" class="w-12 h-12 rounded-lg object-cover" alt="">
+                            <div>
+                                <strong class="text-white">${sanitize(c.title)}</strong>
+                                <span class="block text-xs text-gray-400">${sanitize(c.channelId)}</span>
                             </div>
                         </div>
                     </td>
-                    <td>${c.hidden ? 'Hidden' : (c.subs||0).toLocaleString()}</td>
-                    <td>${(c.videos||0).toLocaleString()}</td>
-                    <td>${(c.views||0).toLocaleString()}</td>
-                    <td>${c.verified}</td>
+                    <td class="p-4">${c.hidden ? 'Hidden' : (c.subs||0).toLocaleString()}</td>
+                    <td class="p-4">${(c.videos||0).toLocaleString()}</td>
+                    <td class="p-4">${(c.views||0).toLocaleString()}</td>
+                    <td class="p-4 rounded-r-xl">${c.verified}</td>
                 `;
                 tr.addEventListener('click', e => {
                     if(e.target.type !== 'checkbox'){
@@ -1110,27 +657,39 @@
             const socialLinks = await getSocialLinksFromAboutPage(c.channelId);
 
             $('detailContent').innerHTML = `
-                <p class="channel-meta">Channel ID: ${c.channelId} • ${c.country} • Created: ${c.createdAt}</p>
-                <p class="channel-description">${sanitize(c.description)}</p>
-                <div class="stats-grid">
-                    <div class="stat-card"><strong>${c.subs.toLocaleString()}</strong><span>Subscribers</span></div>
-                    <div class="stat-card"><strong>${c.views.toLocaleString()}</strong><span>Total Views</span></div>
-                    <div class="stat-card"><strong>${c.videos.toLocaleString()}</strong><span>Total Videos</span></div>
+                <div class="flex flex-col gap-4">
+                    <p class="text-gray-400 text-sm">Channel ID: ${c.channelId} • ${c.country} • Created: ${c.createdAt}</p>
+                    <p class="text-gray-300 leading-relaxed">${sanitize(c.description)}</p>
                 </div>
                 
-                <h4 style="margin:20px 0 8px">Social Links</h4>
-                <div class="social-links">
-                    ${socialLinks.website?`<a href="${sanitize(socialLinks.website)}" target="_blank" class="social-link-btn">Website</a>`:''}
-                    ${socialLinks.twitter?`<a href="${sanitize(socialLinks.twitter)}" target="_blank" class="social-link-btn">Twitter</a>`:''}
-                    ${socialLinks.instagram?`<a href="${sanitize(socialLinks.instagram)}" target="_blank" class="social-link-btn">Instagram</a>`:''}
-                    ${socialLinks.facebook?`<a href="${sanitize(socialLinks.facebook)}" target="_blank" class="social-link-btn">Facebook</a>`:''}
-                    ${socialLinks.tiktok?`<a href="${sanitize(socialLinks.tiktok)}" target="_blank" class="social-link-btn">TikTok</a>`:''}
-                    ${socialLinks.linkedin?`<a href="${sanitize(socialLinks.linkedin)}" target="_blank" class="social-link-btn">LinkedIn</a>`:''}
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
+                        <strong class="text-white text-lg block">${c.subs.toLocaleString()}</strong>
+                        <span class="text-gray-400 text-sm">Subscribers</span>
+                    </div>
+                    <div class="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
+                        <strong class="text-white text-lg block">${c.views.toLocaleString()}</strong>
+                        <span class="text-gray-400 text-sm">Total Views</span>
+                    </div>
+                    <div class="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
+                        <strong class="text-white text-lg block">${c.videos.toLocaleString()}</strong>
+                        <span class="text-gray-400 text-sm">Total Videos</span>
+                    </div>
                 </div>
                 
-                <h4 style="margin:20px 0 8px">Latest Videos <span class="channel-meta">(up to 6)</span></h4>
-                <div class="video-grid" id="latestVideos">
-                    <p class="channel-meta">Loading...</p>
+                <h4 class="text-lg font-semibold text-white mt-4">Social Links</h4>
+                <div class="flex flex-wrap gap-2">
+                    ${socialLinks.website?`<a href="${sanitize(socialLinks.website)}" target="_blank" class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-lg transition-colors">Website</a>`:''}
+                    ${socialLinks.twitter?`<a href="${sanitize(socialLinks.twitter)}" target="_blank" class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-lg transition-colors">Twitter</a>`:''}
+                    ${socialLinks.instagram?`<a href="${sanitize(socialLinks.instagram)}" target="_blank" class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-lg transition-colors">Instagram</a>`:''}
+                    ${socialLinks.facebook?`<a href="${sanitize(socialLinks.facebook)}" target="_blank" class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-lg transition-colors">Facebook</a>`:''}
+                    ${socialLinks.tiktok?`<a href="${sanitize(socialLinks.tiktok)}" target="_blank" class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-lg transition-colors">TikTok</a>`:''}
+                    ${socialLinks.linkedin?`<a href="${sanitize(socialLinks.linkedin)}" target="_blank" class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-lg transition-colors">LinkedIn</a>`:''}
+                </div>
+                
+                <h4 class="text-lg font-semibold text-white mt-4">Latest Videos <span class="text-gray-500 text-xs">(up to 6)</span></h4>
+                <div class="grid grid-cols-2 gap-4" id="latestVideos">
+                    <p class="text-gray-400">Loading...</p>
                 </div>
             `;
             if(c.banner){
@@ -1146,10 +705,10 @@
         /* ========================= UTIL ========================= */
         function resetResults(){
             LIB = []; VIEW = []; lastExport = [];
-            $('resultsTbody').innerHTML='<tr><td colspan="6" class="channel-meta" style="text-align: center;">No channels match your filters.</td></tr>'; 
+            $('resultsTbody').innerHTML='<tr><td colspan="6" class="p-4 text-center text-gray-500">No channels match your filters.</td></tr>'; 
             $('count').innerText='0 channels';
             $('detailTitle').innerText = 'Select a channel';
-            $('detailContent').innerHTML = '<p class="channel-meta">No channel selected. Click a channel from the search results to see details here.</p>';
+            $('detailContent').innerHTML = '<p class="text-gray-400">No channel selected. Click a channel from the search results to see details here.</p>';
             $('banner').style.display='none'; $('banner').style.backgroundImage='none';
             setProgress(0); setStatus('Idle');
         }
@@ -1169,12 +728,12 @@
                 u.searchParams.set('key', apiKey);
                 const r = await fetch(u.toString());
                 if(!r.ok){
-                    box.innerHTML = '<p class="channel-meta">Cannot load videos.</p>';
+                    box.innerHTML = '<p class="text-gray-400">Cannot load videos.</p>';
                     return;
                 }
                 const data = await r.json();
                 if(!data.items?.length){
-                    box.innerHTML = '<p class="channel-meta">No recent videos.</p>';
+                    box.innerHTML = '<p class="text-gray-400">No recent videos.</p>';
                     return;
                 }
                 box.innerHTML='';
@@ -1183,43 +742,38 @@
                     const thumb = it.snippet.thumbnails?.medium?.url || it.snippet.thumbnails?.default?.url || '';
                     const title = it.snippet.title || '';
                     const card = document.createElement('div');
-                    card.className = 'video-card';
+                    card.className = 'bg-white/5 border border-white/10 rounded-xl p-3';
                     card.innerHTML = `
-                        <img src="${sanitize(thumb)}" alt="">
-                        <h4>${sanitize(title)}</h4>
-                        <div class="button-group" style="margin-top:6px">
-                            <button class="btn btn-primary" onclick="window.open('https://www.youtube.com/watch?v=${vid}')">Open</button>
-                            <button class="btn btn-secondary" onclick="embed('${vid}')">Preview</button>
+                        <img src="${sanitize(thumb)}" class="w-full h-24 object-cover rounded-lg" alt="">
+                        <h4 class="text-white font-semibold mt-2 text-sm">${sanitize(title)}</h4>
+                        <div class="flex gap-2 mt-2">
+                            <button class="btn flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded-lg text-xs" onclick="window.open('https://www.youtube.com/watch?v=${vid}')">Open</button>
+                            <button class="btn flex-1 bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-2 rounded-lg text-xs" onclick="embed('${vid}')">Preview</button>
                         </div>
                     `;
                     box.appendChild(card);
                 });
             }catch(e){
                 console.error(e);
-                box.innerHTML = '<p class="channel-meta">Error loading videos.</p>';
+                box.innerHTML = '<p class="text-gray-400">Error loading videos.</p>';
             }
         }
         
         function embed(videoId){
-            // add/replace a small embed at bottom-right of results panel
             let frame = document.getElementById('previewFrame');
             if(frame){ frame.remove(); }
             frame = document.createElement('iframe');
             frame.id='previewFrame';
-            frame.width='100%';
-            frame.height='220px';
-            frame.style.marginTop='10px';
+            frame.className = "w-full h-60 rounded-xl mt-4";
             frame.src=`https://www.youtube.com/embed/${videoId}?autoplay=1`;
             frame.setAttribute('allow','accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture');
             $('detailContent').appendChild(frame);
         }
         
-        // Helper for copying text to clipboard
         async function copyText(text) {
             try {
                 await navigator.clipboard.writeText(text);
             } catch (err) {
-                // Fallback for older browsers or restricted environments
                 const textarea = document.createElement('textarea');
                 textarea.value = text;
                 document.body.appendChild(textarea);
@@ -1247,12 +801,7 @@
             await copyText(ids);
             showMessage('Copy Success', 'Channel IDs copied to clipboard.');
         });
-        $('btnSelectAll').addEventListener('click', () => {
-            document.querySelectorAll('.sel').forEach(cb => cb.checked=true);
-        });
-        $('btnDeselectAll').addEventListener('click', () => {
-            document.querySelectorAll('.sel').forEach(cb => cb.checked=false);
-        });
+        
         $('btnExportSelected').addEventListener('click', () => {
             const rows = getSelected();
             if(!rows.length) return showMessage('Export Failed', 'Select some rows first');
@@ -1292,7 +841,6 @@
         }
 
         function cToSafe(c){
-            // strip big strings that might break inline JSON calls
             return {
                 channelId:c.channelId,
                 title:c.title,
@@ -1305,7 +853,6 @@
             };
         }
 
-        // Handle local storage for library
         $('btnSaveLib').addEventListener('click', () => {
             if(!LIB.length) return showMessage('Save Failed', 'No channels to save.');
             try {
@@ -1329,7 +876,6 @@
             }
         });
 
-        // Function to reliably retrieve social links from the channel's About page
         async function getSocialLinksFromAboutPage(channelId) {
             const proxyUrl = $('corsProxy').value || '';
             const aboutUrl = `${proxyUrl}https://www.youtube.com/channel/${channelId}/about`;
