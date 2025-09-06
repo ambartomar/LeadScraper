@@ -3,2276 +3,3413 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Lead Studio Pro — YouTube Channel Finder</title>
+<meta name="theme-color" content="#007AFF"/>
+<title>Lead Studio Pro — Premium YouTube Channel Discovery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=SF+Pro+Text:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-  /* =========================
-     NOTION-INSPIRED DESIGN SYSTEM
-     ========================= */
-  :root {
-    /* Light Theme (Default) */
-    --bg-primary: #ffffff;
-    --bg-secondary: #f7f6f3;
-    --bg-tertiary: #f1f1ef;
-    --bg-hover: #f1f1ef;
-    --bg-selected: #e9e9e7;
-    --bg-sidebar: #f7f6f3;
-    
-    /* Dark Theme */
-    --bg-primary-dark: #191919;
-    --bg-secondary-dark: #2f3437;
-    --bg-tertiary-dark: #373c41;
-    --bg-hover-dark: #2f3437;
-    --bg-selected-dark: #37352f;
-    --bg-sidebar-dark: #2f3437;
-    
-    /* Text Colors */
-    --text-primary: #37352f;
-    --text-secondary: #787774;
-    --text-tertiary: #9b9a97;
-    --text-inverse: #ffffff;
-    
-    /* Dark Theme Text */
-    --text-primary-dark: #ffffff;
-    --text-secondary-dark: #9b9a97;
-    --text-tertiary-dark: #6f6e69;
-    --text-inverse-dark: #37352f;
-    
-    /* Accent Colors */
-    --accent-blue: #2383e2;
-    --accent-blue-light: #e1ecf7;
-    --accent-red: #e03e3e;
-    --accent-red-light: #fdf2f2;
-    --accent-green: #0f7b0f;
-    --accent-green-light: #edfded;
-    --accent-purple: #8b46ff;
-    --accent-purple-light: #f4f0ff;
-    --accent-orange: #d9730d;
-    --accent-orange-light: #fdf4e8;
-    
-    /* Border & Shadows */
-    --border-color: #e9e9e7;
-    --border-color-dark: #37352f;
-    --shadow-small: 0px 1px 3px rgba(15, 15, 15, 0.1);
-    --shadow-medium: 0px 2px 8px rgba(15, 15, 15, 0.1);
-    --shadow-large: 0px 4px 16px rgba(15, 15, 15, 0.1);
-    
-    /* Spacing & Layout */
-    --space-xs: 4px;
-    --space-sm: 8px;
-    --space-md: 12px;
-    --space-lg: 16px;
-    --space-xl: 24px;
-    --space-xxl: 32px;
-    --border-radius: 6px;
-    --border-radius-lg: 12px;
-    
-    /* Typography */
-    --font-title: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
-    --font-body: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
-    --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-    
-    /* Animation */
-    --transition-fast: 0.15s ease;
-    --transition-smooth: 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
-  }
+/* =========================
+   APPLE-INSPIRED DESIGN SYSTEM
+   ========================= */
+:root {
+  /* Apple Color Palette */
+  --color-blue: #007AFF;
+  --color-blue-light: #40A6FF;
+  --color-blue-dark: #0056CC;
+  --color-green: #34C759;
+  --color-green-light: #5DD679;
+  --color-green-dark: #248A3D;
+  --color-orange: #FF9500;
+  --color-orange-light: #FFAD33;
+  --color-orange-dark: #CC7700;
+  --color-red: #FF3B30;
+  --color-red-light: #FF6B63;
+  --color-red-dark: #CC2E26;
+  --color-purple: #AF52DE;
+  --color-purple-light: #C285EA;
+  --color-purple-dark: #8C42B8;
+  --color-pink: #FF2D92;
+  --color-pink-light: #FF5FAB;
+  --color-pink-dark: #CC2475;
 
-  /* Theme Classes */
-  [data-theme="dark"] {
-    --bg-primary: var(--bg-primary-dark);
-    --bg-secondary: var(--bg-secondary-dark);
-    --bg-tertiary: var(--bg-tertiary-dark);
-    --bg-hover: var(--bg-hover-dark);
-    --bg-selected: var(--bg-selected-dark);
-    --bg-sidebar: var(--bg-sidebar-dark);
-    --text-primary: var(--text-primary-dark);
-    --text-secondary: var(--text-secondary-dark);
-    --text-tertiary: var(--text-tertiary-dark);
-    --text-inverse: var(--text-inverse-dark);
-    --border-color: var(--border-color-dark);
-  }
+  /* Light Theme */
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F2F2F7;
+  --bg-tertiary: #FFFFFF;
+  --bg-grouped: #F2F2F7;
+  --bg-elevated: #FFFFFF;
+  --bg-fill: rgba(120, 120, 128, 0.2);
+  --bg-fill-secondary: rgba(120, 120, 128, 0.16);
+  --bg-fill-tertiary: rgba(120, 120, 128, 0.12);
+  
+  /* Text Colors */
+  --text-primary: #000000;
+  --text-secondary: rgba(60, 60, 67, 0.6);
+  --text-tertiary: rgba(60, 60, 67, 0.3);
+  --text-quaternary: rgba(60, 60, 67, 0.18);
+  
+  /* Dark Theme */
+  --bg-primary-dark: #000000;
+  --bg-secondary-dark: #1C1C1E;
+  --bg-tertiary-dark: #2C2C2E;
+  --bg-grouped-dark: #000000;
+  --bg-elevated-dark: #1C1C1E;
+  --bg-fill-dark: rgba(120, 120, 128, 0.36);
+  --bg-fill-secondary-dark: rgba(120, 120, 128, 0.32);
+  --bg-fill-tertiary-dark: rgba(120, 120, 128, 0.24);
+  
+  --text-primary-dark: #FFFFFF;
+  --text-secondary-dark: rgba(235, 235, 245, 0.6);
+  --text-tertiary-dark: rgba(235, 235, 245, 0.3);
+  --text-quaternary-dark: rgba(235, 235, 245, 0.18);
 
-  /* Base Styles */
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+  /* Borders & Separators */
+  --border-color: rgba(60, 60, 67, 0.29);
+  --border-color-dark: rgba(84, 84, 88, 0.65);
+  --separator-color: rgba(60, 60, 67, 0.36);
+  --separator-color-dark: rgba(84, 84, 88, 0.65);
 
-  html, body {
-    height: 100%;
-    font-family: var(--font-body);
-    font-size: 14px;
-    line-height: 1.5;
-    color: var(--text-primary);
-    background-color: var(--bg-primary);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+  /* Shadows */
+  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --shadow-2: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-3: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --shadow-4: 0 20px 40px rgba(0, 0, 0, 0.1);
 
-  /* Scrollbar Styling */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
+  /* Spacing System (8pt grid) */
+  --space-1: 4px;   /* 0.5 units */
+  --space-2: 8px;   /* 1 unit */
+  --space-3: 12px;  /* 1.5 units */
+  --space-4: 16px;  /* 2 units */
+  --space-5: 20px;  /* 2.5 units */
+  --space-6: 24px;  /* 3 units */
+  --space-8: 32px;  /* 4 units */
+  --space-10: 40px; /* 5 units */
+  --space-12: 48px; /* 6 units */
+  --space-16: 64px; /* 8 units */
 
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: var(--text-tertiary);
-    border-radius: 4px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--text-secondary);
-  }
+  /* Border Radius */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
 
   /* Typography */
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-title);
-    font-weight: 600;
-    color: var(--text-primary);
-    line-height: 1.3;
+  --font-family-display: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-text: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+
+  /* Font Sizes */
+  --text-xs: 11px;
+  --text-sm: 13px;
+  --text-base: 15px;
+  --text-lg: 17px;
+  --text-xl: 19px;
+  --text-2xl: 22px;
+  --text-3xl: 28px;
+  --text-4xl: 34px;
+
+  /* Line Heights */
+  --leading-tight: 1.2;
+  --leading-normal: 1.4;
+  --leading-relaxed: 1.6;
+
+  /* Animation Curves */
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1.0);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* Transitions */
+  --transition-fast: 0.15s var(--ease-out);
+  --transition-normal: 0.25s var(--ease-out);
+  --transition-slow: 0.35s var(--ease-out);
+  --transition-spring: 0.4s var(--ease-spring);
+}
+
+/* Dark Theme Variables */
+[data-theme="dark"] {
+  --bg-primary: var(--bg-primary-dark);
+  --bg-secondary: var(--bg-secondary-dark);
+  --bg-tertiary: var(--bg-tertiary-dark);
+  --bg-grouped: var(--bg-grouped-dark);
+  --bg-elevated: var(--bg-elevated-dark);
+  --bg-fill: var(--bg-fill-dark);
+  --bg-fill-secondary: var(--bg-fill-secondary-dark);
+  --bg-fill-tertiary: var(--bg-fill-tertiary-dark);
+  --text-primary: var(--text-primary-dark);
+  --text-secondary: var(--text-secondary-dark);
+  --text-tertiary: var(--text-tertiary-dark);
+  --text-quaternary: var(--text-quaternary-dark);
+  --border-color: var(--border-color-dark);
+  --separator-color: var(--separator-color-dark);
+}
+
+/* Base Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-text);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+  background-color: var(--bg-grouped);
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-fill);
+  border-radius: var(--radius-full);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bg-fill-secondary);
+  background-clip: padding-box;
+}
+
+/* Selection */
+::selection {
+  background-color: rgba(0, 122, 255, 0.3);
+  color: var(--text-primary);
+}
+
+/* Focus Styles */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 2px;
+}
+
+/* Typography */
+.text-display-large {
+  font-family: var(--font-family-display);
+  font-size: var(--text-4xl);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.02em;
+}
+
+.text-display {
+  font-family: var(--font-family-display);
+  font-size: var(--text-3xl);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.01em;
+}
+
+.text-title {
+  font-family: var(--font-family-display);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+}
+
+.text-headline {
+  font-family: var(--font-family-text);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: var(--leading-normal);
+}
+
+.text-body {
+  font-family: var(--font-family-text);
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: var(--leading-normal);
+}
+
+.text-callout {
+  font-family: var(--font-family-text);
+  font-size: var(--text-base);
+  font-weight: 500;
+  line-height: var(--leading-normal);
+}
+
+.text-caption {
+  font-family: var(--font-family-text);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  line-height: var(--leading-normal);
+  color: var(--text-secondary);
+}
+
+.text-footnote {
+  font-family: var(--font-family-text);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  line-height: var(--leading-normal);
+  color: var(--text-tertiary);
+}
+
+/* Layout */
+.app {
+  min-height: 100vh;
+  background-color: var(--bg-grouped);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.header {
+  background-color: var(--bg-elevated);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--separator-color);
+  padding: var(--space-4) var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: all var(--transition-normal);
+}
+
+.header.scrolled {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-bottom-color: var(--separator-color);
+}
+
+[data-theme="dark"] .header.scrolled {
+  background-color: rgba(28, 28, 30, 0.8);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.brand-icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--color-blue), var(--color-purple));
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: var(--text-base);
+  box-shadow: var(--shadow-2);
+}
+
+.brand-text h1 {
+  font-family: var(--font-family-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1;
+}
+
+.brand-text .subtitle {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* Search Section */
+.search-section {
+  background-color: var(--bg-elevated);
+  padding: var(--space-8) var(--space-6);
+  border-bottom: 1px solid var(--separator-color);
+}
+
+.search-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.search-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+}
+
+.search-header h2 {
+  font-family: var(--font-family-display);
+  font-size: var(--text-3xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.search-shortcuts {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 var(--space-2);
+  background-color: var(--bg-fill);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  font-family: var(--font-family-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--text-secondary);
+  box-shadow: 0 1px 0 var(--border-color);
+}
+
+.search-form {
+  display: flex;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.search-controls {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 280px 1fr 360px;
+  gap: 0;
+  min-height: 0;
+  background-color: var(--bg-grouped);
+}
+
+/* Sidebar */
+.sidebar {
+  background-color: var(--bg-secondary);
+  border-right: 1px solid var(--separator-color);
+  padding: var(--space-6);
+  overflow-y: auto;
+}
+
+.sidebar-section {
+  margin-bottom: var(--space-8);
+}
+
+.sidebar-section:last-child {
+  margin-bottom: 0;
+}
+
+.sidebar-title {
+  font-family: var(--font-family-text);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-4);
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.filter-row {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Results Panel */
+.results-panel {
+  background-color: var(--bg-elevated);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--separator-color);
+  background-color: var(--bg-elevated);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.results-count {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.results-actions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.results-table-container {
+  flex: 1;
+  overflow: auto;
+}
+
+/* Details Panel */
+.details-panel {
+  background-color: var(--bg-secondary);
+  border-left: 1px solid var(--separator-color);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.details-header {
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--separator-color);
+  background-color: var(--bg-secondary);
+}
+
+.details-content {
+  flex: 1;
+  padding: var(--space-6);
+  overflow-y: auto;
+}
+
+/* Form Elements */
+.input,
+.textarea,
+.select {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-family: var(--font-family-text);
+  font-size: var(--text-base);
+  transition: all var(--transition-normal);
+  appearance: none;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  border-color: var(--color-blue);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--text-tertiary);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: var(--leading-relaxed);
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.input-label {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: var(--bg-fill);
+  color: var(--text-primary);
+  font-family: var(--font-family-text);
+  font-size: var(--text-base);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform var(--transition-normal);
+}
+
+.btn:hover::before {
+  transform: translateX(100%);
+}
+
+.btn:hover {
+  background-color: var(--bg-fill-secondary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-2);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-1);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-blue), var(--color-blue-light));
+  color: white;
+  box-shadow: var(--shadow-2);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--color-blue-dark), var(--color-blue));
+  box-shadow: var(--shadow-3);
+}
+
+.btn-secondary {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, var(--color-red), var(--color-red-light));
+  color: white;
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, var(--color-red-dark), var(--color-red));
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--color-green), var(--color-green-light));
+  color: white;
+}
+
+.btn-sm {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.btn-lg {
+  padding: var(--space-4) var(--space-6);
+  font-size: var(--text-lg);
+  border-radius: var(--radius-lg);
+}
+
+/* Icon Buttons */
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: var(--radius-full);
+}
+
+.btn-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Tables */
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: var(--bg-elevated);
+}
+
+.table th {
+  text-align: left;
+  padding: var(--space-4) var(--space-5);
+  background-color: var(--bg-fill-tertiary);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--separator-color);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.table th:first-child {
+  border-top-left-radius: var(--radius-md);
+}
+
+.table th:last-child {
+  border-top-right-radius: var(--radius-md);
+}
+
+.table td {
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--separator-color);
+  vertical-align: middle;
+  transition: all var(--transition-fast);
+}
+
+.table tr:hover {
+  background-color: var(--bg-fill-tertiary);
+  transform: scale(1.002);
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:last-child td:first-child {
+  border-bottom-left-radius: var(--radius-md);
+}
+
+.table tr:last-child td:last-child {
+  border-bottom-right-radius: var(--radius-md);
+}
+
+/* Channel Elements */
+.channel-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+  border: 2px solid var(--bg-fill);
+  transition: all var(--transition-normal);
+}
+
+.channel-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-3);
+}
+
+.channel-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.channel-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.channel-id {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  font-family: var(--font-family-mono);
+}
+
+/* Progress Bar */
+.progress {
+  width: 200px;
+  height: 4px;
+  background-color: var(--bg-fill);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-blue), var(--color-purple));
+  border-radius: var(--radius-full);
+  transition: width var(--transition-normal);
+  position: relative;
+}
+
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  transform: translateX(-100%);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Status Indicator */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--bg-fill);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  transition: all var(--transition-normal);
+}
+
+.status.loading {
+  color: var(--color-blue);
+  background-color: rgba(0, 122, 255, 0.1);
+}
+
+.status.success {
+  color: var(--color-green);
+  background-color: rgba(52, 199, 89, 0.1);
+}
+
+.status.error {
+  color: var(--color-red);
+  background-color: rgba(255, 59, 48, 0.1);
+}
+
+.status.idle {
+  color: var(--text-secondary);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background-color: currentColor;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Switch/Toggle */
+.switch {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+}
+
+.switch input {
+  display: none;
+}
+
+.switch-track {
+  width: 52px;
+  height: 32px;
+  background-color: var(--bg-fill);
+  border-radius: var(--radius-full);
+  position: relative;
+  transition: all var(--transition-normal);
+  border: 1px solid var(--border-color);
+}
+
+.switch-thumb {
+  width: 28px;
+  height: 28px;
+  background-color: var(--bg-elevated);
+  border-radius: var(--radius-full);
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  transition: all var(--transition-spring);
+  box-shadow: var(--shadow-2);
+}
+
+.switch input:checked + .switch-track {
+  background-color: var(--color-green);
+  border-color: var(--color-green);
+}
+
+.switch input:checked + .switch-track .switch-thumb {
+  transform: translateX(20px);
+}
+
+.switch-label {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+  user-select: none;
+}
+
+/* Authentication Card */
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: var(--space-6);
+  position: relative;
+}
+
+.auth-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.05"><circle cx="30" cy="30" r="2"/></g></svg>');
+  animation: float 20s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background-color: var(--bg-elevated);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-4);
+  padding: var(--space-10);
+  position: relative;
+  z-index: 1;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: var(--space-8);
+}
+
+.auth-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto var(--space-6);
+  background: linear-gradient(135deg, var(--color-blue), var(--color-purple));
+  border-radius: var(--radius-2xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-4xl);
+  color: white;
+  box-shadow: var(--shadow-3);
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% { transform: translate3d(0, 0, 0); }
+  40%, 43% { transform: translate3d(0, -10px, 0); }
+  70% { transform: translate3d(0, -5px, 0); }
+  90% { transform: translate3d(0, -2px, 0); }
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.auth-status {
+  color: var(--color-red);
+  font-size: var(--text-sm);
+  text-align: center;
+  padding: var(--space-3);
+  background-color: var(--color-red);
+  background-color: rgba(255, 59, 48, 0.1);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 59, 48, 0.2);
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn var(--transition-normal);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal {
+  background-color: var(--bg-elevated);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-4);
+  padding: var(--space-8);
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: slideUp var(--transition-spring);
+  border: 1px solid var(--border-color);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
   }
-
-  h1 { font-size: 28px; }
-  h2 { font-size: 24px; }
-  h3 { font-size: 20px; }
-  h4 { font-size: 16px; }
-
-  p {
-    color: var(--text-secondary);
-    margin-bottom: var(--space-md);
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
+}
 
-  a {
-    color: var(--accent-blue);
-    text-decoration: none;
-    transition: color var(--transition-fast);
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+}
+
+.modal-title {
+  font-family: var(--font-family-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-fill);
+  border: none;
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: var(--text-lg);
+  transition: all var(--transition-normal);
+}
+
+.modal-close:hover {
+  background-color: var(--bg-fill-secondary);
+  transform: scale(1.1);
+}
+
+.modal-content {
+  margin-bottom: var(--space-6);
+  line-height: var(--leading-relaxed);
+}
+
+.modal-actions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-fill);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  font-size: var(--text-lg);
+}
+
+.theme-toggle:hover {
+  background-color: var(--bg-fill-secondary);
+  transform: scale(1.05);
+  box-shadow: var(--shadow-2);
+}
+
+/* Loading Spinner */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--bg-fill);
+  border-top: 2px solid currentColor;
+  border-radius: var(--radius-full);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Toast Notification */
+.toast {
+  position: fixed;
+  top: var(--space-6);
+  right: var(--space-6);
+  background-color: var(--bg-elevated);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-4);
+  padding: var(--space-4) var(--space-5);
+  max-width: 400px;
+  z-index: 1001;
+  transform: translateX(120%);
+  transition: all var(--transition-spring);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.toast.show {
+  transform: translateX(0);
+}
+
+.toast.success {
+  border-left: 4px solid var(--color-green);
+}
+
+.toast.error {
+  border-left: 4px solid var(--color-red);
+}
+
+.toast.info {
+  border-left: 4px solid var(--color-blue);
+}
+
+.toast-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-sm);
+}
+
+.toast.success .toast-icon {
+  background-color: var(--color-green);
+  color: white;
+}
+
+.toast.error .toast-icon {
+  background-color: var(--color-red);
+  color: white;
+}
+
+.toast.info .toast-icon {
+  background-color: var(--color-blue);
+  color: white;
+}
+
+/* Stats Cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-4);
+  margin: var(--space-6) 0;
+}
+
+.stat-card {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  text-align: center;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-blue), var(--color-purple));
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-3);
+}
+
+.stat-value {
+  font-family: var(--font-family-display);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.stat-label {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Video Cards */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.video-card {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.video-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-3);
+}
+
+.video-thumbnail {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  transition: all var(--transition-normal);
+}
+
+.video-card:hover .video-thumbnail {
+  transform: scale(1.05);
+}
+
+.video-info {
+  padding: var(--space-4);
+}
+
+.video-title {
+  font-weight: 600;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+  line-height: var(--leading-tight);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.video-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .main-content {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
   }
-
-  a:hover {
-    color: var(--accent-blue);
-    text-decoration: underline;
+  
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--separator-color);
+    background-color: var(--bg-elevated);
   }
-
-  /* Layout */
-  .app {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--bg-primary);
+  
+  .details-panel {
+    border-left: none;
+    border-top: 1px solid var(--separator-color);
+    background-color: var(--bg-elevated);
   }
+}
 
-  /* Header */
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--space-lg) var(--space-xl);
-    border-bottom: 1px solid var(--border-color);
-    background-color: var(--bg-primary);
-    min-height: 64px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-  }
-
-  .brand h1 {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--text-primary);
-  }
-
-  .brand .subtitle {
-    font-size: 12px;
-    color: var(--text-tertiary);
-    font-weight: 400;
-  }
-
-  .header-controls {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-  }
-
-  /* Search Section */
+@media (max-width: 768px) {
   .search-section {
-    padding: var(--space-xl);
-    border-bottom: 1px solid var(--border-color);
-    background-color: var(--bg-primary);
+    padding: var(--space-6) var(--space-4);
   }
-
-  .search-container {
-    max-width: 800px;
-    margin: 0 auto;
+  
+  .search-form {
+    flex-direction: column;
   }
-
+  
+  .header {
+    padding: var(--space-3) var(--space-4);
+  }
+  
+  .brand-text h1 {
+    font-size: var(--text-lg);
+  }
+  
+  .sidebar,
+  .details-panel {
+    padding: var(--space-4);
+  }
+  
   .search-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: var(--space-lg);
+    flex-direction: column;
+    gap: var(--space-3);
   }
-
-  .search-input-group {
-    display: flex;
-    gap: var(--space-md);
-    margin-bottom: var(--space-lg);
-  }
-
-  .search-controls {
-    display: flex;
-    gap: var(--space-sm);
-    align-items: center;
+  
+  .results-actions {
     flex-wrap: wrap;
   }
-
-  /* Main Content */
-  .main-content {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 280px 1fr 360px;
-    gap: 0;
-    min-height: 0;
-  }
-
-  /* Sidebar */
-  .sidebar {
-    background-color: var(--bg-sidebar);
-    border-right: 1px solid var(--border-color);
-    padding: var(--space-lg);
-    overflow-y: auto;
-  }
-
-  .sidebar-section {
-    margin-bottom: var(--space-xl);
-  }
-
-  .sidebar-section h3 {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: var(--space-md);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .filter-group {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-  }
-
-  .filter-row {
-    display: flex;
-    gap: var(--space-sm);
-  }
-
-  /* Results Panel */
-  .results-panel {
-    display: flex;
-    flex-direction: column;
-    background-color: var(--bg-primary);
-    min-height: 0;
-  }
-
-  .results-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--space-lg);
-    border-bottom: 1px solid var(--border-color);
-    background-color: var(--bg-primary);
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-
-  .results-count {
-    font-weight: 500;
-    color: var(--text-primary);
-  }
-
-  .results-actions {
-    display: flex;
-    gap: var(--space-sm);
-    align-items: center;
-  }
-
-  .results-table-container {
-    flex: 1;
-    overflow: auto;
-  }
-
-  /* Details Panel */
-  .details-panel {
-    background-color: var(--bg-sidebar);
-    border-left: 1px solid var(--border-color);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .details-header {
-    padding: var(--space-lg);
-    border-bottom: 1px solid var(--border-color);
-    background-color: var(--bg-sidebar);
-  }
-
-  .details-content {
-    flex: 1;
-    padding: var(--space-lg);
-    overflow-y: auto;
-  }
-
-  /* Form Elements */
-  .input, .select, .textarea {
-    width: 100%;
-    padding: var(--space-sm) var(--space-md);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    font-family: var(--font-body);
-    font-size: 14px;
-    transition: all var(--transition-fast);
-  }
-
-  .input:focus, .select:focus, .textarea:focus {
-    outline: none;
-    border-color: var(--accent-blue);
-    box-shadow: 0 0 0 3px rgba(35, 131, 226, 0.1);
-  }
-
-  .input::placeholder, .textarea::placeholder {
-    color: var(--text-tertiary);
-  }
-
-  .textarea {
-    resize: vertical;
-    min-height: 80px;
-  }
-
-  /* Buttons */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-xs);
-    padding: var(--space-sm) var(--space-md);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    font-family: var(--font-body);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    text-decoration: none;
-    white-space: nowrap;
-  }
-
-  .btn:hover {
-    background-color: var(--bg-hover);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-small);
-  }
-
-  .btn:active {
-    transform: translateY(0);
-  }
-
-  .btn-primary {
-    background-color: var(--accent-blue);
-    border-color: var(--accent-blue);
-    color: white;
-  }
-
-  .btn-primary:hover {
-    background-color: #1a75d1;
-    border-color: #1a75d1;
-    color: white;
-  }
-
-  .btn-danger {
-    background-color: var(--accent-red);
-    border-color: var(--accent-red);
-    color: white;
-  }
-
-  .btn-danger:hover {
-    background-color: #c73333;
-    border-color: #c73333;
-    color: white;
-  }
-
-  .btn-small {
-    padding: var(--space-xs) var(--space-sm);
-    font-size: 12px;
-  }
-
-  /* Tables */
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: var(--bg-primary);
-  }
-
-  .table th {
-    text-align: left;
-    padding: var(--space-md);
-    background-color: var(--bg-secondary);
-    color: var(--text-secondary);
-    font-weight: 500;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom: 1px solid var(--border-color);
-    position: sticky;
-    top: 0;
-    z-index: 5;
-  }
-
-  .table td {
-    padding: var(--space-md);
-    border-bottom: 1px solid var(--border-color);
-    vertical-align: middle;
-  }
-
-  .table tr:hover {
-    background-color: var(--bg-hover);
-  }
-
-  .table tr.selected {
-    background-color: var(--bg-selected);
-  }
-
-  /* Channel Avatar */
-  .channel-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: var(--border-radius);
-    object-fit: cover;
-    border: 1px solid var(--border-color);
-  }
-
-  .channel-info {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-  }
-
-  .channel-name {
-    font-weight: 500;
-    color: var(--text-primary);
-    margin-bottom: var(--space-xs);
-  }
-
-  .channel-id {
-    font-size: 12px;
-    color: var(--text-tertiary);
-    font-family: var(--font-mono);
-  }
-
-  /* Progress Bar */
-  .progress {
-    width: 200px;
-    height: 4px;
-    background-color: var(--bg-tertiary);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .progress-bar {
-    height: 100%;
-    background-color: var(--accent-blue);
-    transition: width var(--transition-smooth);
-    border-radius: 2px;
-  }
-
-  /* Status Indicator */
-  .status {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xs);
-    padding: var(--space-xs) var(--space-sm);
-    background-color: var(--bg-tertiary);
-    border-radius: var(--border-radius);
-    font-size: 12px;
-    font-weight: 500;
-  }
-
-  .status.idle { color: var(--text-secondary); }
-  .status.loading { color: var(--accent-blue); }
-  .status.success { color: var(--accent-green); }
-  .status.error { color: var(--accent-red); }
-
-  /* Switch/Toggle */
-  .switch {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    cursor: pointer;
-  }
-
-  .switch input {
-    display: none;
-  }
-
-  .switch-track {
-    width: 36px;
-    height: 20px;
-    background-color: var(--bg-tertiary);
-    border-radius: 10px;
-    position: relative;
-    transition: background-color var(--transition-fast);
-  }
-
-  .switch-thumb {
-    width: 16px;
-    height: 16px;
-    background-color: white;
-    border-radius: 50%;
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    transition: transform var(--transition-fast);
-    box-shadow: var(--shadow-small);
-  }
-
-  .switch input:checked + .switch-track {
-    background-color: var(--accent-blue);
-  }
-
-  .switch input:checked + .switch-track .switch-thumb {
-    transform: translateX(16px);
-  }
-
-  /* Authentication Form */
-  .auth-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background-color: var(--bg-secondary);
-    padding: var(--space-xl);
-  }
-
+  
   .auth-card {
-    width: 100%;
-    max-width: 400px;
-    background-color: var(--bg-primary);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-large);
-    padding: var(--space-xxl);
+    padding: var(--space-8);
   }
-
-  .auth-header {
-    text-align: center;
-    margin-bottom: var(--space-xl);
-  }
-
-  .auth-header h2 {
-    margin-bottom: var(--space-sm);
-  }
-
-  .auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-lg);
-  }
-
-  .auth-status {
-    color: var(--accent-red);
-    font-size: 12px;
-    text-align: center;
-  }
-
-  /* Modal/Message Box */
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
-
+  
   .modal {
-    background-color: var(--bg-primary);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-large);
-    padding: var(--space-xl);
-    max-width: 500px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
+    padding: var(--space-6);
+    margin: var(--space-4);
   }
+}
 
-  .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: var(--space-lg);
-  }
-
-  .modal-title {
-    font-size: 18px;
-    font-weight: 600;
-  }
-
-  .modal-close {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: var(--text-secondary);
-    padding: 0;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--border-radius);
-  }
-
-  .modal-close:hover {
-    background-color: var(--bg-hover);
-  }
-
-  .modal-content {
-    margin-bottom: var(--space-lg);
-  }
-
-  .modal-actions {
-    display: flex;
-    gap: var(--space-sm);
-    justify-content: flex-end;
-  }
-
-  /* Theme Toggle */
-  .theme-toggle {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    padding: var(--space-sm);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    background-color: var(--bg-primary);
-    cursor: pointer;
-    transition: all var(--transition-fast);
-  }
-
-  .theme-toggle:hover {
-    background-color: var(--bg-hover);
-  }
-
-  /* Keyboard Shortcuts */
-  .kbd {
-    display: inline-block;
-    padding: 2px 6px;
-    background-color: var(--bg-tertiary);
-    border: 1px solid var(--border-color);
-    border-radius: 3px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text-secondary);
-  }
-
-  /* Video Cards */
-  .video-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: var(--space-md);
-    margin-top: var(--space-lg);
-  }
-
-  .video-card {
-    background-color: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    transition: all var(--transition-fast);
-  }
-
-  .video-card:hover {
-    box-shadow: var(--shadow-medium);
-    transform: translateY(-1px);
-  }
-
-  .video-thumbnail {
-    width: 100%;
-    height: 120px;
-    object-fit: cover;
-  }
-
-  .video-info {
-    padding: var(--space-md);
-  }
-
-  .video-title {
-    font-weight: 500;
-    font-size: 13px;
-    color: var(--text-primary);
-    margin-bottom: var(--space-sm);
-    line-height: 1.3;
-  }
-
-  /* Stats Cards */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: var(--space-md);
-    margin: var(--space-lg) 0;
-  }
-
-  .stat-card {
-    background-color: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    padding: var(--space-lg);
-    text-align: center;
-  }
-
-  .stat-value {
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: var(--space-xs);
-  }
-
-  .stat-label {
-    font-size: 12px;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  /* Responsive Design */
-  @media (max-width: 1200px) {
-    .main-content {
-      grid-template-columns: 1fr;
-      grid-template-rows: auto auto 1fr;
-    }
-    
-    .sidebar {
-      border-right: none;
-      border-bottom: 1px solid var(--border-color);
-    }
-    
-    .details-panel {
-      border-left: none;
-      border-top: 1px solid var(--border-color);
-    }
-  }
-
-  @media (max-width: 768px) {
-    .search-section {
-      padding: var(--space-lg);
-    }
-    
-    .search-input-group {
-      flex-direction: column;
-    }
-    
-    .header {
-      padding: var(--space-md);
-    }
-    
-    .brand h1 {
-      font-size: 16px;
-    }
-    
-    .sidebar,
-    .details-panel {
-      padding: var(--space-md);
-    }
-  }
-
-  /* Utility Classes */
-  .hidden { display: none !important; }
-  .flex { display: flex; }
-  .items-center { align-items: center; }
-  .justify-between { justify-content: space-between; }
-  .gap-sm { gap: var(--space-sm); }
-  .gap-md { gap: var(--space-md); }
-  .mt-sm { margin-top: var(--space-sm); }
-  .mt-md { margin-top: var(--space-md); }
-  .mb-md { margin-bottom: var(--space-md); }
-  .text-sm { font-size: 12px; }
-  .text-muted { color: var(--text-secondary); }
-  .font-mono { font-family: var(--font-mono); }
-  .truncate { 
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  /* Loading Animation */
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-
-  .loading {
-    animation: spin 1s linear infinite;
-  }
-
-  /* Enhanced Search Highlight */
-  .highlight {
-    background-color: var(--accent-purple-light);
-    padding: 1px 2px;
-    border-radius: 2px;
-  }
-
-  /* Notification Toast */
+@media (max-width: 480px) {
   .toast {
-    position: fixed;
-    top: var(--space-lg);
-    right: var(--space-lg);
-    background-color: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-large);
-    padding: var(--space-md) var(--space-lg);
-    max-width: 400px;
-    z-index: 1001;
-    transform: translateX(100%);
-    transition: transform var(--transition-smooth);
+    top: var(--space-4);
+    right: var(--space-4);
+    left: var(--space-4);
+    max-width: none;
   }
+  
+  .header-controls {
+    gap: var(--space-2);
+  }
+  
+  .search-controls {
+    justify-content: center;
+  }
+}
 
-  .toast.show {
-    transform: translateX(0);
-  }
+/* Utility Classes */
+.hidden { display: none !important; }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
-  .toast.success {
-    border-left: 4px solid var(--accent-green);
-  }
+.flex { display: flex; }
+.inline-flex { display: inline-flex; }
+.grid { display: grid; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.items-end { align-items: flex-end; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.justify-end { justify-content: flex-end; }
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.uppercase { text-transform: uppercase; }
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
-  .toast.error {
-    border-left: 4px solid var(--accent-red);
-  }
+/* Custom Icons */
+.icon {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+}
 
-  .toast.info {
-    border-left: 4px solid var(--accent-blue);
+/* Search highlight */
+.highlight {
+  background-color: rgba(255, 214, 10, 0.3);
+  padding: 1px 2px;
+  border-radius: var(--radius-xs);
+  font-weight: 600;
+}
+
+[data-theme="dark"] .highlight {
+  background-color: rgba(255, 214, 10, 0.2);
+}
+
+/* Loading skeleton */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-fill) 25%, var(--bg-fill-secondary) 50%, var(--bg-fill) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: var(--radius-md);
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-text {
+  height: 1em;
+  margin-bottom: 0.5em;
+}
+
+.skeleton-text:last-child {
+  margin-bottom: 0;
+  width: 75%;
+}
+
+/* Verified badge */
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(135deg, var(--color-blue), var(--color-blue-light));
+  color: white;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: var(--space-16) var(--space-8);
+  color: var(--text-secondary);
+}
+
+.empty-state-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto var(--space-4);
+  background-color: var(--bg-fill);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-4xl);
+  color: var(--text-tertiary);
+}
+
+.empty-state-title {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.empty-state-description {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  max-width: 400px;
+  margin: 0 auto;
+  line-height: var(--leading-relaxed);
+}
+
+/* Floating action button */
+.fab {
+  position: fixed;
+  bottom: var(--space-8);
+  right: var(--space-8);
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, var(--color-blue), var(--color-purple));
+  border: none;
+  border-radius: var(--radius-full);
+  color: white;
+  font-size: var(--text-xl);
+  cursor: pointer;
+  box-shadow: var(--shadow-4);
+  transition: all var(--transition-spring);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fab:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-4), 0 0 0 0 rgba(0, 122, 255, 0.7);
+  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(1.1);
+    opacity: 0;
   }
+}
+
+/* Premium features indicator */
+.premium-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  background: linear-gradient(135deg, var(--color-orange), var(--color-pink));
+  color: white;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.premium-badge::before {
+  content: '✨';
+}
 </style>
 </head>
+
 <body>
-    <!-- Authentication View -->
-    <div id="auth-view" class="auth-container">
-        <div class="auth-card">
-            <div class="auth-header">
-                <h2>Welcome to Lead Studio Pro</h2>
-                <p class="text-muted">Advanced YouTube Channel Discovery Platform</p>
-            </div>
-            <form class="auth-form">
-                <div>
-                    <input id="authEmail" class="input" type="email" placeholder="Email address" autocomplete="username" required>
-                </div>
-                <div>
-                    <input id="authPass" class="input" type="password" placeholder="Password" autocomplete="current-password" required>
-                </div>
-                <button type="button" class="btn btn-primary" id="btnSignIn">Sign In</button>
-                <button type="button" class="btn" id="btnSignUp">Create Account</button>
-                <div id="authStatus" class="auth-status"></div>
-            </form>
+<!-- Authentication View -->
+<div id="auth-view" class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-icon">LS</div>
+      <h2 class="text-display">Welcome to Lead Studio Pro</h2>
+      <p class="text-caption">Premium YouTube Channel Discovery Platform</p>
+    </div>
+    <form class="auth-form">
+      <div class="input-group">
+        <input id="authEmail" class="input" type="email" placeholder="Email address" autocomplete="username" required>
+      </div>
+      <div class="input-group">
+        <input id="authPass" class="input" type="password" placeholder="Password" autocomplete="current-password" required>
+      </div>
+      <button type="button" class="btn btn-primary btn-lg" id="btnSignIn">
+        <span>Sign In</span>
+      </button>
+      <button type="button" class="btn btn-secondary btn-lg" id="btnSignUp">
+        <span>Create Account</span>
+      </button>
+      <div id="authStatus" class="auth-status hidden"></div>
+    </form>
+  </div>
+</div>
+
+<!-- Main Application -->
+<div id="app-view" class="app hidden">
+  <!-- Header -->
+  <header class="header" id="mainHeader">
+    <div class="brand">
+      <div class="brand-icon">LS</div>
+      <div class="brand-text">
+        <h1>Lead Studio Pro</h1>
+        <div class="subtitle">Premium Channel Discovery</div>
+      </div>
+    </div>
+    <div class="header-controls">
+      <div class="theme-toggle" id="themeToggle">
+        <span id="themeIcon">🌙</span>
+      </div>
+      <div class="status" id="headerStatus">
+        <div class="status-dot"></div>
+        <span>Ready</span>
+      </div>
+      <div id="userInfo" class="text-caption"></div>
+      <button class="btn btn-secondary btn-sm" id="btnSignOut">Sign Out</button>
+    </div>
+  </header>
+
+  <!-- Search Section -->
+  <section class="search-section">
+    <div class="search-container">
+      <div class="search-header">
+        <h2 class="text-display">Discover YouTube Channels</h2>
+        <div class="search-shortcuts">
+          <span>Quick actions:</span>
+          <div class="flex items-center gap-2">
+            <kbd>⌘K</kbd>
+            <span>Search</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <kbd>⌘↵</kbd>
+            <span>Execute</span>
+          </div>
         </div>
-    </div>
-
-    <!-- Main Application -->
-    <div id="app-view" class="app hidden">
-        <!-- Header -->
-        <header class="header">
-            <div class="brand">
-                <div>
-                    <h1>Lead Studio Pro</h1>
-                    <div class="subtitle">Advanced YouTube Channel Discovery</div>
-                </div>
-            </div>
-            <div class="header-controls">
-                <div class="theme-toggle" id="themeToggle">
-                    <span id="themeIcon">🌙</span>
-                </div>
-                <div class="status" id="headerStatus">
-                    <span>Ready</span>
-                </div>
-                <div id="userInfo" class="text-sm text-muted"></div>
-                <button class="btn" id="btnSignOut">Sign Out</button>
-            </div>
-        </header>
-
-        <!-- Search Section -->
-        <section class="search-section">
-            <div class="search-container">
-                <div class="search-header">
-                    <h3>Search YouTube Channels</h3>
-                    <div class="text-sm text-muted">
-                        Use <span class="kbd">Ctrl+K</span> to focus search
-                    </div>
-                </div>
-                <div class="search-input-group">
-                    <input id="apiKey" class="input" type="text" placeholder="YouTube API Key" 
-                           value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA" style="flex: 0 0 300px;">
-                    <textarea id="query" class="textarea" placeholder="Enter search queries (comma or newline separated)&#10;Example: tech tutorials, cooking videos" style="flex: 1;"></textarea>
-                </div>
-                <div class="search-controls">
-                    <button class="btn btn-primary" id="btnSearch">
-                        <span>🔍</span>
-                        Search
-                    </button>
-                    <button class="btn btn-primary" id="btnDeepSearch" style="background-color: var(--accent-purple);">
-                        <span>⚡</span>
-                        Deep Search
-                    </button>
-                    <button class="btn" id="btnClear">Clear</button>
-                    <div class="progress" id="searchProgress">
-                        <div class="progress-bar" id="progressBar"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Sidebar -->
-            <aside class="sidebar">
-                <div class="sidebar-section">
-                    <h3>Search Filters</h3>
-                    <div class="filter-group">
-                        <select id="order" class="select">
-                            <option value="relevance">Sort by Relevance</option>
-                            <option value="date">Sort by Date</option>
-                            <option value="viewCount">Sort by Views</option>
-                            <option value="rating">Sort by Rating</option>
-                        </select>
-                        <select id="duration" class="select">
-                            <option value="">Any Duration</option>
-                            <option value="short">Short (&lt;4min)</option>
-                            <option value="medium">Medium (4–20min)</option>
-                            <option value="long">Long (&gt;20min)</option>
-                        </select>
-                        <select id="upload" class="select">
-                            <option value="">Any Upload Time</option>
-                            <option value="hour">Last Hour</option>
-                            <option value="today">Today</option>
-                            <option value="week">This Week</option>
-                            <option value="month">This Month</option>
-                        </select>
-                        <select id="region" class="select">
-                            <option value="">Any Region</option>
-                            <option value="US">United States</option>
-                            <option value="IN">India</option>
-                            <option value="GB">United Kingdom</option>
-                            <option value="CA">Canada</option>
-                            <option value="AU">Australia</option>
-                            <option value="DE">Germany</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="sidebar-section">
-                    <h3>Channel Filters</h3>
-                    <div class="filter-group">
-                        <div class="filter-row">
-                            <input id="minSubs" class="input" type="number" placeholder="Min subscribers" min="0">
-                            <input id="maxSubs" class="input" type="number" placeholder="Max subscribers" min="0">
-                        </div>
-                        <input id="perPage" class="input" type="number" min="1" max="50" value="25" placeholder="Results per page (1-50)">
-                        <input id="pages" class="input" type="number" min="1" max="10" value="2" placeholder="Pages per query (1-10)">
-                        <input id="searchInResults" class="input" type="text" placeholder="Search in results...">
-                    </div>
-                </div>
-
-                <div class="sidebar-section">
-                    <h3>Advanced Options</h3>
-                    <div class="filter-group">
-                        <input id="corsProxy" class="input" type="url" placeholder="CORS proxy URL (optional)">
-                        <label class="switch">
-                            <input id="doVerify" type="checkbox">
-                            <div class="switch-track">
-                                <div class="switch-thumb"></div>
-                            </div>
-                            <span class="text-sm">Verify channels</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="sidebar-section">
-                    <h3>Library</h3>
-                    <div class="filter-group">
-                        <button class="btn" id="btnSaveLib">💾 Save Library</button>
-                        <button class="btn" id="btnLoadLib">📂 Load Library</button>
-                    </div>
-                </div>
-            </aside>
-
-            <!-- Results Panel -->
-            <section class="results-panel">
-                <div class="results-header">
-                    <div class="results-count" id="resultsCount">0 channels found</div>
-                    <div class="results-actions">
-                        <select id="clientSort" class="select">
-                            <option value="subs-desc">Sort by Subscribers ↓</option>
-                            <option value="subs-asc">Sort by Subscribers ↑</option>
-                            <option value="views-desc">Sort by Views ↓</option>
-                            <option value="views-asc">Sort by Views ↑</option>
-                            <option value="title-asc">Sort by Title A→Z</option>
-                            <option value="title-desc">Sort by Title Z→A</option>
-                        </select>
-                        <button class="btn btn-small" id="btnSelectAll">Select All</button>
-                        <button class="btn btn-small" id="btnDeselectAll">Deselect</button>
-                        <button class="btn btn-primary btn-small" id="btnExportCSV">Export CSV</button>
-                        <button class="btn btn-small" id="btnExportJSON">Export JSON</button>
-                        <button class="btn btn-small" id="btnCopyIDs">Copy IDs</button>
-                        <button class="btn btn-danger btn-small" id="btnClearResults">Clear All</button>
-                    </div>
-                </div>
-                <div class="results-table-container">
-                    <table class="table" id="resultsTable">
-                        <thead>
-                            <tr>
-                                <th style="width: 40px;"></th>
-                                <th>Channel</th>
-                                <th style="width: 120px;">Subscribers</th>
-                                <th style="width: 100px;">Videos</th>
-                                <th style="width: 120px;">Views</th>
-                                <th style="width: 80px;">Verified</th>
-                                <th style="width: 100px;">Country</th>
-                            </tr>
-                        </thead>
-                        <tbody id="resultsTbody">
-                            <tr>
-                                <td colspan="7" class="text-muted" style="text-align: center; padding: 40px;">
-                                    Enter search terms above to find YouTube channels
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Details Panel -->
-            <aside class="details-panel">
-                <div class="details-header">
-                    <h3 id="detailTitle">Channel Details</h3>
-                    <div class="flex gap-sm">
-                        <button class="btn btn-small" id="btnExportSelected">Export Selected</button>
-                        <button class="btn btn-small" id="btnCopySelected">Copy Selected</button>
-                    </div>
-                </div>
-                <div class="details-content" id="detailContent">
-                    <div class="text-muted" style="text-align: center; padding: 40px;">
-                        Select a channel from the table to view details
-                    </div>
-                </div>
-            </aside>
-        </main>
-    </div>
-
-    <!-- Modal -->
-    <div id="modalOverlay" class="modal-overlay">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title" id="modalTitle">Confirmation</h3>
-                <button class="modal-close" id="modalClose">×</button>
-            </div>
-            <div class="modal-content">
-                <p id="modalMessage">Are you sure you want to proceed?</p>
-            </div>
-            <div class="modal-actions" id="modalActions">
-                <button class="btn" id="modalCancel">Cancel</button>
-                <button class="btn btn-primary" id="modalConfirm">Confirm</button>
-            </div>
+      </div>
+      
+      <div class="search-form">
+        <div style="flex: 0 0 320px;">
+          <input id="apiKey" class="input" type="text" placeholder="YouTube API Key" 
+                 value="AIzaSyBo5wWMC5T5lemycWNqtfs2_SAjApsLuFA">
         </div>
+        <div style="flex: 1;">
+          <textarea id="query" class="textarea" placeholder="Enter search queries (comma or newline separated)&#10;&#10;Examples:&#10;• tech tutorials, programming guides&#10;• cooking recipes, food vlogs&#10;• fitness workouts, yoga classes"></textarea>
+        </div>
+      </div>
+      
+      <div class="search-controls">
+        <button class="btn btn-primary" id="btnSearch">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="21 21l-4.35-4.35"></path>
+          </svg>
+          <span>Search</span>
+        </button>
+        <button class="btn btn-primary" id="btnDeepSearch" style="background: linear-gradient(135deg, var(--color-purple), var(--color-pink));">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          <span>Deep Search</span>
+          <div class="premium-badge">Pro</div>
+        </button>
+        <button class="btn btn-secondary" id="btnClear">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          <span>Clear</span>
+        </button>
+        <div class="progress" id="searchProgress">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="toast">
-        <div id="toastMessage"></div>
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Search Filters</div>
+        <div class="filter-group">
+          <select id="order" class="select">
+            <option value="relevance">Sort by Relevance</option>
+            <option value="date">Sort by Date</option>
+            <option value="viewCount">Sort by Views</option>
+            <option value="rating">Sort by Rating</option>
+          </select>
+          <select id="duration" class="select">
+            <option value="">Any Duration</option>
+            <option value="short">Short (&lt;4min)</option>
+            <option value="medium">Medium (4–20min)</option>
+            <option value="long">Long (&gt;20min)</option>
+          </select>
+          <select id="upload" class="select">
+            <option value="">Any Upload Time</option>
+            <option value="hour">Last Hour</option>
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+          </select>
+          <select id="region" class="select">
+            <option value="">Any Region</option>
+            <option value="US">🇺🇸 United States</option>
+            <option value="IN">🇮🇳 India</option>
+            <option value="GB">🇬🇧 United Kingdom</option>
+            <option value="CA">🇨🇦 Canada</option>
+            <option value="AU">🇦🇺 Australia</option>
+            <option value="DE">🇩🇪 Germany</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">Channel Filters</div>
+        <div class="filter-group">
+          <div class="filter-row">
+            <input id="minSubs" class="input" type="number" placeholder="Min subscribers" min="0">
+            <input id="maxSubs" class="input" type="number" placeholder="Max subscribers" min="0">
+          </div>
+          <input id="perPage" class="input" type="number" min="1" max="50" value="25" placeholder="Results per page (1-50)">
+          <input id="pages" class="input" type="number" min="1" max="10" value="2" placeholder="Pages per query (1-10)">
+          <input id="searchInResults" class="input" type="text" placeholder="🔍 Search in results...">
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">Advanced Options</div>
+        <div class="filter-group">
+          <input id="corsProxy" class="input" type="url" placeholder="CORS proxy URL (optional)">
+          <label class="switch">
+            <input id="doVerify" type="checkbox">
+            <div class="switch-track">
+              <div class="switch-thumb"></div>
+            </div>
+            <span class="switch-label">Verify channels</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">Library</div>
+        <div class="filter-group">
+          <button class="btn btn-success" id="btnSaveLib">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+              <polyline points="17,21 17,13 7,13 7,21"></polyline>
+              <polyline points="7,3 7,8 15,8"></polyline>
+            </svg>
+            <span>Save Library</span>
+          </button>
+          <button class="btn btn-secondary" id="btnLoadLib">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14,2 14,8 20,8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10,9 9,9 8,9"></polyline>
+            </svg>
+            <span>Load Library</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Results Panel -->
+    <section class="results-panel">
+      <div class="results-header">
+        <div class="results-count" id="resultsCount">0 channels found</div>
+        <div class="results-actions">
+          <select id="clientSort" class="select">
+            <option value="subs-desc">Subscribers ↓</option>
+            <option value="subs-asc">Subscribers ↑</option>
+            <option value="views-desc">Views ↓</option>
+            <option value="views-asc">Views ↑</option>
+            <option value="title-asc">Title A→Z</option>
+            <option value="title-desc">Title Z→A</option>
+          </select>
+          <button class="btn btn-sm" id="btnSelectAll">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9,11 12,14 22,4"></polyline>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+            Select All
+          </button>
+          <button class="btn btn-sm" id="btnDeselectAll">Clear</button>
+          <button class="btn btn-primary btn-sm" id="btnExportCSV">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7,10 12,15 17,10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            CSV
+          </button>
+          <button class="btn btn-sm" id="btnExportJSON">JSON</button>
+          <button class="btn btn-sm" id="btnCopyIDs">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Copy IDs
+          </button>
+          <button class="btn btn-danger btn-sm" id="btnClearResults">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3,6 5,6 21,6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            Clear All
+          </button>
+        </div>
+      </div>
+      <div class="results-table-container">
+        <table class="table" id="resultsTable">
+          <thead>
+            <tr>
+              <th style="width: 50px;"></th>
+              <th>Channel</th>
+              <th style="width: 120px;">Subscribers</th>
+              <th style="width: 100px;">Videos</th>
+              <th style="width: 120px;">Views</th>
+              <th style="width: 80px;">Status</th>
+              <th style="width: 100px;">Country</th>
+            </tr>
+          </thead>
+          <tbody id="resultsTbody">
+            <tr>
+              <td colspan="7">
+                <div class="empty-state">
+                  <div class="empty-state-icon">🔍</div>
+                  <div class="empty-state-title">Ready to Discover</div>
+                  <div class="empty-state-description">
+                    Enter search terms above to find YouTube channels and start building your lead library.
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Details Panel -->
+    <aside class="details-panel">
+      <div class="details-header">
+        <h3 class="text-title" id="detailTitle">Channel Details</h3>
+        <div class="flex gap-2">
+          <button class="btn btn-sm" id="btnExportSelected">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7,10 12,15 17,10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export
+          </button>
+          <button class="btn btn-sm" id="btnCopySelected">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Copy
+          </button>
+        </div>
+      </div>
+      <div class="details-content" id="detailContent">
+        <div class="empty-state">
+          <div class="empty-state-icon">👆</div>
+          <div class="empty-state-title">Select a Channel</div>
+          <div class="empty-state-description">
+            Click on any channel from the table to view detailed information, social links, and recent videos.
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<!-- Modal -->
+<div id="modalOverlay" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modalTitle">Confirmation</h3>
+      <button class="modal-close" id="modalClose">×</button>
     </div>
+    <div class="modal-content">
+      <p id="modalMessage">Are you sure you want to proceed?</p>
+    </div>
+    <div class="modal-actions" id="modalActions">
+      <button class="btn btn-secondary" id="modalCancel">Cancel</button>
+      <button class="btn btn-primary" id="modalConfirm">Confirm</button>
+    </div>
+  </div>
+</div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-functions.js";
+<!-- Toast Notification -->
+<div id="toast" class="toast">
+  <div class="toast-icon" id="toastIcon">ℹ️</div>
+  <div id="toastMessage"></div>
+</div>
+
+<!-- Floating Action Button -->
+<button class="fab hidden" id="scrollToTop">
+  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <line x1="12" y1="19" x2="12" y2="5"></line>
+    <polyline points="5,12 12,5 19,12"></polyline>
+  </svg>
+</button>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-functions.js";
+
+/* =========================
+   PREMIUM STATE MANAGEMENT & UTILITIES
+   ========================= */
+const $ = id => document.getElementById(id);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const esc = s => String(s ?? '').replace(/"/g, '""');
+const sanitize = s => {
+  try {
+    return String(s ?? '').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  } catch(e) {
+    return '';
+  }
+};
+
+// Premium library key with enhanced versioning
+const savedLibraryKey = 'lead_studio_pro_premium_v3';
+let currentUser = null;
+let currentTheme = localStorage.getItem('theme') || 'light';
+
+// Application State
+let LIB = []; // All discovered channels
+let VIEW = []; // Filtered/sorted view
+let lastExport = [];
+let searchCache = new Map(); // Enhanced cache for search results
+let abortController = null; // For canceling requests
+
+/* =========================
+   PREMIUM UI HELPERS & ANIMATIONS
+   ========================= */
+function setStatus(text, type = 'idle') {
+  const statusEl = $('headerStatus');
+  const statusDot = statusEl.querySelector('.status-dot');
+  const statusText = statusEl.querySelector('span');
+  
+  statusText.textContent = text;
+  statusEl.className = `status ${type}`;
+  
+  // Add pulsing animation for active states
+  if (type === 'loading') {
+    statusDot.style.animation = 'pulse 1s infinite';
+  } else {
+    statusDot.style.animation = '';
+  }
+}
+
+function setProgress(percent) {
+  const progressBar = $('progressBar');
+  progressBar.style.width = `${Math.min(100, Math.max(0, percent * 100))}%`;
+}
+
+function showToast(message, type = 'info') {
+  const toast = $('toast');
+  const toastMessage = $('toastMessage');
+  const toastIcon = $('toastIcon');
+  
+  // Set icon based on type
+  const icons = {
+    success: '✅',
+    error: '❌',
+    info: 'ℹ️',
+    warning: '⚠️'
+  };
+  
+  toastIcon.textContent = icons[type] || icons.info;
+  toastMessage.textContent = message;
+  toast.className = `toast ${type}`;
+  toast.classList.add('show');
+  
+  // Auto-hide after 4 seconds with smooth animation
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 4000);
+}
+
+function showModal(title, message, confirmText = 'Confirm', cancelText = 'Cancel') {
+  return new Promise((resolve) => {
+    $('modalTitle').textContent = title;
+    $('modalMessage').textContent = message;
+    $('modalConfirm').textContent = confirmText;
+    $('modalCancel').textContent = cancelText;
+    
+    const overlay = $('modalOverlay');
+    overlay.style.display = 'flex';
+    
+    // Add smooth entrance animation
+    requestAnimationFrame(() => {
+      overlay.style.animation = 'fadeIn 0.3s ease-out';
+    });
+    
+    const handleConfirm = () => {
+      cleanup();
+      resolve(true);
+    };
+    
+    const handleCancel = () => {
+      cleanup();
+      resolve(false);
+    };
+    
+    const cleanup = () => {
+      overlay.style.animation = 'fadeOut 0.3s ease-out';
+      setTimeout(() => {
+        overlay.style.display = 'none';
+      }, 300);
+      $('modalConfirm').removeEventListener('click', handleConfirm);
+      $('modalCancel').removeEventListener('click', handleCancel);
+      $('modalClose').removeEventListener('click', handleCancel);
+    };
+    
+    $('modalConfirm').addEventListener('click', handleConfirm);
+    $('modalCancel').addEventListener('click', handleCancel);
+    $('modalClose').addEventListener('click', handleCancel);
+  });
+}
+
+/* =========================
+   PREMIUM THEME MANAGEMENT
+   ========================= */
+function initTheme() {
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  updateThemeIcon();
+  
+  // Add smooth theme transition
+  document.documentElement.style.transition = 'color 0.3s ease, background-color 0.3s ease';
+}
+
+function toggleTheme() {
+  currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  localStorage.setItem('theme', currentTheme);
+  updateThemeIcon();
+  
+  // Haptic-style feedback
+  $('themeToggle').style.transform = 'scale(0.95)';
+  setTimeout(() => {
+    $('themeToggle').style.transform = '';
+  }, 100);
+  
+  showToast(`Switched to ${currentTheme} theme`, 'info');
+}
+
+function updateThemeIcon() {
+  $('themeIcon').textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+}
+
+$('themeToggle').addEventListener('click', toggleTheme);
+
+/* =========================
+   ENHANCED KEYBOARD SHORTCUTS
+   ========================= */
+document.addEventListener('keydown', (e) => {
+  // Cmd/Ctrl+K to focus search
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    $('query').focus();
+    $('query').select();
+    return;
+  }
+  
+  // Cmd/Ctrl+Enter to search
+  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+    e.preventDefault();
+    if ($('query').value.trim()) {
+      searchAll(false);
+    }
+    return;
+  }
+  
+  // Escape to clear search or close modal
+  if (e.key === 'Escape') {
+    if ($('modalOverlay').style.display === 'flex') {
+      $('modalOverlay').style.display = 'none';
+    } else if ($('query').value.trim()) {
+      $('query').value = '';
+      resetResults();
+      showToast('Search cleared', 'info');
+    }
+    return;
+  }
+  
+  // Cmd/Ctrl+A to select all (when focus is on table)
+  if ((e.metaKey || e.ctrlKey) && e.key === 'a' && document.activeElement.closest('.results-table-container')) {
+    e.preventDefault();
+    document.querySelectorAll('.channel-checkbox').forEach(cb => cb.checked = true);
+    showToast('All channels selected', 'info');
+    return;
+  }
+  
+  // Cmd/Ctrl+S to save library
+  if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+    e.preventDefault();
+    if (LIB.length > 0) {
+      $('btnSaveLib').click();
+    }
+    return;
+  }
+});
+
+/* =========================
+   FIREBASE CONFIGURATION
+   ========================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyBvU3_Njbi1JQr_wD1a16h5coTW2ifaRDU",
+  authDomain: "youleadmax.firebaseapp.com",
+  projectId: "youleadmax",
+  storageBucket: "youleadmax.firebasestorage.app",
+  messagingSenderId: "710806971072",
+  appId: "1:710806971072:web:ced903befe8693f886c325",
+  measurementId: "G-JW9W20C1LQ"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const functions = getFunctions(app);
+const logSearchCallable = httpsCallable(functions, 'logSearch');
+
+/* =========================
+   PREMIUM AUTHENTICATION
+   ========================= */
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    
+    // Smooth transition to app
+    $('auth-view').style.animation = 'slideUp 0.5s ease-out reverse';
+    setTimeout(() => {
+      $('app-view').classList.remove('hidden');
+      $('auth-view').style.display = 'none';
+      $('app-view').style.animation = 'slideUp 0.5s ease-out';
+    }, 500);
+    
+    $('userInfo').textContent = user.email;
+    
+    // Enhanced user tracking
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await setDoc(userRef, {
+        email: user.email,
+        lastLogin: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        version: '3.0-premium',
+        theme: currentTheme
+      }, { merge: true });
+    } catch (error) {
+      console.warn('Failed to log user activity:', error);
+    }
+    
+    showToast(`Welcome back, ${user.email.split('@')[0]}!`, 'success');
+    
+  } else {
+    currentUser = null;
+    $('app-view').classList.add('hidden');
+    $('auth-view').style.display = 'flex';
+    resetResults();
+  }
+});
+
+// Enhanced authentication handlers with loading states
+$('btnSignIn').addEventListener('click', async () => {
+  const email = $('authEmail').value.trim();
+  const password = $('authPass').value;
+  
+  if (!email || !password) {
+    showAuthError('Please fill in all fields');
+    return;
+  }
+  
+  try {
+    setAuthLoading('btnSignIn', 'Signing in...');
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    showAuthError(`Sign-in failed: ${error.message}`);
+    resetAuthLoading('btnSignIn', 'Sign In');
+  }
+});
+
+$('btnSignUp').addEventListener('click', async () => {
+  const email = $('authEmail').value.trim();
+  const password = $('authPass').value;
+  
+  if (!email || !password) {
+    showAuthError('Please fill in all fields');
+    return;
+  }
+  
+  if (password.length < 6) {
+    showAuthError('Password must be at least 6 characters');
+    return;
+  }
+  
+  try {
+    setAuthLoading('btnSignUp', 'Creating account...');
+    await createUserWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    showAuthError(`Sign-up failed: ${error.message}`);
+    resetAuthLoading('btnSignUp', 'Create Account');
+  }
+});
+
+$('btnSignOut').addEventListener('click', async () => {
+  if (await showModal('Sign Out', 'Are you sure you want to sign out?', 'Sign Out', 'Cancel')) {
+    await signOut(auth);
+    showToast('Signed out successfully', 'info');
+  }
+});
+
+function setAuthLoading(buttonId, text) {
+  const btn = $(buttonId);
+  btn.disabled = true;
+  btn.innerHTML = `<div class="spinner"></div><span>${text}</span>`;
+}
+
+function resetAuthLoading(buttonId, text) {
+  const btn = $(buttonId);
+  btn.disabled = false;
+  btn.innerHTML = `<span>${text}</span>`;
+}
+
+function showAuthError(message) {
+  const status = $('authStatus');
+  status.textContent = message;
+  status.classList.remove('hidden');
+  setTimeout(() => status.classList.add('hidden'), 5000);
+}
+
+/* =========================
+   PREMIUM SEARCH FUNCTIONALITY
+   ========================= */
+$('btnSearch').addEventListener('click', () => searchAll(false));
+$('btnDeepSearch').addEventListener('click', async () => {
+  const query = $('query').value.trim();
+  if (!query) {
+    showToast('Please enter search terms first', 'error');
+    return;
+  }
+  
+  if (!currentUser) {
+    showToast('Please sign in to use Deep Search', 'error');
+    return;
+  }
+  
+  const confirmed = await showModal(
+    'Deep Search Confirmation',
+    'Deep Search will consume more API credits by searching 20 pages per query and may take longer. This will find many more channels. Continue?',
+    'Yes, Deep Search',
+    'Cancel'
+  );
+  
+  if (confirmed) {
+    searchAll(true);
+  }
+});
+
+$('btnClear').addEventListener('click', () => {
+  $('query').value = '';
+  resetResults();
+  showToast('Search cleared', 'info');
+});
+
+// Premium search with enhanced caching and animations
+async function searchAll(isDeepSearch = false) {
+  const queryRaw = $('query').value.trim();
+  const queries = queryRaw.split(/[,\n]/).map(q => q.trim()).filter(Boolean);
+  const perPage = Math.max(1, Math.min(50, Number($('perPage').value) || 25));
+  const pages = isDeepSearch ? 20 : Math.max(1, Math.min(10, Number($('pages').value) || 2));
+
+  // Validation with better UX
+  if (!queries.length) {
+    showToast('Please enter at least one search query', 'error');
+    $('query').focus();
+    return;
+  }
+  
+  if (!currentUser) {
+    showToast('Please sign in to search', 'error');
+    return;
+  }
+
+  const apiKey = $('apiKey').value.trim();
+  if (!apiKey) {
+    showToast('Please enter your YouTube API key', 'error');
+    $('apiKey').focus();
+    return;
+  }
+
+  // Cancel previous search
+  if (abortController) {
+    abortController.abort();
+  }
+  abortController = new AbortController();
+
+  // Enhanced cache key
+  const cacheKey = JSON.stringify({ 
+    queries, perPage, pages,
+    order: $('order').value,
+    duration: $('duration').value,
+    region: $('region').value,
+    upload: $('upload').value
+  });
+
+  // Check cache first
+  if (searchCache.has(cacheKey) && !isDeepSearch) {
+    LIB = searchCache.get(cacheKey);
+    applyClientFiltersAndRender();
+    showToast('Results loaded from cache ⚡', 'info');
+    return;
+  }
+
+  resetResults();
+  setStatus('Searching for channels...', 'loading');
+  setProgress(0);
+
+  // Add loading skeleton to table
+  showLoadingSkeleton();
+
+  try {
+    // Log search activity with more details
+    try {
+      await logSearchCallable({ 
+        query: queryRaw, 
+        isDeepSearch,
+        timestamp: new Date().toISOString(),
+        filters: {
+          order: $('order').value,
+          duration: $('duration').value,
+          region: $('region').value
+        }
+      });
+    } catch (logError) {
+      console.warn('Failed to log search:', logError);
+    }
+
+    const channelIds = new Set();
+    const totalSteps = queries.length * pages;
+    let completed = 0;
+
+    // Search for videos to find channels
+    for (const query of queries) {
+      await searchVideosForChannels(query, pages, perPage, channelIds, (progress) => {
+        completed = progress;
+        setProgress(completed / totalSteps * 0.6);
+        setStatus(`Searching "${query}"... (${completed}/${pages} pages)`, 'loading');
+      });
+      
+      if (abortController.signal.aborted) return;
+    }
+
+    if (channelIds.size === 0) {
+      setStatus('No channels found', 'idle');
+      showToast('No channels found for your search terms. Try different keywords.', 'info');
+      hideLoadingSkeleton();
+      return;
+    }
+
+    setStatus(`Found ${channelIds.size} unique channels — fetching details...`, 'loading');
+
+    // Fetch channel details in batches
+    const channels = await fetchChannelDetails(Array.from(channelIds), (progress) => {
+      setProgress(0.6 + progress * 0.4);
+      const processed = Math.floor(progress * channelIds.size);
+      setStatus(`Loading channel details... (${processed}/${channelIds.size})`, 'loading');
+    });
+
+    if (abortController.signal.aborted) return;
+
+    LIB = channels;
+    
+    // Enhanced caching with metadata
+    if (LIB.length > 0) {
+      searchCache.set(cacheKey, {
+        data: LIB.slice(),
+        timestamp: Date.now(),
+        searchType: isDeepSearch ? 'deep' : 'normal'
+      });
+      
+      // Limit cache size with LRU eviction
+      if (searchCache.size > 15) {
+        const oldestKey = Array.from(searchCache.keys())[0];
+        searchCache.delete(oldestKey);
+      }
+    }
+
+    hideLoadingSkeleton();
+    applyClientFiltersAndRender();
+    setStatus(`Found ${LIB.length} channels`, 'success');
+    showToast(`🎉 Successfully discovered ${LIB.length} channels!`, 'success');
+    setProgress(1);
+
+  } catch (error) {
+    hideLoadingSkeleton();
+    if (error.name === 'AbortError') {
+      setStatus('Search cancelled', 'idle');
+      showToast('Search was cancelled', 'info');
+    } else {
+      console.error('Search error:', error);
+      setStatus('Search failed', 'error');
+      showToast(`❌ Search failed: ${error.message}`, 'error');
+    }
+    setProgress(0);
+  }
+}
+
+function showLoadingSkeleton() {
+  const tbody = $('resultsTbody');
+  tbody.innerHTML = Array(5).fill(0).map(() => `
+    <tr>
+      <td><div class="skeleton" style="width: 20px; height: 20px; border-radius: 4px;"></div></td>
+      <td>
+        <div class="flex items-center gap-4">
+          <div class="skeleton" style="width: 48px; height: 48px; border-radius: 12px;"></div>
+          <div style="flex: 1;">
+            <div class="skeleton skeleton-text" style="width: 200px;"></div>
+            <div class="skeleton skeleton-text" style="width: 150px;"></div>
+          </div>
+        </div>
+      </td>
+      <td><div class="skeleton skeleton-text" style="width: 80px;"></div></td>
+      <td><div class="skeleton skeleton-text" style="width: 60px;"></div></td>
+      <td><div class="skeleton skeleton-text" style="width: 100px;"></div></td>
+      <td><div class="skeleton" style="width: 20px; height: 20px; border-radius: 50%;"></div></td>
+      <td><div class="skeleton skeleton-text" style="width: 40px;"></div></td>
+    </tr>
+  `).join('');
+}
+
+function hideLoadingSkeleton() {
+  // Will be replaced by actual results in renderResults()
+}
+
+// Enhanced video search with better error handling and rate limiting
+async function searchVideosForChannels(query, pages, perPage, channelIds, onProgress) {
+  const apiKey = $('apiKey').value.trim();
+  const order = $('order').value;
+  const duration = $('duration').value;
+  const upload = $('upload').value;
+  const region = $('region').value;
+  
+  let pageToken = '';
+  let completed = 0;
+  
+  for (let page = 0; page < pages; page++) {
+    if (!pageToken && page > 0) break;
+    if (abortController.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+    
+    const url = new URL('https://www.googleapis.com/youtube/v3/search');
+    url.searchParams.set('part', 'snippet');
+    url.searchParams.set('type', 'video');
+    url.searchParams.set('q', query);
+    url.searchParams.set('maxResults', String(perPage));
+    url.searchParams.set('order', order);
+    url.searchParams.set('key', apiKey);
+    
+    if (region) url.searchParams.set('regionCode', region);
+    if (duration) url.searchParams.set('videoDuration', duration);
+    if (upload) url.searchParams.set('publishedAfter', getPublishedAfterISO(upload));
+    if (pageToken) url.searchParams.set('pageToken', pageToken);
+    
+    const response = await fetch(url.toString(), { 
+      signal: abortController.signal 
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`YouTube API error (${response.status}): ${errorText}`);
+    }
+    
+    const data = await response.json();
+    
+    // Enhanced filtering with better heuristics
+    (data.items || []).forEach(item => {
+      const title = (item.snippet.title || '').toLowerCase();
+      const description = (item.snippet.description || '').toLowerCase();
+      
+      // Advanced Shorts and low-quality content filtering
+      const isLowQuality = 
+        title.includes('#shorts') || 
+        title.includes('shorts ') || 
+        title.endsWith('shorts') ||
+        description.includes('#shorts') ||
+        description.includes('shorts ') ||
+        title.length < 10 || // Very short titles
+        /^\d+$/.test(title.trim()) || // Just numbers
+        title.includes('subscribe') && title.length < 30; // Generic subscribe titles
+      
+      if (!isLowQuality && item.snippet.channelId) {
+        channelIds.add(item.snippet.channelId);
+      }
+    });
+    
+    pageToken = data.nextPageToken || '';
+    completed++;
+    onProgress(completed);
+    
+    // Adaptive rate limiting based on API response
+    const rateLimitDelay = response.headers.get('X-RateLimit-Remaining') ? 150 : 250;
+    await sleep(rateLimitDelay);
+  }
+}
+
+// Enhanced channel details fetching with better data extraction
+async function fetchChannelDetails(channelIds, onProgress) {
+  const apiKey = $('apiKey').value.trim();
+  const channels = [];
+  const batchSize = 50;
+  
+  for (let i = 0; i < channelIds.length; i += batchSize) {
+    if (abortController.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+    
+    const batch = channelIds.slice(i, i + batchSize);
+    const url = new URL('https://www.googleapis.com/youtube/v3/channels');
+    url.searchParams.set('part', 'snippet,statistics,brandingSettings,status,topicDetails');
+    url.searchParams.set('id', batch.join(','));
+    url.searchParams.set('key', apiKey);
+    
+    const response = await fetch(url.toString(), { 
+      signal: abortController.signal 
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`YouTube API error (${response.status}): ${errorText}`);
+    }
+    
+    const data = await response.json();
+    
+    (data.items || []).forEach(channel => {
+      if (!channel.snippet?.title) return;
+      
+      const stats = channel.statistics || {};
+      const snippet = channel.snippet;
+      const branding = channel.brandingSettings || {};
+      const status = channel.status || {};
+      const topics = channel.topicDetails || {};
+      
+      // Enhanced country detection
+      let country = snippet.country || 
+                    branding.channel?.country || 
+                    branding.channel?.defaultLanguage || '';
+      
+      // Enhanced verification check with multiple signals
+      const isVerified = status.isLinked || 
+                         snippet.customUrl?.includes('/c/') || 
+                         snippet.customUrl?.includes('/@') ||
+                         (stats.subscriberCount && parseInt(stats.subscriberCount) > 100000) ||
+                         false;
+      
+      // Extract topic categories
+      const topicCategories = topics.topicCategories || [];
+      
+      channels.push({
+        title: snippet.title,
+        description: snippet.description || '',
+        channelId: channel.id,
+        subs: Number(stats.subscriberCount || 0),
+        views: Number(stats.viewCount || 0),
+        videos: Number(stats.videoCount || 0),
+        verified: isVerified ? 'Yes' : 'No',
+        avatar: snippet.thumbnails?.high?.url || 
+               snippet.thumbnails?.medium?.url || 
+               snippet.thumbnails?.default?.url || '',
+        banner: branding.image?.bannerExternalUrl || '',
+        country: country,
+        createdAt: snippet.publishedAt?.split('T')[0] || '',
+        customUrl: snippet.customUrl || '',
+        hidden: stats.hiddenSubscriberCount || false,
+        keywords: branding.channel?.keywords || '',
+        topics: topicCategories.map(cat => cat.split('/').pop()).join(', ')
+      });
+    });
+    
+    onProgress((i + batch.length) / channelIds.length);
+    await sleep(200); // Rate limiting
+  }
+  
+  return channels;
+}
+
+function getPublishedAfterISO(timeframe) {
+  const date = new Date();
+  switch (timeframe) {
+    case 'hour': date.setHours(date.getHours() - 1); break;
+    case 'today': date.setDate(date.getDate() - 1); break;
+    case 'week': date.setDate(date.getDate() - 7); break;
+    case 'month': date.setMonth(date.getMonth() - 1); break;
+  }
+  return date.toISOString();
+}
+
+/* =========================
+   PREMIUM FILTERING & RENDERING
+   ========================= */
+function applyClientFiltersAndRender() {
+  const minSubs = Number($('minSubs').value || 0);
+  const maxSubs = Number($('maxSubs').value || 0);
+  const searchTerm = $('searchInResults').value.trim().toLowerCase();
+  
+  VIEW = LIB.filter(channel => {
+    // Subscriber filters
+    if (channel.subs < minSubs) return false;
+    if (maxSubs > 0 && channel.subs > maxSubs) return false;
+    
+    // Enhanced search filter
+    if (searchTerm) {
+      const searchable = [
+        channel.title,
+        channel.channelId,
+        channel.description,
+        channel.country,
+        channel.keywords,
+        channel.topics
+      ].join(' ').toLowerCase();
+      
+      // Support multiple search terms
+      const searchTerms = searchTerm.split(' ').filter(Boolean);
+      const matchesAll = searchTerms.every(term => searchable.includes(term));
+      
+      if (!matchesAll) return false;
+    }
+    
+    return true;
+  });
+  
+  // Apply sorting with enhanced options
+  const sortBy = $('clientSort').value;
+  VIEW.sort((a, b) => {
+    switch (sortBy) {
+      case 'subs-desc': return (b.subs || 0) - (a.subs || 0);
+      case 'subs-asc': return (a.subs || 0) - (b.subs || 0);
+      case 'views-desc': return (b.views || 0) - (a.views || 0);
+      case 'views-asc': return (a.views || 0) - (b.views || 0);
+      case 'title-asc': return (a.title || '').localeCompare(b.title || '');
+      case 'title-desc': return (b.title || '').localeCompare(a.title || '');
+      default: return 0;
+    }
+  });
+  
+  renderResults();
+  updateResultsCount();
+  lastExport = VIEW.slice();
+}
+
+function renderResults() {
+  const tbody = $('resultsTbody');
+  tbody.innerHTML = '';
+  
+  if (VIEW.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7">
+          <div class="empty-state">
+            <div class="empty-state-icon">🔍</div>
+            <div class="empty-state-title">${LIB.length === 0 ? 'No Results Found' : 'No Matches'}</div>
+            <div class="empty-state-description">
+              ${LIB.length === 0 ? 
+                'Try adjusting your search terms or filters to find channels.' : 
+                'No channels match your current filters. Try adjusting your criteria.'}
+            </div>
+          </div>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+  
+  VIEW.forEach((channel, index) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <input type="checkbox" class="channel-checkbox" data-index="${index}">
+      </td>
+      <td>
+        <div class="channel-info">
+          <img class="channel-avatar" src="${sanitize(channel.avatar)}" alt="${sanitize(channel.title)}" 
+               loading="lazy" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiByeD0iMTIiIGZpbGw9IiNGMkYyRjciLz4KPHN2ZyB4PSIxMiIgeT0iMTIiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Qjk5OTciIHN0cm9rZS13aWR0aD0iMiI+CjxwYXRoIGQ9Ik0yMCAyMXYtMmE0IDQgMCAwIDAtNC00SDhhNCA0IDAgMCAwLTQgNHYyIi8+CjxjaXJjbGUgY3g9IjEyIiBjeT0iNyIgcj0iNCIvPgo8L3N2Zz4KPC9zdmc+'">
+          <div>
+            <div class="channel-name">${highlightSearchTerms(sanitize(channel.title))}</div>
+            <div class="channel-id">${sanitize(channel.channelId)}</div>
+          </div>
+        </div>
+      </td>
+      <td class="font-semibold">${channel.hidden ? 'Hidden' : formatNumber(channel.subs)}</td>
+      <td>${formatNumber(channel.videos)}</td>
+      <td>${formatNumber(channel.views)}</td>
+      <td>
+        ${channel.verified === 'Yes' ? 
+          '<div class="verified-badge">✓</div>' : 
+          '<span style="color: var(--text-tertiary);">—</span>'
+        }
+      </td>
+      <td>${sanitize(channel.country) || '—'}</td>
+    `;
+    
+    // Add hover effect and click handler
+    tr.addEventListener('click', (e) => {
+      if (e.target.type !== 'checkbox') {
+        renderChannelDetails(channel);
         
-        /* =========================
-           ENHANCED STATE MANAGEMENT & UTILITIES
-           ========================= */
-        const $ = id => document.getElementById(id);
-        const sleep = ms => new Promise(r => setTimeout(r, ms));
-        const esc = s => String(s ?? '').replace(/"/g, '""');
-        const sanitize = s => {
-            try {
-                return String(s ?? '').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-            } catch(e) {
-                return '';
-            }
-        };
+        // Highlight selected row
+        tbody.querySelectorAll('tr').forEach(row => row.classList.remove('selected'));
+        tr.classList.add('selected');
+      }
+    });
+    
+    tbody.appendChild(tr);
+  });
+}
 
-        // Enhanced library key with versioning
-        const savedLibraryKey = 'lead_studio_pro_lib_v2';
-        let currentUser = null;
-        let currentTheme = localStorage.getItem('theme') || 'light';
+function highlightSearchTerms(text) {
+  const searchTerm = $('searchInResults').value.trim();
+  if (!searchTerm) return text;
+  
+  const terms = searchTerm.split(' ').filter(Boolean);
+  let highlightedText = text;
+  
+  terms.forEach(term => {
+    const regex = new RegExp(`(${escapeRegex(term)})`, 'gi');
+    highlightedText = highlightedText.replace(regex, '<span class="highlight">$1</span>');
+  });
+  
+  return highlightedText;
+}
+
+function escapeRegex(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function formatNumber(num) {
+  if (num >= 1e9) return (num / 1e9).toFixed(1) + 'B';
+  if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
+  if (num >= 1e3) return (num / 1e3).toFixed(1) + 'K';
+  return num.toLocaleString();
+}
+
+function updateResultsCount() {
+  const total = LIB.length;
+  const filtered = VIEW.length;
+  const text = total === filtered ? 
+    `${total} channels found` : 
+    `${filtered} of ${total} channels shown`;
+  $('resultsCount').textContent = text;
+}
+
+// Event listeners for real-time filtering with debouncing
+['clientSort', 'minSubs', 'maxSubs', 'searchInResults'].forEach(id => {
+  $(id).addEventListener('input', debounce(applyClientFiltersAndRender, 300));
+  $(id).addEventListener('change', applyClientFiltersAndRender);
+});
+
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+/* =========================
+   PREMIUM CHANNEL DETAILS
+   ========================= */
+async function renderChannelDetails(channel) {
+  $('detailTitle').textContent = channel.title;
+  
+  // Add loading state
+  $('detailContent').innerHTML = `
+    <div class="text-center" style="padding: 40px;">
+      <div class="spinner" style="margin: 0 auto 16px;"></div>
+      <div class="text-caption">Loading channel details...</div>
+    </div>
+  `;
+  
+  try {
+    const [socialLinks, videos] = await Promise.all([
+      getSocialLinksFromAboutPage(channel.channelId),
+      getLatestVideos(channel.channelId, 6)
+    ]);
+    
+    $('detailContent').innerHTML = `
+      <div style="margin-bottom: var(--space-6);">
+        <div class="text-caption" style="margin-bottom: var(--space-4);">
+          <strong>Channel ID:</strong> ${channel.channelId}<br>
+          <strong>Country:</strong> ${channel.country || 'Unknown'}<br>
+          <strong>Created:</strong> ${channel.createdAt || 'Unknown'}<br>
+          ${channel.customUrl ? `<strong>Custom URL:</strong> ${sanitize(channel.customUrl)}<br>` : ''}
+          ${channel.topics ? `<strong>Topics:</strong> ${sanitize(channel.topics)}<br>` : ''}
+        </div>
         
-        // Application State
-        let LIB = []; // All discovered channels
-        let VIEW = []; // Filtered/sorted view
-        let lastExport = [];
-        let searchCache = new Map(); // Cache for search results
-        let abortController = null; // For canceling requests
-
-        /* =========================
-           ENHANCED UI HELPERS
-           ========================= */
-        function setStatus(text, type = 'info') {
-            const statusEl = $('headerStatus');
-            statusEl.innerHTML = `<span>${text}</span>`;
-            statusEl.className = `status ${type}`;
-        }
-
-        function setProgress(percent) {
-            const progressBar = $('progressBar');
-            progressBar.style.width = `${Math.min(100, Math.max(0, percent * 100))}%`;
-        }
-
-        function showToast(message, type = 'info') {
-            const toast = $('toast');
-            const toastMessage = $('toastMessage');
-            
-            toastMessage.textContent = message;
-            toast.className = `toast ${type}`;
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 4000);
-        }
-
-        function showModal(title, message, confirmText = 'Confirm', cancelText = 'Cancel') {
-            return new Promise((resolve) => {
-                $('modalTitle').textContent = title;
-                $('modalMessage').textContent = message;
-                $('modalConfirm').textContent = confirmText;
-                $('modalCancel').textContent = cancelText;
-                
-                const overlay = $('modalOverlay');
-                overlay.style.display = 'flex';
-                
-                const handleConfirm = () => {
-                    cleanup();
-                    resolve(true);
-                };
-                
-                const handleCancel = () => {
-                    cleanup();
-                    resolve(false);
-                };
-                
-                const cleanup = () => {
-                    overlay.style.display = 'none';
-                    $('modalConfirm').removeEventListener('click', handleConfirm);
-                    $('modalCancel').removeEventListener('click', handleCancel);
-                    $('modalClose').removeEventListener('click', handleCancel);
-                };
-                
-                $('modalConfirm').addEventListener('click', handleConfirm);
-                $('modalCancel').addEventListener('click', handleCancel);
-                $('modalClose').addEventListener('click', handleCancel);
-            });
-        }
-
-        /* =========================
-           THEME MANAGEMENT
-           ========================= */
-        function initTheme() {
-            document.documentElement.setAttribute('data-theme', currentTheme);
-            updateThemeIcon();
-        }
-
-        function toggleTheme() {
-            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', currentTheme);
-            localStorage.setItem('theme', currentTheme);
-            updateThemeIcon();
-        }
-
-        function updateThemeIcon() {
-            $('themeIcon').textContent = currentTheme === 'dark' ? '☀️' : '🌙';
-        }
-
-        $('themeToggle').addEventListener('click', toggleTheme);
-
-        /* =========================
-           KEYBOARD SHORTCUTS
-           ========================= */
-        document.addEventListener('keydown', (e) => {
-            // Ctrl+K to focus search
-            if (e.ctrlKey && e.key === 'k') {
-                e.preventDefault();
-                $('query').focus();
-                return;
-            }
-            
-            // Ctrl+Enter to search
-            if (e.ctrlKey && e.key === 'Enter') {
-                e.preventDefault();
-                if ($('query').value.trim()) {
-                    searchAll(false);
-                }
-                return;
-            }
-            
-            // Escape to clear search or close modal
-            if (e.key === 'Escape') {
-                if ($('modalOverlay').style.display === 'flex') {
-                    $('modalOverlay').style.display = 'none';
-                } else {
-                    $('query').value = '';
-                    resetResults();
-                }
-                return;
-            }
-            
-            // Ctrl+A to select all (when focus is on table)
-            if (e.ctrlKey && e.key === 'a' && document.activeElement.closest('.results-table-container')) {
-                e.preventDefault();
-                document.querySelectorAll('.channel-checkbox').forEach(cb => cb.checked = true);
-                return;
-            }
-        });
-
-        /* =========================
-           FIREBASE CONFIGURATION
-           ========================= */
-        const firebaseConfig = {
-            apiKey: "AIzaSyBvU3_Njbi1JQr_wD1a16h5coTW2ifaRDU",
-            authDomain: "youleadmax.firebaseapp.com",
-            projectId: "youleadmax",
-            storageBucket: "youleadmax.firebasestorage.app",
-            messagingSenderId: "710806971072",
-            appId: "1:710806971072:web:ced903befe8693f886c325",
-            measurementId: "G-JW9W20C1LQ"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const functions = getFunctions(app);
-        const logSearchCallable = httpsCallable(functions, 'logSearch');
-
-        /* =========================
-           ENHANCED AUTHENTICATION
-           ========================= */
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                $('app-view').classList.remove('hidden');
-                $('auth-view').style.display = 'none';
-                $('userInfo').textContent = `${user.email}`;
-                
-                // Enhanced user tracking
-                try {
-                    const userRef = doc(db, 'users', user.uid);
-                    await setDoc(userRef, {
-                        email: user.email,
-                        lastLogin: new Date().toISOString(),
-                        userAgent: navigator.userAgent,
-                        version: '2.0'
-                    }, { merge: true });
-                } catch (error) {
-                    console.warn('Failed to log user activity:', error);
-                }
-                
-                showToast(`Welcome back, ${user.email}!`, 'success');
-                
-            } else {
-                currentUser = null;
-                $('app-view').classList.add('hidden');
-                $('auth-view').style.display = 'flex';
-                resetResults();
-            }
-        });
-
-        // Enhanced authentication handlers
-        $('btnSignIn').addEventListener('click', async () => {
-            const email = $('authEmail').value.trim();
-            const password = $('authPass').value;
-            
-            if (!email || !password) {
-                $('authStatus').textContent = 'Please fill in all fields';
-                return;
-            }
-            
-            try {
-                $('btnSignIn').disabled = true;
-                $('btnSignIn').textContent = 'Signing in...';
-                await signInWithEmailAndPassword(auth, email, password);
-            } catch (error) {
-                $('authStatus').textContent = `Sign-in failed: ${error.message}`;
-                $('btnSignIn').disabled = false;
-                $('btnSignIn').textContent = 'Sign In';
-            }
-        });
-
-        $('btnSignUp').addEventListener('click', async () => {
-            const email = $('authEmail').value.trim();
-            const password = $('authPass').value;
-            
-            if (!email || !password) {
-                $('authStatus').textContent = 'Please fill in all fields';
-                return;
-            }
-            
-            if (password.length < 6) {
-                $('authStatus').textContent = 'Password must be at least 6 characters';
-                return;
-            }
-            
-            try {
-                $('btnSignUp').disabled = true;
-                $('btnSignUp').textContent = 'Creating account...';
-                await createUserWithEmailAndPassword(auth, email, password);
-            } catch (error) {
-                $('authStatus').textContent = `Sign-up failed: ${error.message}`;
-                $('btnSignUp').disabled = false;
-                $('btnSignUp').textContent = 'Create Account';
-            }
-        });
-
-        $('btnSignOut').addEventListener('click', async () => {
-            if (await showModal('Sign Out', 'Are you sure you want to sign out?', 'Sign Out', 'Cancel')) {
-                await signOut(auth);
-                showToast('Signed out successfully', 'info');
-            }
-        });
-
-        /* =========================
-           ENHANCED SEARCH FUNCTIONALITY
-           ========================= */
-        $('btnSearch').addEventListener('click', () => searchAll(false));
-        $('btnDeepSearch').addEventListener('click', async () => {
-            const query = $('query').value.trim();
-            if (!query) {
-                showToast('Please enter search terms first', 'error');
-                return;
-            }
-            
-            if (!currentUser) {
-                showToast('Please sign in to use Deep Search', 'error');
-                return;
-            }
-            
-            const confirmed = await showModal(
-                'Deep Search Confirmation',
-                'Deep Search will consume more API credits by searching more pages and may take longer. Continue?',
-                'Yes, Continue',
-                'Cancel'
-            );
-            
-            if (confirmed) {
-                searchAll(true);
-            }
-        });
-
-        $('btnClear').addEventListener('click', () => {
-            $('query').value = '';
-            resetResults();
-            showToast('Search cleared', 'info');
-        });
-
-        // Enhanced search with caching and abort capability
-        async function searchAll(isDeepSearch = false) {
-            const queryRaw = $('query').value.trim();
-            const queries = queryRaw.split(/[,\n]/).map(q => q.trim()).filter(Boolean);
-            const perPage = Math.max(1, Math.min(50, Number($('perPage').value) || 25));
-            const pages = isDeepSearch ? 20 : Math.max(1, Math.min(10, Number($('pages').value) || 2));
-
-            // Validation
-            if (!queries.length) {
-                showToast('Please enter at least one search query', 'error');
-                return;
-            }
-            
-            if (!currentUser) {
-                showToast('Please sign in to search', 'error');
-                return;
-            }
-
-            const apiKey = $('apiKey').value.trim();
-            if (!apiKey) {
-                showToast('Please enter your YouTube API key', 'error');
-                return;
-            }
-
-            // Cancel previous search
-            if (abortController) {
-                abortController.abort();
-            }
-            abortController = new AbortController();
-
-            // Cache key for this search
-            const cacheKey = JSON.stringify({ queries, perPage, pages, 
-                order: $('order').value, 
-                duration: $('duration').value,
-                region: $('region').value 
-            });
-
-            // Check cache first (for exact same searches)
-            if (searchCache.has(cacheKey) && !isDeepSearch) {
-                LIB = searchCache.get(cacheKey);
-                applyClientFiltersAndRender();
-                showToast('Results loaded from cache', 'info');
-                return;
-            }
-
-            resetResults();
-            setStatus('Searching for channels...', 'loading');
-            setProgress(0);
-
-            try {
-                // Log search activity
-                try {
-                    await logSearchCallable({ query: queryRaw, isDeepSearch });
-                } catch (logError) {
-                    console.warn('Failed to log search:', logError);
-                }
-
-                const channelIds = new Set();
-                const totalSteps = queries.length * pages;
-                let completed = 0;
-
-                // Search for videos to find channels
-                for (const query of queries) {
-                    await searchVideosForChannels(query, pages, perPage, channelIds, (progress) => {
-                        completed = progress;
-                        setProgress(completed / totalSteps * 0.6);
-                    });
-                    
-                    if (abortController.signal.aborted) return;
-                }
-
-                if (channelIds.size === 0) {
-                    setStatus('No channels found', 'info');
-                    showToast('No channels found for your search terms', 'info');
-                    return;
-                }
-
-                setStatus(`Found ${channelIds.size} unique channels — fetching details...`, 'loading');
-
-                // Fetch channel details in batches
-                const channels = await fetchChannelDetails(Array.from(channelIds), (progress) => {
-                    setProgress(0.6 + progress * 0.4);
-                });
-
-                if (abortController.signal.aborted) return;
-
-                LIB = channels;
-                
-                // Cache successful results
-                if (LIB.length > 0) {
-                    searchCache.set(cacheKey, LIB.slice());
-                    // Limit cache size
-                    if (searchCache.size > 10) {
-                        const firstKey = searchCache.keys().next().value;
-                        searchCache.delete(firstKey);
-                    }
-                }
-
-                applyClientFiltersAndRender();
-                setStatus(`Found ${LIB.length} channels`, 'success');
-                showToast(`Successfully found ${LIB.length} channels!`, 'success');
-                setProgress(1);
-
-            } catch (error) {
-                if (error.name === 'AbortError') {
-                    setStatus('Search cancelled', 'info');
-                    showToast('Search was cancelled', 'info');
-                } else {
-                    console.error('Search error:', error);
-                    setStatus('Search failed', 'error');
-                    showToast(`Search failed: ${error.message}`, 'error');
-                }
-                setProgress(0);
-            }
-        }
-
-        // Enhanced video search with better error handling
-        async function searchVideosForChannels(query, pages, perPage, channelIds, onProgress) {
-            const apiKey = $('apiKey').value.trim();
-            const order = $('order').value;
-            const duration = $('duration').value;
-            const upload = $('upload').value;
-            const region = $('region').value;
-            
-            let pageToken = '';
-            let completed = 0;
-            
-            for (let page = 0; page < pages; page++) {
-                if (!pageToken && page > 0) break;
-                if (abortController.signal.aborted) throw new DOMException('Aborted', 'AbortError');
-                
-                const url = new URL('https://www.googleapis.com/youtube/v3/search');
-                url.searchParams.set('part', 'snippet');
-                url.searchParams.set('type', 'video');
-                url.searchParams.set('q', query);
-                url.searchParams.set('maxResults', String(perPage));
-                url.searchParams.set('order', order);
-                url.searchParams.set('key', apiKey);
-                
-                if (region) url.searchParams.set('regionCode', region);
-                if (duration) url.searchParams.set('videoDuration', duration);
-                if (upload) url.searchParams.set('publishedAfter', getPublishedAfterISO(upload));
-                if (pageToken) url.searchParams.set('pageToken', pageToken);
-                
-                const response = await fetch(url.toString(), { 
-                    signal: abortController.signal 
-                });
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`YouTube API error (${response.status}): ${errorText}`);
-                }
-                
-                const data = await response.json();
-                
-                // Process results with enhanced filtering
-                (data.items || []).forEach(item => {
-                    const title = (item.snippet.title || '').toLowerCase();
-                    const description = (item.snippet.description || '').toLowerCase();
-                    
-                    // Enhanced Shorts filtering
-                    const isShortsContent = 
-                        title.includes('#shorts') || 
-                        title.includes('shorts ') || 
-                        title.endsWith('shorts') ||
-                        description.includes('#shorts') ||
-                        description.includes('shorts ');
-                    
-                    if (!isShortsContent && item.snippet.channelId) {
-                        channelIds.add(item.snippet.channelId);
-                    }
-                });
-                
-                pageToken = data.nextPageToken || '';
-                completed++;
-                onProgress(completed);
-                
-                // Rate limiting
-                await sleep(200);
-            }
-        }
-
-        // Enhanced channel details fetching
-        async function fetchChannelDetails(channelIds, onProgress) {
-            const apiKey = $('apiKey').value.trim();
-            const channels = [];
-            const batchSize = 50;
-            
-            for (let i = 0; i < channelIds.length; i += batchSize) {
-                if (abortController.signal.aborted) throw new DOMException('Aborted', 'AbortError');
-                
-                const batch = channelIds.slice(i, i + batchSize);
-                const url = new URL('https://www.googleapis.com/youtube/v3/channels');
-                url.searchParams.set('part', 'snippet,statistics,brandingSettings,status');
-                url.searchParams.set('id', batch.join(','));
-                url.searchParams.set('key', apiKey);
-                
-                const response = await fetch(url.toString(), { 
-                    signal: abortController.signal 
-                });
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`YouTube API error (${response.status}): ${errorText}`);
-                }
-                
-                const data = await response.json();
-                
-                (data.items || []).forEach(channel => {
-                    if (!channel.snippet?.title) return;
-                    
-                    const stats = channel.statistics || {};
-                    const snippet = channel.snippet;
-                    const branding = channel.brandingSettings || {};
-                    const status = channel.status || {};
-                    
-                    // Enhanced country detection
-                    let country = snippet.country || 
-                                branding.channel?.country || 
-                                branding.channel?.defaultLanguage || '';
-                    
-                    // Enhanced verification check
-                    const isVerified = status.isLinked || 
-                                     snippet.customUrl?.includes('/c/') || 
-                                     snippet.customUrl?.includes('/@') || 
-                                     false;
-                    
-                    channels.push({
-                        title: snippet.title,
-                        description: snippet.description || '',
-                        channelId: channel.id,
-                        subs: Number(stats.subscriberCount || 0),
-                        views: Number(stats.viewCount || 0),
-                        videos: Number(stats.videoCount || 0),
-                        verified: isVerified ? 'Yes' : 'No',
-                        avatar: snippet.thumbnails?.high?.url || 
-                               snippet.thumbnails?.medium?.url || 
-                               snippet.thumbnails?.default?.url || '',
-                        banner: branding.image?.bannerExternalUrl || '',
-                        country: country,
-                        createdAt: snippet.publishedAt?.split('T')[0] || '',
-                        customUrl: snippet.customUrl || '',
-                        hidden: stats.hiddenSubscriberCount || false
-                    });
-                });
-                
-                onProgress((i + batch.length) / channelIds.length);
-                await sleep(200); // Rate limiting
-            }
-            
-            return channels;
-        }
-
-        function getPublishedAfterISO(timeframe) {
-            const date = new Date();
-            switch (timeframe) {
-                case 'hour': date.setHours(date.getHours() - 1); break;
-                case 'today': date.setDate(date.getDate() - 1); break;
-                case 'week': date.setDate(date.getDate() - 7); break;
-                case 'month': date.setMonth(date.getMonth() - 1); break;
-            }
-            return date.toISOString();
-        }
-
-        /* =========================
-           ENHANCED FILTERING & RENDERING
-           ========================= */
-        function applyClientFiltersAndRender() {
-            const minSubs = Number($('minSubs').value || 0);
-            const maxSubs = Number($('maxSubs').value || 0);
-            const searchTerm = $('searchInResults').value.trim().toLowerCase();
-            
-            VIEW = LIB.filter(channel => {
-                // Subscriber filters
-                if (channel.subs < minSubs) return false;
-                if (maxSubs > 0 && channel.subs > maxSubs) return false;
-                
-                // Search filter
-                if (searchTerm) {
-                    const searchable = [
-                        channel.title,
-                        channel.channelId,
-                        channel.description,
-                        channel.country
-                    ].join(' ').toLowerCase();
-                    
-                    if (!searchable.includes(searchTerm)) return false;
-                }
-                
-                return true;
-            });
-            
-            // Apply sorting
-            const sortBy = $('clientSort').value;
-            VIEW.sort((a, b) => {
-                switch (sortBy) {
-                    case 'subs-desc': return (b.subs || 0) - (a.subs || 0);
-                    case 'subs-asc': return (a.subs || 0) - (b.subs || 0);
-                    case 'views-desc': return (b.views || 0) - (a.views || 0);
-                    case 'views-asc': return (a.views || 0) - (b.views || 0);
-                    case 'title-asc': return (a.title || '').localeCompare(b.title || '');
-                    case 'title-desc': return (b.title || '').localeCompare(a.title || '');
-                    default: return 0;
-                }
-            });
-            
-            renderResults();
-            updateResultsCount();
-            lastExport = VIEW.slice();
-        }
-
-        function renderResults() {
-            const tbody = $('resultsTbody');
-            tbody.innerHTML = '';
-            
-            if (VIEW.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="text-muted" style="text-align: center; padding: 40px;">
-                            ${LIB.length === 0 ? 'No channels found. Try adjusting your search terms.' : 'No channels match your current filters.'}
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            VIEW.forEach((channel, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>
-                        <input type="checkbox" class="channel-checkbox" data-index="${index}">
-                    </td>
-                    <td>
-                        <div class="channel-info">
-                            <img class="channel-avatar" src="${sanitize(channel.avatar)}" alt="" loading="lazy" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iNiIgZmlsbD0iI0Y3RjZGMyIvPgo8cGF0aCBkPSJNMjAgMjZDMjMuMzEzNyAyNiAyNiAyMy4zMTM3IDI2IDIwQzI2IDE2LjY4NjMgMjMuMzEzNyAxNCAyMCAxNEMxNi42ODYzIDE0IDE0IDE2LjY4NjMgMTQgMjBDMTQgMjMuMzEzNyAxNi42ODYzIDI2IDIwIDI2WiIgZmlsbD0iIzlCOUE5NyIvPgo8L3N2Zz4K'">
-                            <div>
-                                <div class="channel-name">${highlightSearchTerms(sanitize(channel.title))}</div>
-                                <div class="channel-id">${sanitize(channel.channelId)}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>${channel.hidden ? 'Hidden' : formatNumber(channel.subs)}</td>
-                    <td>${formatNumber(channel.videos)}</td>
-                    <td>${formatNumber(channel.views)}</td>
-                    <td>
-                        <span style="color: ${channel.verified === 'Yes' ? 'var(--accent-green)' : 'var(--text-secondary)'}">
-                            ${channel.verified === 'Yes' ? '✓' : '—'}
-                        </span>
-                    </td>
-                    <td>${sanitize(channel.country) || '—'}</td>
-                `;
-                
-                tr.addEventListener('click', (e) => {
-                    if (e.target.type !== 'checkbox') {
-                        renderChannelDetails(channel);
-                    }
-                });
-                
-                tbody.appendChild(tr);
-            });
-        }
-
-        function highlightSearchTerms(text) {
-            const searchTerm = $('searchInResults').value.trim();
-            if (!searchTerm) return text;
-            
-            const regex = new RegExp(`(${escapeRegex(searchTerm)})`, 'gi');
-            return text.replace(regex, '<span class="highlight">$1</span>');
-        }
-
-        function escapeRegex(string) {
-            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        }
-
-        function formatNumber(num) {
-            if (num >= 1e9) return (num / 1e9).toFixed(1) + 'B';
-            if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
-            if (num >= 1e3) return (num / 1e3).toFixed(1) + 'K';
-            return num.toLocaleString();
-        }
-
-        function updateResultsCount() {
-            const total = LIB.length;
-            const filtered = VIEW.length;
-            const text = total === filtered ? 
-                `${total} channels found` : 
-                `${filtered} of ${total} channels shown`;
-            $('resultsCount').textContent = text;
-        }
-
-        // Event listeners for real-time filtering
-        ['clientSort', 'minSubs', 'maxSubs', 'searchInResults'].forEach(id => {
-            $(id).addEventListener('input', debounce(applyClientFiltersAndRender, 300));
-            $(id).addEventListener('change', applyClientFiltersAndRender);
-        });
-
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
-        /* =========================
-           ENHANCED CHANNEL DETAILS
-           ========================= */
-        async function renderChannelDetails(channel) {
-            $('detailTitle').textContent = channel.title;
-            
-            const socialLinks = await getSocialLinksFromAboutPage(channel.channelId);
-            const videos = await getLatestVideos(channel.channelId, 6);
-            
-            $('detailContent').innerHTML = `
-                <div class="mb-md">
-                    <div class="text-sm text-muted mb-md">
-                        ${channel.channelId} • ${channel.country || 'Unknown'} • Created: ${channel.createdAt || 'Unknown'}
-                    </div>
-                    ${channel.customUrl ? `<div class="text-sm text-muted mb-md">Custom URL: ${sanitize(channel.customUrl)}</div>` : ''}
-                    ${channel.banner ? `<div style="height: 120px; background: url('${sanitize(channel.banner)}') center/cover; border-radius: var(--border-radius); margin-bottom: var(--space-md); border: 1px solid var(--border-color);"></div>` : ''}
+        ${channel.banner ? `
+          <div style="height: 140px; background: url('${sanitize(channel.banner)}') center/cover; 
+                      border-radius: var(--radius-lg); margin-bottom: var(--space-6); 
+                      border: 1px solid var(--border-color); position: relative; overflow: hidden;">
+            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 100%);"></div>
+          </div>
+        ` : ''}
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">${formatNumber(channel.subs)}</div>
+          <div class="stat-label">Subscribers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${formatNumber(channel.views)}</div>
+          <div class="stat-label">Total Views</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${formatNumber(channel.videos)}</div>
+          <div class="stat-label">Videos</div>
+        </div>
+      </div>
+      
+      ${channel.description ? `
+        <div style="margin: var(--space-6) 0;">
+          <h4 class="text-headline" style="margin-bottom: var(--space-3);">About</h4>
+          <div class="text-body" style="line-height: var(--leading-relaxed); max-height: 150px; overflow-y: auto; 
+                                       background: var(--bg-fill-tertiary); padding: var(--space-4); 
+                                       border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            ${sanitize(channel.description).replace(/\n/g, '<br>').replace(/https?:\/\/[^\s]+/g, '<a href="$&" target="_blank">$&</a>')}
+          </div>
+        </div>
+      ` : ''}
+      
+      ${Object.keys(socialLinks).length > 0 ? `
+        <div style="margin: var(--space-6) 0;">
+          <h4 class="text-headline" style="margin-bottom: var(--space-3);">Social Links</h4>
+          <div class="flex gap-2" style="flex-wrap: wrap;">
+            ${Object.entries(socialLinks).map(([platform, url]) => `
+              <a href="${sanitize(url)}" target="_blank" class="btn btn-sm" 
+                 style="background: var(--bg-tertiary); border: 1px solid var(--border-color);">
+                ${getSocialIcon(platform)} ${platform.charAt(0).toUpperCase() + platform.slice(1)}
+              </a>
+            `).join('')}
+          </div>
+        </div>
+      ` : ''}
+      
+      <div style="margin: var(--space-6) 0;">
+        <h4 class="text-headline" style="margin-bottom: var(--space-3);">Latest Videos</h4>
+        <div class="video-grid" id="channelVideos">
+          ${videos.length > 0 ? videos.map(video => `
+            <div class="video-card">
+              <div style="position: relative; overflow: hidden;">
+                <img class="video-thumbnail" src="${sanitize(video.thumbnail)}" alt="${sanitize(video.title)}" loading="lazy">
+                <div style="position: absolute; bottom: 8px; right: 8px; 
+                           background: rgba(0,0,0,0.8); color: white; padding: 2px 6px; 
+                           border-radius: var(--radius-xs); font-size: var(--text-xs);">
+                  ${formatDate(video.publishedAt)}
                 </div>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value">${formatNumber(channel.subs)}</div>
-                        <div class="stat-label">Subscribers</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${formatNumber(channel.views)}</div>
-                        <div class="stat-label">Total Views</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${formatNumber(channel.videos)}</div>
-                        <div class="stat-label">Videos</div>
-                    </div>
+              </div>
+              <div class="video-info">
+                <div class="video-title" title="${sanitize(video.title)}">${sanitize(video.title)}</div>
+                <div class="video-actions">
+                  <a href="https://www.youtube.com/watch?v=${video.videoId}" target="_blank" class="btn btn-primary btn-sm">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="5,3 19,12 5,21 5,3"></polygon>
+                    </svg>
+                    Watch
+                  </a>
+                  <button class="btn btn-sm" onclick="previewVideo('${video.videoId}')">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    Preview
+                  </button>
                 </div>
-                
-                ${channel.description ? `
-                    <div class="mb-md">
-                        <h4>Description</h4>
-                        <p class="text-sm text-muted" style="line-height: 1.5; max-height: 120px; overflow-y: auto;">
-                            ${sanitize(channel.description).replace(/\n/g, '<br>')}
-                        </p>
-                    </div>
-                ` : ''}
-                
-                ${Object.keys(socialLinks).length > 0 ? `
-                    <div class="mb-md">
-                        <h4>Social Links</h4>
-                        <div class="flex gap-sm" style="flex-wrap: wrap;">
-                            ${Object.entries(socialLinks).map(([platform, url]) => `
-                                <a href="${sanitize(url)}" target="_blank" class="btn btn-small">
-                                    ${platform.charAt(0).toUpperCase() + platform.slice(1)}
-                                </a>
-                            `).join('')}
-                        </div>
-                    </div>
-                ` : ''}
-                
-                <div class="mb-md">
-                    <h4>Latest Videos</h4>
-                    <div class="video-grid" id="channelVideos">
-                        ${videos.length > 0 ? videos.map(video => `
-                            <div class="video-card">
-                                <img class="video-thumbnail" src="${sanitize(video.thumbnail)}" alt="" loading="lazy">
-                                <div class="video-info">
-                                    <div class="video-title">${sanitize(video.title)}</div>
-                                    <div class="flex gap-sm mt-sm">
-                                        <a href="https://www.youtube.com/watch?v=${video.videoId}" target="_blank" class="btn btn-small btn-primary">Watch</a>
-                                        <button class="btn btn-small" onclick="previewVideo('${video.videoId}')">Preview</button>
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('') : '<div class="text-muted">No recent videos found</div>'}
-                    </div>
-                </div>
-            `;
+              </div>
+            </div>
+          `).join('') : '<div class="empty-state-description">No recent videos found</div>'}
+        </div>
+      </div>
+    `;
+    
+  } catch (error) {
+    console.error('Error loading channel details:', error);
+    $('detailContent').innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">⚠️</div>
+        <div class="empty-state-title">Failed to Load</div>
+        <div class="empty-state-description">
+          Could not load channel details. Please try again.
+        </div>
+      </div>
+    `;
+  }
+}
+
+function getSocialIcon(platform) {
+  const icons = {
+    website: '🌐',
+    twitter: '🐦',
+    instagram: '📸',
+    facebook: '👥',
+    tiktok: '🎵',
+    linkedin: '💼',
+    youtube: '📺'
+  };
+  return icons[platform] || '🔗';
+}
+
+function formatDate(dateString) {
+  try {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 1) return '1d ago';
+    if (diffDays < 30) return `${diffDays}d ago`;
+    if (diffDays < 365) return `${Math.floor(diffDays / 30)}mo ago`;
+    return `${Math.floor(diffDays / 365)}y ago`;
+  } catch (error) {
+    return 'Recently';
+  }
+}
+
+async function getSocialLinksFromAboutPage(channelId) {
+  const proxyUrl = $('corsProxy').value.trim();
+  if (!proxyUrl) return {};
+  
+  try {
+    const aboutUrl = `${proxyUrl}https://www.youtube.com/channel/${channelId}/about`;
+    const response = await fetch(aboutUrl, { 
+      signal: AbortSignal.timeout(15000) 
+    });
+    
+    if (!response.ok) throw new Error('Failed to fetch');
+    
+    const html = await response.text();
+    const socialLinks = {};
+    
+    // Enhanced social link patterns
+    const patterns = {
+      twitter: /(?:twitter\.com|x\.com)\/([A-Za-z0-9_]+)/gi,
+      instagram: /instagram\.com\/([A-Za-z0-9_.]+)/gi,
+      facebook: /facebook\.com\/([A-Za-z0-9.]+)/gi,
+      tiktok: /tiktok\.com\/@([A-Za-z0-9_.]+)/gi,
+      linkedin: /linkedin\.com\/(?:in|company)\/([A-Za-z0-9-]+)/gi,
+      website: /https?:\/\/(?!(?:youtube|twitter|instagram|facebook|tiktok|linkedin)\.com)[A-Za-z0-9.-]+\.[A-Za-z]{2,}/gi
+    };
+    
+    for (const [platform, pattern] of Object.entries(patterns)) {
+      const matches = [...html.matchAll(pattern)];
+      if (matches.length > 0) {
+        socialLinks[platform] = matches[0][0];
+      }
+    }
+    
+    return socialLinks;
+    
+  } catch (error) {
+    console.warn('Failed to get social links:', error);
+    return {};
+  }
+}
+
+async function getLatestVideos(channelId, maxResults = 6) {
+  const apiKey = $('apiKey').value.trim();
+  if (!apiKey) return [];
+  
+  try {
+    const url = new URL('https://www.googleapis.com/youtube/v3/search');
+    url.searchParams.set('part', 'snippet');
+    url.searchParams.set('channelId', channelId);
+    url.searchParams.set('order', 'date');
+    url.searchParams.set('maxResults', String(maxResults));
+    url.searchParams.set('type', 'video');
+    url.searchParams.set('key', apiKey);
+    
+    const response = await fetch(url.toString(), { 
+      signal: AbortSignal.timeout(15000) 
+    });
+    
+    if (!response.ok) throw new Error('Failed to fetch videos');
+    
+    const data = await response.json();
+    
+    return (data.items || []).map(item => ({
+      videoId: item.id.videoId,
+      title: item.snippet.title,
+      thumbnail: item.snippet.thumbnails?.medium?.url || 
+                item.snippet.thumbnails?.default?.url || '',
+      publishedAt: item.snippet.publishedAt
+    }));
+    
+  } catch (error) {
+    console.warn('Failed to get latest videos:', error);
+    return [];
+  }
+}
+
+// Global function for video preview with enhanced player
+window.previewVideo = function(videoId) {
+  const existing = document.getElementById('videoPreview');
+  if (existing) existing.remove();
+  
+  const iframe = document.createElement('iframe');
+  iframe.id = 'videoPreview';
+  iframe.width = '100%';
+  iframe.height = '220';
+  iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`;
+  iframe.setAttribute('allowfullscreen', '');
+  iframe.style.marginTop = 'var(--space-4)';
+  iframe.style.borderRadius = 'var(--radius-lg)';
+  iframe.style.border = '1px solid var(--border-color)';
+  iframe.style.boxShadow = 'var(--shadow-3)';
+  
+  $('detailContent').appendChild(iframe);
+  
+  // Smooth scroll to iframe
+  iframe.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+};
+
+/* =========================
+   PREMIUM EXPORT & LIBRARY FUNCTIONS
+   ========================= */
+$('btnSelectAll').addEventListener('click', () => {
+  document.querySelectorAll('.channel-checkbox').forEach(cb => cb.checked = true);
+  showToast(`Selected all ${VIEW.length} channels`, 'info');
+});
+
+$('btnDeselectAll').addEventListener('click', () => {
+  document.querySelectorAll('.channel-checkbox').forEach(cb => cb.checked = false);
+  showToast('All channels deselected', 'info');
+});
+
+$('btnExportCSV').addEventListener('click', () => {
+  if (VIEW.length === 0) {
+    showToast('No data to export', 'error');
+    return;
+  }
+  
+  const csv = generateCSV(VIEW);
+  downloadFile(csv, `lead-studio-pro-${new Date().toISOString().split('T')[0]}.csv`, 'text/csv');
+  showToast(`📊 Exported ${VIEW.length} channels to CSV`, 'success');
+});
+
+$('btnExportJSON').addEventListener('click', () => {
+  if (VIEW.length === 0) {
+    showToast('No data to export', 'error');
+    return;
+  }
+  
+  const cleanData = VIEW.map(cleanChannelData);
+  const json = JSON.stringify({
+    exportDate: new Date().toISOString(),
+    totalChannels: cleanData.length,
+    exportedBy: currentUser?.email,
+    channels: cleanData
+  }, null, 2);
+  downloadFile(json, `lead-studio-pro-${new Date().toISOString().split('T')[0]}.json`, 'application/json');
+  showToast(`📁 Exported ${VIEW.length} channels to JSON`, 'success');
+});
+
+$('btnCopyIDs').addEventListener('click', async () => {
+  if (VIEW.length === 0) {
+    showToast('No channel IDs to copy', 'error');
+    return;
+  }
+  
+  const ids = VIEW.map(c => c.channelId).join('\n');
+  await copyToClipboard(ids);
+  showToast(`📋 Copied ${VIEW.length} channel IDs`, 'success');
+});
+
+$('btnExportSelected').addEventListener('click', () => {
+  const selected = getSelectedChannels();
+  if (selected.length === 0) {
+    showToast('No channels selected', 'error');
+    return;
+  }
+  
+  const csv = generateCSV(selected);
+  downloadFile(csv, `lead-studio-pro-selected-${new Date().toISOString().split('T')[0]}.csv`, 'text/csv');
+  showToast(`📊 Exported ${selected.length} selected channels`, 'success');
+});
+
+$('btnCopySelected').addEventListener('click', async () => {
+  const selected = getSelectedChannels();
+  if (selected.length === 0) {
+    showToast('No channels selected', 'error');
+    return;
+  }
+  
+  const csv = generateCSV(selected);
+  await copyToClipboard(csv);
+  showToast(`📋 Copied ${selected.length} selected channels`, 'success');
+});
+
+$('btnClearResults').addEventListener('click', async () => {
+  const confirmed = await showModal(
+    'Clear All Results',
+    'This will permanently clear all search results and cannot be undone. Are you sure?',
+    'Clear Everything',
+    'Cancel'
+  );
+  
+  if (confirmed) {
+    resetResults();
+    showToast('🗑️ All results cleared', 'info');
+  }
+});
+
+function getSelectedChannels() {
+  const selected = [];
+  document.querySelectorAll('.channel-checkbox:checked').forEach(cb => {
+    const index = parseInt(cb.dataset.index);
+    if (VIEW[index]) selected.push(VIEW[index]);
+  });
+  return selected;
+}
+
+function generateCSV(channels) {
+  const headers = [
+    'Channel Name', 'Channel ID', 'Subscribers', 'Videos', 'Views', 
+    'Verified', 'Country', 'Created Date', 'Custom URL', 'Keywords', 'Topics', 'Description'
+  ];
+  
+  let csv = headers.map(h => `"${h}"`).join(',') + '\n';
+  
+  channels.forEach(channel => {
+    const row = [
+      channel.title,
+      channel.channelId,
+      channel.hidden ? 'Hidden' : channel.subs,
+      channel.videos,
+      channel.views,
+      channel.verified,
+      channel.country,
+      channel.createdAt,
+      channel.customUrl,
+      channel.keywords,
+      channel.topics,
+      channel.description.replace(/\n/g, ' ').substring(0, 500) // Truncate long descriptions
+    ].map(cell => `"${String(cell).replace(/"/g, '""')}"`);
+    
+    csv += row.join(',') + '\n';
+  });
+  
+  return csv;
+}
+
+function cleanChannelData(channel) {
+  return {
+    channelId: channel.channelId,
+    title: channel.title,
+    subscribers: channel.subs,
+    videos: channel.videos,
+    views: channel.views,
+    verified: channel.verified,
+    country: channel.country,
+    createdAt: channel.createdAt,
+    customUrl: channel.customUrl,
+    keywords: channel.keywords,
+    topics: channel.topics,
+    avgViewsPerVideo: Math.round((channel.views || 0) / Math.max(channel.videos || 1, 1))
+  };
+}
+
+async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (err) {
+    // Fallback for older browsers
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.opacity = '0';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+  }
+}
+
+function downloadFile(content, filename, type) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  
+  // Add download animation
+  link.style.opacity = '0';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+/* =========================
+   PREMIUM LIBRARY MANAGEMENT
+   ========================= */
+$('btnSaveLib').addEventListener('click', async () => {
+  if (LIB.length === 0) {
+    showToast('No channels to save', 'error');
+    return;
+  }
+  
+  const confirmed = await showModal(
+    'Save to Library',
+    `Save ${LIB.length} channels to your local library? This will create a backup of your current results.`,
+    'Save Library',
+    'Cancel'
+  );
+  
+  if (!confirmed) return;
+  
+  try {
+    const libraryData = {
+      version: '3.0-premium',
+      timestamp: new Date().toISOString(),
+      userEmail: currentUser?.email,
+      totalChannels: LIB.length,
+      searchMetadata: {
+        queries: $('query').value.split(/[,\n]/).map(q => q.trim()).filter(Boolean),
+        filters: {
+          order: $('order').value,
+          duration: $('duration').value,
+          region: $('region').value,
+          minSubs: $('minSubs').value,
+          maxSubs: $('maxSubs').value
         }
+      },
+      channels: LIB
+    };
+    
+    localStorage.setItem(savedLibraryKey, JSON.stringify(libraryData));
+    showToast(`💾 Successfully saved ${LIB.length} channels to library`, 'success');
+    
+  } catch (error) {
+    console.error('Save error:', error);
+    showToast('❌ Failed to save library. Storage might be full.', 'error');
+  }
+});
 
-        async function getSocialLinksFromAboutPage(channelId) {
-            const proxyUrl = $('corsProxy').value.trim();
-            if (!proxyUrl) return {};
-            
-            try {
-                const aboutUrl = `${proxyUrl}https://www.youtube.com/channel/${channelId}/about`;
-                const response = await fetch(aboutUrl, { 
-                    signal: AbortSignal.timeout(10000) 
-                });
-                
-                if (!response.ok) throw new Error('Failed to fetch');
-                
-                const html = await response.text();
-                const socialLinks = {};
-                
-                // Enhanced social link extraction with better patterns
-                const patterns = {
-                    twitter: /(?:twitter\.com|x\.com)\/([A-Za-z0-9_]+)/i,
-                    instagram: /instagram\.com\/([A-Za-z0-9_.]+)/i,
-                    facebook: /facebook\.com\/([A-Za-z0-9.]+)/i,
-                    tiktok: /tiktok\.com\/@([A-Za-z0-9_.]+)/i,
-                    linkedin: /linkedin\.com\/(?:in|company)\/([A-Za-z0-9-]+)/i,
-                    website: /https?:\/\/(?!(?:youtube|twitter|instagram|facebook|tiktok|linkedin)\.com)[A-Za-z0-9.-]+\.[A-Za-z]{2,}/i
-                };
-                
-                for (const [platform, pattern] of Object.entries(patterns)) {
-                    const match = html.match(pattern);
-                    if (match) {
-                        socialLinks[platform] = match[0];
-                    }
-                }
-                
-                return socialLinks;
-                
-            } catch (error) {
-                console.warn('Failed to get social links:', error);
-                return {};
-            }
-        }
+$('btnLoadLib').addEventListener('click', async () => {
+  const savedData = localStorage.getItem(savedLibraryKey);
+  if (!savedData) {
+    showToast('No saved library found', 'error');
+    return;
+  }
+  
+  try {
+    const libraryData = JSON.parse(savedData);
+    
+    const confirmed = await showModal(
+      'Load Library',
+      `Load saved library with ${libraryData.totalChannels || libraryData.channels?.length || 0} channels? This will replace your current results.`,
+      'Load Library',
+      'Cancel'
+    );
+    
+    if (!confirmed) return;
+    
+    // Handle different library versions
+    if (libraryData.version?.includes('3.0')) {
+      LIB = libraryData.channels || [];
+      if (libraryData.searchMetadata?.queries?.length > 0) {
+        $('query').value = libraryData.searchMetadata.queries.join('\n');
+      }
+    } else if (libraryData.version === '2.0') {
+      LIB = libraryData.channels || [];
+      if (libraryData.searchQueries?.length > 0) {
+        $('query').value = libraryData.searchQueries.join('\n');
+      }
+    } else {
+      // Legacy format
+      LIB = Array.isArray(libraryData) ? libraryData : [];
+    }
+    
+    applyClientFiltersAndRender();
+    showToast(`📂 Successfully loaded ${LIB.length} channels from library`, 'success');
+    
+  } catch (error) {
+    console.error('Load error:', error);
+    showToast('❌ Failed to load library. Data might be corrupted.', 'error');
+  }
+});
 
-        async function getLatestVideos(channelId, maxResults = 6) {
-            const apiKey = $('apiKey').value.trim();
-            if (!apiKey) return [];
-            
-            try {
-                const url = new URL('https://www.googleapis.com/youtube/v3/search');
-                url.searchParams.set('part', 'snippet');
-                url.searchParams.set('channelId', channelId);
-                url.searchParams.set('order', 'date');
-                url.searchParams.set('maxResults', String(maxResults));
-                url.searchParams.set('type', 'video');
-                url.searchParams.set('key', apiKey);
-                
-                const response = await fetch(url.toString(), { 
-                    signal: AbortSignal.timeout(10000) 
-                });
-                
-                if (!response.ok) throw new Error('Failed to fetch videos');
-                
-                const data = await response.json();
-                
-                return (data.items || []).map(item => ({
-                    videoId: item.id.videoId,
-                    title: item.snippet.title,
-                    thumbnail: item.snippet.thumbnails?.medium?.url || 
-                              item.snippet.thumbnails?.default?.url || '',
-                    publishedAt: item.snippet.publishedAt
-                }));
-                
-            } catch (error) {
-                console.warn('Failed to get latest videos:', error);
-                return [];
-            }
-        }
+/* =========================
+   PREMIUM UTILITY FUNCTIONS
+   ========================= */
+function resetResults() {
+  LIB = [];
+  VIEW = [];
+  lastExport = [];
+  
+  const tbody = $('resultsTbody');
+  tbody.innerHTML = `
+    <tr>
+      <td colspan="7">
+        <div class="empty-state">
+          <div class="empty-state-icon">🔍</div>
+          <div class="empty-state-title">Ready to Discover</div>
+          <div class="empty-state-description">
+            Enter search terms above to find YouTube channels and start building your lead library.
+          </div>
+        </div>
+      </td>
+    </tr>
+  `;
+  
+  $('resultsCount').textContent = '0 channels found';
+  $('detailTitle').textContent = 'Channel Details';
+  $('detailContent').innerHTML = `
+    <div class="empty-state">
+      <div class="empty-state-icon">👆</div>
+      <div class="empty-state-title">Select a Channel</div>
+      <div class="empty-state-description">
+        Click on any channel from the table to view detailed information, social links, and recent videos.
+      </div>
+    </div>
+  `;
+  
+  setProgress(0);
+  setStatus('Ready', 'idle');
+  
+  // Clear search cache
+  searchCache.clear();
+}
 
-        // Global function for video preview
-        window.previewVideo = function(videoId) {
-            // Remove existing preview
-            const existing = document.getElementById('videoPreview');
-            if (existing) existing.remove();
-            
-            const iframe = document.createElement('iframe');
-            iframe.id = 'videoPreview';
-            iframe.width = '100%';
-            iframe.height = '200';
-            iframe.src = `https://www.youtube.com/embed/${videoId}`;
-            iframe.setAttribute('allowfullscreen', '');
-            iframe.style.marginTop = 'var(--space-md)';
-            iframe.style.borderRadius = 'var(--border-radius)';
-            iframe.style.border = '1px solid var(--border-color)';
-            
-            $('detailContent').appendChild(iframe);
-        };
+/* =========================
+   PREMIUM SCROLL EFFECTS & FAB
+   ========================= */
+let isScrolled = false;
+let scrollTimeout;
 
-        /* =========================
-           ENHANCED EXPORT & LIBRARY FUNCTIONS
-           ========================= */
-        $('btnSelectAll').addEventListener('click', () => {
-            document.querySelectorAll('.channel-checkbox').forEach(cb => cb.checked = true);
-            showToast('All channels selected', 'info');
-        });
+window.addEventListener('scroll', () => {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const shouldShowScrolled = scrollTop > 20;
+  
+  if (shouldShowScrolled !== isScrolled) {
+    isScrolled = shouldShowScrolled;
+    $('mainHeader').classList.toggle('scrolled', isScrolled);
+  }
+  
+  // Show/hide FAB
+  const fab = $('scrollToTop');
+  if (scrollTop > 500) {
+    fab.classList.remove('hidden');
+  } else {
+    fab.classList.add('hidden');
+  }
+  
+  // Clear timeout and set a new one
+  clearTimeout(scrollTimeout);
+  scrollTimeout = setTimeout(() => {
+    // Add any scroll-end effects here
+  }, 150);
+});
 
-        $('btnDeselectAll').addEventListener('click', () => {
-            document.querySelectorAll('.channel-checkbox').forEach(cb => cb.checked = false);
-            showToast('All channels deselected', 'info');
-        });
+$('scrollToTop').addEventListener('click', () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+});
 
-        $('btnExportCSV').addEventListener('click', () => {
-            if (VIEW.length === 0) {
-                showToast('No data to export', 'error');
-                return;
-            }
-            
-            const csv = generateCSV(VIEW);
-            downloadFile(csv, 'lead_studio_pro_results.csv', 'text/csv');
-            showToast(`Exported ${VIEW.length} channels to CSV`, 'success');
-        });
+/* =========================
+   PREMIUM INITIALIZATION
+   ========================= */
+function init() {
+  initTheme();
+  
+  // Auto-focus search on load (if authenticated)
+  setTimeout(() => {
+    if (currentUser && $('query')) {
+      $('query').focus();
+    }
+  }, 100);
+  
+  // Enhanced keyboard support for auth form
+  ['authEmail', 'authPass'].forEach(id => {
+    $(id).addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        $('btnSignIn').click();
+      }
+    });
+  });
+  
+  // Add smooth animations to interactive elements
+  document.querySelectorAll('.btn, .input, .select, .textarea').forEach(element => {
+    element.style.transition = 'all var(--transition-normal)';
+  });
+  
+  // Initialize tooltips and hover effects
+  initializeInteractions();
+  
+  console.log('🚀 Lead Studio Pro Premium v3.0 initialized');
+}
 
-        $('btnExportJSON').addEventListener('click', () => {
-            if (VIEW.length === 0) {
-                showToast('No data to export', 'error');
-                return;
-            }
-            
-            const cleanData = VIEW.map(cleanChannelData);
-            const json = JSON.stringify(cleanData, null, 2);
-            downloadFile(json, 'lead_studio_pro_results.json', 'application/json');
-            showToast(`Exported ${VIEW.length} channels to JSON`, 'success');
-        });
+function initializeInteractions() {
+  // Add hover effects to buttons
+  document.querySelectorAll('.btn').forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+      btn.style.transform = 'translateY(-1px)';
+    });
+    
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = '';
+    });
+  });
+  
+  // Add focus effects to inputs
+  document.querySelectorAll('.input, .textarea, .select').forEach(input => {
+    input.addEventListener('focus', () => {
+      input.style.transform = 'translateY(-1px)';
+    });
+    
+    input.addEventListener('blur', () => {
+      input.style.transform = '';
+    });
+  });
+}
 
-        $('btnCopyIDs').addEventListener('click', async () => {
-            if (VIEW.length === 0) {
-                showToast('No channel IDs to copy', 'error');
-                return;
-            }
-            
-            const ids = VIEW.map(c => c.channelId).join('\n');
-            await copyToClipboard(ids);
-            showToast(`Copied ${VIEW.length} channel IDs to clipboard`, 'success');
-        });
-
-        $('btnExportSelected').addEventListener('click', () => {
-            const selected = getSelectedChannels();
-            if (selected.length === 0) {
-                showToast('No channels selected', 'error');
-                return;
-            }
-            
-            const csv = generateCSV(selected);
-            downloadFile(csv, 'lead_studio_pro_selected.csv', 'text/csv');
-            showToast(`Exported ${selected.length} selected channels`, 'success');
-        });
-
-        $('btnCopySelected').addEventListener('click', async () => {
-            const selected = getSelectedChannels();
-            if (selected.length === 0) {
-                showToast('No channels selected', 'error');
-                return;
-            }
-            
-            const csv = generateCSV(selected);
-            await copyToClipboard(csv);
-            showToast(`Copied ${selected.length} selected channels to clipboard`, 'success');
-        });
-
-        $('btnClearResults').addEventListener('click', async () => {
-            const confirmed = await showModal(
-                'Clear Results',
-                'Are you sure you want to clear all search results? This action cannot be undone.',
-                'Clear All',
-                'Cancel'
-            );
-            
-            if (confirmed) {
-                resetResults();
-                showToast('All results cleared', 'info');
-            }
-        });
-
-        function getSelectedChannels() {
-            const selected = [];
-            document.querySelectorAll('.channel-checkbox:checked').forEach(cb => {
-                const index = parseInt(cb.dataset.index);
-                if (VIEW[index]) selected.push(VIEW[index]);
-            });
-            return selected;
-        }
-
-        function generateCSV(channels) {
-            const headers = [
-                'Channel Name', 'Channel ID', 'Subscribers', 'Videos', 'Views', 
-                'Verified', 'Country', 'Created Date', 'Custom URL', 'Description'
-            ];
-            
-            let csv = headers.map(h => `"${h}"`).join(',') + '\n';
-            
-            channels.forEach(channel => {
-                const row = [
-                    channel.title,
-                    channel.channelId,
-                    channel.hidden ? 'Hidden' : channel.subs,
-                    channel.videos,
-                    channel.views,
-                    channel.verified,
-                    channel.country,
-                    channel.createdAt,
-                    channel.customUrl,
-                    channel.description.replace(/\n/g, ' ')
-                ].map(cell => `"${String(cell).replace(/"/g, '""')}"`);
-                
-                csv += row.join(',') + '\n';
-            });
-            
-            return csv;
-        }
-
-        function cleanChannelData(channel) {
-            return {
-                channelId: channel.channelId,
-                title: channel.title,
-                subscribers: channel.subs,
-                videos: channel.videos,
-                views: channel.views,
-                verified: channel.verified,
-                country: channel.country,
-                createdAt: channel.createdAt,
-                customUrl: channel.customUrl
-            };
-        }
-
-        async function copyToClipboard(text) {
-            try {
-                await navigator.clipboard.writeText(text);
-            } catch (err) {
-                // Fallback for older browsers
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
-                textArea.style.position = 'fixed';
-                textArea.style.opacity = '0';
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-            }
-        }
-
-        function downloadFile(content, filename, type) {
-            const blob = new Blob([content], { type });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = filename;
-            link.click();
-            URL.revokeObjectURL(url);
-        }
-
-        /* =========================
-           ENHANCED LIBRARY MANAGEMENT
-           ========================= */
-        $('btnSaveLib').addEventListener('click', async () => {
-            if (LIB.length === 0) {
-                showToast('No channels to save', 'error');
-                return;
-            }
-            
-            const confirmed = await showModal(
-                'Save Library',
-                `Save ${LIB.length} channels to local storage? This will overwrite any existing saved library.`,
-                'Save',
-                'Cancel'
-            );
-            
-            if (!confirmed) return;
-            
-            try {
-                const libraryData = {
-                    version: '2.0',
-                    timestamp: new Date().toISOString(),
-                    userEmail: currentUser?.email,
-                    channels: LIB,
-                    searchQueries: Array.from($('query').value.split(/[,\n]/).map(q => q.trim()).filter(Boolean))
-                };
-                
-                localStorage.setItem(savedLibraryKey, JSON.stringify(libraryData));
-                showToast(`Successfully saved ${LIB.length} channels to library`, 'success');
-                
-            } catch (error) {
-                console.error('Save error:', error);
-                showToast('Failed to save library. Storage might be full.', 'error');
-            }
-        });
-
-        $('btnLoadLib').addEventListener('click', async () => {
-            const savedData = localStorage.getItem(savedLibraryKey);
-            if (!savedData) {
-                showToast('No saved library found', 'error');
-                return;
-            }
-            
-            try {
-                const libraryData = JSON.parse(savedData);
-                
-                const confirmed = await showModal(
-                    'Load Library',
-                    `Load saved library with ${libraryData.channels?.length || 0} channels? This will replace your current results.`,
-                    'Load',
-                    'Cancel'
-                );
-                
-                if (!confirmed) return;
-                
-                // Handle different library versions
-                if (libraryData.version === '2.0') {
-                    LIB = libraryData.channels || [];
-                    if (libraryData.searchQueries?.length > 0) {
-                        $('query').value = libraryData.searchQueries.join('\n');
-                    }
-                } else {
-                    // Legacy format
-                    LIB = Array.isArray(libraryData) ? libraryData : [];
-                }
-                
-                applyClientFiltersAndRender();
-                showToast(`Successfully loaded ${LIB.length} channels from library`, 'success');
-                
-            } catch (error) {
-                console.error('Load error:', error);
-                showToast('Failed to load library. Data might be corrupted.', 'error');
-            }
-        });
-
-        /* =========================
-           UTILITY FUNCTIONS
-           ========================= */
-        function resetResults() {
-            LIB = [];
-            VIEW = [];
-            lastExport = [];
-            
-            $('resultsTbody').innerHTML = `
-                <tr>
-                    <td colspan="7" class="text-muted" style="text-align: center; padding: 40px;">
-                        Enter search terms above to find YouTube channels
-                    </td>
-                </tr>
-            `;
-            
-            $('resultsCount').textContent = '0 channels found';
-            $('detailTitle').textContent = 'Channel Details';
-            $('detailContent').innerHTML = `
-                <div class="text-muted" style="text-align: center; padding: 40px;">
-                    Select a channel from the table to view details
-                </div>
-            `;
-            
-            setProgress(0);
-            setStatus('Ready', 'info');
-            
-            // Clear search cache when results are reset
-            searchCache.clear();
-        }
-
-        /* =========================
-           INITIALIZATION
-           ========================= */
-        function init() {
-            initTheme();
-            
-            // Auto-focus search on load (if authenticated)
-            if (currentUser && $('query')) {
-                setTimeout(() => $('query').focus(), 100);
-            }
-            
-            // Enhanced keyboard support for auth form
-            ['authEmail', 'authPass'].forEach(id => {
-                $(id).addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        $('btnSignIn').click();
-                    }
-                });
-            });
-            
-            console.log('🚀 Lead Studio Pro v2.0 initialized');
-        }
-
-        // Initialize when DOM is loaded
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
-        }
-
-    </script>
+// Initialize when DOM is loaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
 </body>
 </html>
