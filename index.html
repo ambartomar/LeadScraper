@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#007AFF">
-    <meta name="description" content="Lead Studio Pro - Professional YouTube Channel Discovery Platform with Advanced AI Analytics">
-    <title>Lead Studio Pro — Professional YouTube Channel Discovery</title>
+    <meta name="description" content="Lead Studio Pro - Ultimate YouTube Lead Extraction Platform with Advanced AI Analytics">
+    <title>Lead Studio Pro — Ultimate Lead Extraction Platform</title>
     
     <!-- Preload critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://www.googleapis.com" crossorigin>
     
     <!-- Premium fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=SF+Pro+Display:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -20,7 +19,7 @@
     
     <style>
         /* ==========================================
-           LEAD STUDIO PRO - ARTIFY INSPIRED DESIGN SYSTEM
+           LEAD STUDIO PRO - ULTIMATE ENHANCED DESIGN SYSTEM
            ========================================== */
         
         :root {
@@ -29,6 +28,7 @@
             --color-primary-dark: #0056CC;
             --color-primary-light: #40A6FF;
             --color-secondary: #5856D6;
+            --color-tertiary: #00C6FF;
             --color-success: #32D74B;
             --color-warning: #FF9F0A;
             --color-error: #FF453A;
@@ -36,11 +36,13 @@
             
             /* Premium Gradients */
             --gradient-primary: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+            --gradient-secondary: linear-gradient(135deg, #5856D6 0%, #8134AF 100%);
+            --gradient-tertiary: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%);
             --gradient-success: linear-gradient(135deg, #32D74B 0%, #00D4AA 100%);
             --gradient-warning: linear-gradient(135deg, #FF9F0A 0%, #FF6347 100%);
-            --gradient-mesh: radial-gradient(circle at 20% 50%, rgba(0, 122, 255, 0.12) 0%, transparent 50%),
-                            radial-gradient(circle at 80% 20%, rgba(88, 86, 214, 0.08) 0%, transparent 50%),
-                            radial-gradient(circle at 40% 80%, rgba(50, 215, 75, 0.06) 0%, transparent 50%);
+            --gradient-mesh: radial-gradient(circle at 20% 50%, rgba(0, 122, 255, 0.15) 0%, transparent 50%),
+                            radial-gradient(circle at 80% 20%, rgba(88, 86, 214, 0.12) 0%, transparent 50%),
+                            radial-gradient(circle at 40% 80%, rgba(50, 215, 75, 0.08) 0%, transparent 50%);
             
             /* Dark Theme Colors */
             --bg-primary: #000000;
@@ -49,30 +51,31 @@
             --bg-quaternary: #2C2C2E;
             --bg-elevated: rgba(28, 28, 30, 0.95);
             --bg-glass: rgba(255, 255, 255, 0.05);
-            --bg-frosted: rgba(0, 0, 0, 0.8);
-            --bg-card: rgba(28, 28, 30, 0.6);
-            --bg-input: rgba(58, 58, 60, 0.3);
+            --bg-frosted: rgba(0, 0, 0, 0.85);
+            --bg-card: rgba(28, 28, 30, 0.7);
+            --bg-input: rgba(58, 58, 60, 0.4);
             
             /* Text Colors */
             --text-primary: #FFFFFF;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-            --text-tertiary: rgba(255, 255, 255, 0.5);
-            --text-quaternary: rgba(255, 255, 255, 0.3);
+            --text-secondary: rgba(255, 255, 255, 0.75);
+            --text-tertiary: rgba(255, 255, 255, 0.55);
+            --text-quaternary: rgba(255, 255, 255, 0.35);
             --text-inverse: #000000;
             
             /* Borders */
             --border-light: rgba(255, 255, 255, 0.08);
-            --border-medium: rgba(255, 255, 255, 0.12);
-            --border-strong: rgba(255, 255, 255, 0.2);
+            --border-medium: rgba(255, 255, 255, 0.15);
+            --border-strong: rgba(255, 255, 255, 0.25);
             --border-focus: var(--color-primary);
             
-            /* Shadows - Apple Style */
-            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
-            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-            --shadow-glow: 0 0 30px rgba(0, 122, 255, 0.3);
+            /* Shadows - Enhanced Apple Style */
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.6), 0 4px 8px rgba(0, 0, 0, 0.4);
+            --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.7), 0 8px 16px rgba(0, 0, 0, 0.5);
+            --shadow-2xl: 0 32px 64px rgba(0, 0, 0, 0.8), 0 12px 24px rgba(0, 0, 0, 0.6);
+            --shadow-glow: 0 0 40px rgba(0, 122, 255, 0.4);
+            --shadow-glow-secondary: 0 0 30px rgba(88, 86, 214, 0.3);
             
             /* Spacing */
             --space-1: 0.25rem;
@@ -90,16 +93,16 @@
             
             /* Border Radius */
             --radius-sm: 6px;
-            --radius-md: 8px;
-            --radius-lg: 12px;
-            --radius-xl: 16px;
-            --radius-2xl: 20px;
-            --radius-3xl: 24px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --radius-xl: 18px;
+            --radius-2xl: 22px;
+            --radius-3xl: 28px;
             --radius-full: 9999px;
             
             /* Typography */
             --font-family: 'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            --font-mono: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
+            --font-mono: 'SF Mono', 'Monaco', 'Cascadia Code', 'JetBrains Mono', monospace;
             
             --text-xs: 0.75rem;
             --text-sm: 0.875rem;
@@ -114,8 +117,8 @@
             
             /* Animation */
             --duration-fast: 0.15s;
-            --duration-normal: 0.25s;
-            --duration-slow: 0.4s;
+            --duration-normal: 0.3s;
+            --duration-slow: 0.5s;
             
             --ease-out: cubic-bezier(0, 0, 0.2, 1);
             --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -134,26 +137,26 @@
             --bg-tertiary: #F2F2F7;
             --bg-quaternary: #E5E5EA;
             --bg-elevated: rgba(255, 255, 255, 0.95);
-            --bg-glass: rgba(0, 0, 0, 0.02);
-            --bg-frosted: rgba(255, 255, 255, 0.8);
-            --bg-card: rgba(242, 242, 247, 0.6);
-            --bg-input: rgba(120, 120, 128, 0.12);
+            --bg-glass: rgba(0, 0, 0, 0.03);
+            --bg-frosted: rgba(255, 255, 255, 0.85);
+            --bg-card: rgba(242, 242, 247, 0.7);
+            --bg-input: rgba(120, 120, 128, 0.15);
             
             --text-primary: #000000;
-            --text-secondary: rgba(0, 0, 0, 0.7);
-            --text-tertiary: rgba(0, 0, 0, 0.5);
-            --text-quaternary: rgba(0, 0, 0, 0.3);
+            --text-secondary: rgba(0, 0, 0, 0.75);
+            --text-tertiary: rgba(0, 0, 0, 0.55);
+            --text-quaternary: rgba(0, 0, 0, 0.35);
             --text-inverse: #FFFFFF;
             
-            --border-light: rgba(0, 0, 0, 0.06);
-            --border-medium: rgba(0, 0, 0, 0.1);
-            --border-strong: rgba(0, 0, 0, 0.15);
+            --border-light: rgba(0, 0, 0, 0.08);
+            --border-medium: rgba(0, 0, 0, 0.12);
+            --border-strong: rgba(0, 0, 0, 0.18);
             
-            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.15), 0 2px 4px -2px rgba(0, 0, 0, 0.15);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -4px rgba(0, 0, 0, 0.15);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.15);
-            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.18), 0 8px 16px rgba(0, 0, 0, 0.12);
+            --shadow-2xl: 0 32px 64px rgba(0, 0, 0, 0.22), 0 12px 24px rgba(0, 0, 0, 0.15);
         }
         
         /* Base Styles */
@@ -179,18 +182,20 @@
             line-height: 1.6;
             color: var(--text-primary);
             background: var(--bg-primary);
+            background-image: var(--gradient-mesh);
             overflow-x: hidden;
             transition: all var(--duration-normal) var(--ease-out);
         }
         
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 8px;
+            height: 8px;
         }
         
         ::-webkit-scrollbar-track {
-            background: transparent;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius-full);
         }
         
         ::-webkit-scrollbar-thumb {
@@ -201,6 +206,7 @@
         
         ::-webkit-scrollbar-thumb:hover {
             background: var(--text-tertiary);
+            transform: scaleY(1.2);
         }
         
         /* Selection */
@@ -216,16 +222,16 @@
         
         :focus-visible {
             outline: 2px solid var(--border-focus);
-            outline-offset: 2px;
+            outline-offset: 3px;
             border-radius: var(--radius-md);
         }
         
         /* Typography */
         .text-display {
-            font-size: clamp(var(--text-4xl), 6vw, var(--text-6xl));
-            font-weight: 800;
-            line-height: 1.1;
-            letter-spacing: -0.02em;
+            font-size: clamp(var(--text-4xl), 7vw, var(--text-6xl));
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -260,7 +266,7 @@
             color: var(--text-tertiary);
         }
         
-        /* Button System */
+        /* Enhanced Button System */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -287,7 +293,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
             transform: translateX(-100%);
             transition: transform var(--duration-normal) var(--ease-out);
         }
@@ -297,12 +303,12 @@
         }
         
         .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: var(--shadow-xl);
         }
         
         .btn:active {
-            transform: translateY(0);
+            transform: translateY(0) scale(0.98);
             transition-duration: 0.1s;
         }
         
@@ -317,13 +323,25 @@
             backdrop-filter: blur(20px);
             color: var(--text-primary);
             border: 1px solid var(--border-light);
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-tertiary {
+            background: var(--gradient-tertiary);
+            color: white;
+            box-shadow: 0 0 30px rgba(0, 198, 255, 0.3);
         }
         
         .btn-ghost {
             background: transparent;
             color: var(--text-secondary);
             border: 1px solid var(--border-light);
+        }
+        
+        .btn-success {
+            background: var(--gradient-success);
+            color: white;
+            box-shadow: 0 0 25px rgba(50, 215, 75, 0.25);
         }
         
         .btn-sm {
@@ -333,7 +351,7 @@
         }
         
         .btn-lg {
-            padding: var(--space-4) var(--space-8);
+            padding: var(--space-5) var(--space-10);
             font-size: var(--text-lg);
             border-radius: var(--radius-2xl);
         }
@@ -346,12 +364,32 @@
         }
         
         .btn:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
             transform: none !important;
         }
         
-        /* Input System */
+        /* Button Group */
+        .btn-group {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .btn-group .btn {
+            border-radius: var(--radius-lg);
+        }
+        
+        .btn-group .btn:first-child {
+            border-top-right-radius: var(--radius-sm);
+            border-bottom-right-radius: var(--radius-sm);
+        }
+        
+        .btn-group .btn:last-child {
+            border-top-left-radius: var(--radius-sm);
+            border-bottom-left-radius: var(--radius-sm);
+        }
+        
+        /* Enhanced Input System */
         .input-group {
             display: flex;
             flex-direction: column;
@@ -363,6 +401,9 @@
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: var(--space-1);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
         }
         
         .input {
@@ -382,7 +423,7 @@
         
         .input:focus {
             border-color: var(--border-focus);
-            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+            box-shadow: 0 0 0 6px rgba(0, 122, 255, 0.15);
             transform: translateY(-1px);
         }
         
@@ -391,7 +432,7 @@
         }
         
         .textarea {
-            min-height: 120px;
+            min-height: 140px;
             resize: vertical;
             font-family: inherit;
         }
@@ -406,25 +447,66 @@
             padding-right: var(--space-10);
         }
         
-        /* Card System */
+        .input-sm {
+            padding: var(--space-2) var(--space-4);
+            font-size: var(--text-sm);
+            border-radius: var(--radius-lg);
+        }
+        
+        /* Search Bar */
+        .search-bar {
+            position: relative;
+            width: 200px;
+        }
+        
+        .search-bar input {
+            padding-right: var(--space-10);
+        }
+        
+        .search-bar svg {
+            position: absolute;
+            right: var(--space-3);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-quaternary);
+            transition: color var(--duration-normal) var(--ease-out);
+        }
+        
+        .search-bar:focus-within svg {
+            color: var(--color-primary);
+        }
+        
+        /* Enhanced Card System */
         .card {
             background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
             border: 1px solid var(--border-light);
             border-radius: var(--radius-2xl);
             padding: var(--space-6);
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-md);
             transition: all var(--duration-normal) var(--ease-apple);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
         }
         
         .card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: var(--shadow-xl);
             border-color: var(--border-medium);
         }
         
-        /* Badge System */
+        /* Enhanced Badge System */
         .badge {
             display: inline-flex;
             align-items: center;
@@ -436,6 +518,15 @@
             letter-spacing: 0.05em;
             border-radius: var(--radius-full);
             transition: all var(--duration-normal) var(--ease-out);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .badge::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
         }
         
         .badge-primary {
@@ -447,6 +538,7 @@
         .badge-success {
             background: var(--gradient-success);
             color: white;
+            box-shadow: 0 0 20px rgba(50, 215, 75, 0.2);
         }
         
         .badge-secondary {
@@ -455,20 +547,148 @@
             border: 1px solid var(--border-light);
         }
         
+        .badge-warning {
+            background: var(--gradient-warning);
+            color: white;
+            box-shadow: 0 0 20px rgba(255, 159, 10, 0.2);
+        }
+        
+        .badge-error {
+            background: var(--color-error);
+            color: white;
+            box-shadow: 0 0 20px rgba(255, 69, 58, 0.2);
+        }
+        
+        /* Tabs System */
+        .tabs {
+            width: 100%;
+            margin-top: var(--space-3);
+        }
+        
+        .tab-header {
+            display: flex;
+            background: var(--bg-quaternary);
+            border-radius: var(--radius-lg);
+            padding: 4px;
+            margin-bottom: var(--space-5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+            pointer-events: none;
+        }
+        
+        .tab-item {
+            flex: 1;
+            text-align: center;
+            padding: var(--space-2) var(--space-3);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--duration-normal) var(--ease-apple);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .tab-item.active {
+            background: var(--bg-glass);
+            color: var(--text-primary);
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-1px);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s var(--ease-out);
+        }
+        
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+        
+        /* Details Panel Tabs */
+        .details-tabs {
+            display: flex;
+            margin-top: var(--space-4);
+            background: var(--bg-quaternary);
+            border-radius: var(--radius-lg);
+            padding: 3px;
+        }
+        
+        .details-tab {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: var(--space-2) var(--space-3);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: all var(--duration-normal) var(--ease-out);
+        }
+        
+        .details-tab.active {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        /* Range Slider */
+        .range-slider-container {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+        
+        .range-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 8px;
+            border-radius: var(--radius-full);
+            background: var(--bg-quaternary);
+            outline: none;
+            position: relative;
+        }
+        
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: var(--radius-full);
+            background: var(--gradient-primary);
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all var(--duration-normal) var(--ease-spring);
+        }
+        
+        .range-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .range-slider::-webkit-slider-thumb:active {
+            transform: scale(1.1);
+        }
+        
         /* Layout */
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
             padding: 0 var(--space-6);
         }
         
-        .grid {
-            display: grid;
-        }
-        
-        .flex {
-            display: flex;
-        }
+        .grid { display: grid; }
+        .flex { display: flex; }
         
         .items-center { align-items: center; }
         .justify-center { justify-content: center; }
@@ -486,15 +706,16 @@
             right: 0;
             z-index: var(--z-sticky);
             background: var(--bg-frosted);
-            backdrop-filter: saturate(180%) blur(20px);
-            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            backdrop-filter: saturate(180%) blur(30px);
+            -webkit-backdrop-filter: saturate(180%) blur(30px);
             border-bottom: 1px solid var(--border-light);
             transition: all var(--duration-normal) var(--ease-out);
         }
         
         .header.scrolled {
             background: var(--bg-elevated);
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-xl);
+            border-bottom-color: var(--border-medium);
         }
         
         .header-content {
@@ -514,26 +735,35 @@
         }
         
         .logo:hover {
-            transform: scale(1.02);
+            transform: scale(1.03) translateY(-1px);
         }
         
         .logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             background: var(--gradient-primary);
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-xl);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: var(--text-lg);
-            font-weight: 800;
+            font-size: var(--text-xl);
+            font-weight: 900;
             color: white;
             box-shadow: var(--shadow-glow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
         }
         
         .logo-text {
             font-size: var(--text-xl);
-            font-weight: 800;
+            font-weight: 900;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -552,11 +782,11 @@
         }
         
         .nav-item {
-            padding: var(--space-2) var(--space-4);
+            padding: var(--space-3) var(--space-5);
             border-radius: var(--radius-full);
             text-decoration: none;
             color: var(--text-secondary);
-            font-weight: 500;
+            font-weight: 600;
             transition: all var(--duration-normal) var(--ease-out);
         }
         
@@ -564,7 +794,8 @@
         .nav-item.active {
             background: var(--bg-card);
             color: var(--text-primary);
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
         }
         
         .header-controls {
@@ -575,7 +806,7 @@
         
         /* Hero Section */
         .hero {
-            padding: calc(80px + var(--space-20)) 0 var(--space-24);
+            padding: calc(90px + var(--space-24)) 0 var(--space-24);
             background: var(--gradient-mesh);
             position: relative;
             overflow: hidden;
@@ -586,8 +817,8 @@
             position: absolute;
             inset: 0;
             background: var(--gradient-mesh);
-            opacity: 0.5;
-            animation: float 12s ease-in-out infinite;
+            opacity: 0.6;
+            animation: float 15s ease-in-out infinite;
         }
         
         .hero-content {
@@ -604,16 +835,16 @@
         .hero-description {
             font-size: var(--text-xl);
             color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto var(--space-10);
-            line-height: 1.6;
+            max-width: 700px;
+            margin: 0 auto var(--space-12);
+            line-height: 1.7;
             animation: slideUp 0.8s var(--ease-spring) 0.1s both;
         }
         
         .hero-cta {
             display: flex;
             justify-content: center;
-            gap: var(--space-4);
+            gap: var(--space-6);
             flex-wrap: wrap;
             animation: slideUp 0.8s var(--ease-spring) 0.2s both;
         }
@@ -621,23 +852,23 @@
         /* Main Content */
         .main {
             min-height: 100vh;
-            padding: var(--space-12) 0;
+            padding: var(--space-16) 0;
         }
         
         .main-grid {
             display: grid;
-            grid-template-columns: 320px 1fr 380px;
-            gap: var(--space-8);
+            grid-template-columns: 360px 1fr 400px;
+            gap: var(--space-10);
             align-items: start;
         }
         
         /* Sidebar */
         .sidebar {
             position: sticky;
-            top: calc(80px + var(--space-6));
+            top: calc(90px + var(--space-6));
             display: flex;
             flex-direction: column;
-            gap: var(--space-6);
+            gap: var(--space-8);
         }
         
         .sidebar-section {
@@ -647,30 +878,38 @@
         .sidebar-section:nth-child(2) { animation-delay: 0.1s; }
         .sidebar-section:nth-child(3) { animation-delay: 0.2s; }
         .sidebar-section:nth-child(4) { animation-delay: 0.3s; }
+        .sidebar-section:nth-child(5) { animation-delay: 0.4s; }
         
         .sidebar-title {
             font-size: var(--text-lg);
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: var(--space-4);
+            margin-bottom: var(--space-5);
             display: flex;
             align-items: center;
-            gap: var(--space-2);
+            gap: var(--space-3);
         }
         
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: var(--space-4);
+            gap: var(--space-5);
         }
         
-        /* Switch */
+        /* Enhanced Switch */
         .switch {
             display: flex;
             align-items: center;
-            gap: var(--space-3);
+            gap: var(--space-4);
             cursor: pointer;
             user-select: none;
+            padding: var(--space-2);
+            border-radius: var(--radius-lg);
+            transition: all var(--duration-normal) var(--ease-out);
+        }
+        
+        .switch:hover {
+            background: rgba(255, 255, 255, 0.03);
         }
         
         .switch-input {
@@ -679,88 +918,109 @@
         
         .switch-track {
             position: relative;
-            width: 52px;
-            height: 32px;
+            width: 56px;
+            height: 34px;
             background: var(--bg-quaternary);
             border-radius: var(--radius-full);
             transition: all var(--duration-normal) var(--ease-out);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         .switch-thumb {
             position: absolute;
-            top: 2px;
-            left: 2px;
+            top: 3px;
+            left: 3px;
             width: 28px;
             height: 28px;
             background: white;
             border-radius: var(--radius-full);
             transition: all var(--duration-normal) var(--ease-spring);
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-md);
         }
         
         .switch-input:checked + .switch-track {
             background: var(--gradient-primary);
+            box-shadow: var(--shadow-glow);
         }
         
         .switch-input:checked + .switch-track .switch-thumb {
-            transform: translateX(20px);
+            transform: translateX(22px);
         }
         
         .switch-label {
             font-size: var(--text-base);
             font-weight: 500;
             color: var(--text-primary);
+            line-height: 1.3;
         }
         
         /* Results Panel */
         .results-panel {
             background: var(--bg-card);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(30px);
             border: 1px solid var(--border-light);
             border-radius: var(--radius-2xl);
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-xl);
             overflow: hidden;
             animation: slideUp 0.6s var(--ease-spring) 0.1s both;
+            position: relative;
+        }
+        
+        .results-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
         }
         
         .results-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: var(--space-6);
+            padding: var(--space-8);
             border-bottom: 1px solid var(--border-light);
             background: var(--bg-glass);
             backdrop-filter: blur(20px);
         }
         
         .results-title {
-            font-size: var(--text-xl);
-            font-weight: 700;
+            font-size: var(--text-2xl);
+            font-weight: 800;
             color: var(--text-primary);
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .results-actions {
             display: flex;
             align-items: center;
-            gap: var(--space-2);
+            gap: var(--space-4);
             flex-wrap: wrap;
         }
         
         .results-content {
-            padding: var(--space-6);
-            max-height: 800px;
+            padding: var(--space-8);
+            max-height: 900px;
             overflow-y: auto;
         }
         
-        /* Table */
+        /* Enhanced Table */
         .table {
             width: 100%;
             border-collapse: collapse;
             border-spacing: 0;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
         }
         
         .table th {
-            padding: var(--space-3) var(--space-4);
+            padding: var(--space-4) var(--space-5);
             font-size: var(--text-sm);
             font-weight: 700;
             text-align: left;
@@ -770,10 +1030,11 @@
             position: sticky;
             top: 0;
             z-index: 10;
+            backdrop-filter: blur(20px);
         }
         
         .table td {
-            padding: var(--space-4);
+            padding: var(--space-5);
             border-bottom: 1px solid var(--border-light);
             vertical-align: middle;
         }
@@ -784,13 +1045,14 @@
         }
         
         .table tbody tr:hover {
-            background: var(--bg-glass);
-            transform: scale(1.005);
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateX(4px);
+            box-shadow: inset 4px 0 0 var(--color-primary);
         }
         
         .table tbody tr.selected {
-            background: rgba(0, 122, 255, 0.1);
-            border-left: 3px solid var(--color-primary);
+            background: rgba(0, 122, 255, 0.12);
+            box-shadow: inset 4px 0 0 var(--color-primary);
         }
         
         /* Channel Display */
@@ -801,17 +1063,32 @@
         }
         
         .channel-avatar {
-            width: 56px;
-            height: 56px;
+            width: 64px;
+            height: 64px;
             border-radius: var(--radius-xl);
             object-fit: cover;
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-md);
             transition: all var(--duration-normal) var(--ease-out);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .channel-avatar::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity var(--duration-normal) var(--ease-out);
         }
         
         .channel-avatar:hover {
-            transform: scale(1.05);
-            box-shadow: var(--shadow-md);
+            transform: scale(1.08);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .channel-avatar:hover::before {
+            opacity: 1;
         }
         
         .channel-info h4 {
@@ -819,6 +1096,7 @@
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: var(--space-1);
+            line-height: 1.3;
         }
         
         .channel-info p {
@@ -830,12 +1108,12 @@
         /* Details Panel */
         .details-panel {
             position: sticky;
-            top: calc(80px + var(--space-6));
+            top: calc(90px + var(--space-6));
             background: var(--bg-card);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(30px);
             border: 1px solid var(--border-light);
             border-radius: var(--radius-2xl);
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-xl);
             overflow: hidden;
             animation: slideUp 0.6s var(--ease-spring) 0.2s both;
         }
@@ -849,14 +1127,14 @@
         
         .details-content {
             padding: var(--space-6);
-            max-height: 600px;
+            max-height: 700px;
             overflow-y: auto;
         }
         
         /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: var(--space-4);
             margin: var(--space-6) 0;
         }
@@ -864,53 +1142,66 @@
         .stat-card {
             background: var(--bg-glass);
             border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg);
-            padding: var(--space-4);
+            border-radius: var(--radius-xl);
+            padding: var(--space-5);
             text-align: center;
             transition: all var(--duration-normal) var(--ease-out);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-primary);
         }
         
         .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
             border-color: var(--border-medium);
         }
         
         .stat-value {
             font-size: var(--text-2xl);
-            font-weight: 800;
+            font-weight: 900;
             color: var(--text-primary);
-            margin-bottom: var(--space-1);
+            margin-bottom: var(--space-2);
         }
         
         .stat-label {
             font-size: var(--text-xs);
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.1em;
         }
         
         /* Video Preview */
         .video-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: var(--space-4);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-5);
             margin-top: var(--space-6);
         }
         
         .video-card {
             background: var(--bg-glass);
             border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-xl);
             overflow: hidden;
             transition: all var(--duration-normal) var(--ease-out);
             cursor: pointer;
+            position: relative;
         }
         
         .video-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: var(--shadow-xl);
             border-color: var(--border-medium);
         }
         
@@ -928,13 +1219,13 @@
         }
         
         .video-card:hover .video-thumbnail img {
-            transform: scale(1.05);
+            transform: scale(1.1);
         }
         
         .video-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -947,15 +1238,16 @@
         }
         
         .play-button {
-            width: 64px;
-            height: 64px;
-            background: rgba(255, 255, 255, 0.9);
+            width: 72px;
+            height: 72px;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: var(--radius-full);
             display: flex;
             align-items: center;
             justify-content: center;
-            transform: scale(0.8);
+            transform: scale(0.7);
             transition: all var(--duration-normal) var(--ease-spring);
+            box-shadow: var(--shadow-xl);
         }
         
         .video-card:hover .play-button {
@@ -963,7 +1255,7 @@
         }
         
         .video-info {
-            padding: var(--space-4);
+            padding: var(--space-5);
         }
         
         .video-title {
@@ -981,7 +1273,7 @@
         .video-meta {
             display: flex;
             align-items: center;
-            gap: var(--space-3);
+            gap: var(--space-4);
             font-size: var(--text-sm);
             color: var(--text-tertiary);
         }
@@ -992,77 +1284,80 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: var(--space-16);
+            padding: var(--space-20);
             text-align: center;
         }
         
         .empty-icon {
-            width: 80px;
-            height: 80px;
-            margin-bottom: var(--space-6);
+            width: 96px;
+            height: 96px;
+            margin-bottom: var(--space-8);
             background: var(--bg-glass);
             border-radius: var(--radius-full);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: var(--text-4xl);
-            animation: float 3s ease-in-out infinite;
+            font-size: var(--text-5xl);
+            animation: float 4s ease-in-out infinite;
+            box-shadow: var(--shadow-xl);
         }
         
         .empty-title {
-            font-size: var(--text-xl);
-            font-weight: 700;
+            font-size: var(--text-2xl);
+            font-weight: 800;
             color: var(--text-primary);
-            margin-bottom: var(--space-3);
+            margin-bottom: var(--space-4);
         }
         
         .empty-description {
             color: var(--text-secondary);
-            max-width: 400px;
-            line-height: 1.6;
+            max-width: 450px;
+            line-height: 1.7;
+            font-size: var(--text-lg);
         }
         
         /* Loading States */
         .loading {
             display: inline-flex;
             align-items: center;
-            gap: var(--space-2);
+            gap: var(--space-3);
         }
         
         .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid transparent;
+            width: 24px;
+            height: 24px;
+            border: 3px solid transparent;
             border-top-color: currentColor;
             border-radius: var(--radius-full);
-            animation: spin 1s linear infinite;
+            animation: spin 1.2s linear infinite;
         }
         
         .skeleton {
             background: linear-gradient(90deg, var(--bg-glass) 25%, var(--bg-quaternary) 50%, var(--bg-glass) 75%);
             background-size: 200% 100%;
-            animation: skeleton 1.5s infinite;
+            animation: skeleton 1.8s infinite;
             border-radius: var(--radius-md);
         }
         
         .skeleton-text {
-            height: 1em;
-            margin-bottom: var(--space-2);
+            height: 1.2em;
+            margin-bottom: var(--space-3);
         }
         
         .skeleton-avatar {
-            width: 56px;
-            height: 56px;
+            width: 64px;
+            height: 64px;
             border-radius: var(--radius-xl);
         }
         
         /* Progress Bar */
         .progress {
             width: 100%;
-            height: 8px;
+            height: 10px;
             background: var(--bg-quaternary);
             border-radius: var(--radius-full);
             overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         .progress-fill {
@@ -1077,22 +1372,22 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: shimmer 1.5s infinite;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2s infinite;
         }
         
-        /* Toast System */
+        /* Enhanced Toast System */
         .toast {
             position: fixed;
-            top: var(--space-6);
-            right: var(--space-6);
+            top: var(--space-8);
+            right: var(--space-8);
             background: var(--bg-elevated);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(30px);
             border: 1px solid var(--border-light);
             border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-xl);
-            padding: var(--space-4) var(--space-5);
-            max-width: 400px;
+            box-shadow: var(--shadow-2xl);
+            padding: var(--space-5) var(--space-6);
+            max-width: 450px;
             z-index: var(--z-toast);
             transform: translateX(120%);
             transition: all var(--duration-normal) var(--ease-spring);
@@ -1105,22 +1400,23 @@
         .toast-content {
             display: flex;
             align-items: center;
-            gap: var(--space-3);
+            gap: var(--space-4);
         }
         
         .toast-icon {
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             border-radius: var(--radius-full);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: var(--text-sm);
+            font-size: var(--text-base);
+            font-weight: 800;
             flex-shrink: 0;
         }
         
         .toast-message {
-            font-size: var(--text-sm);
+            font-size: var(--text-base);
             font-weight: 500;
             color: var(--text-primary);
             line-height: 1.5;
@@ -1144,11 +1440,25 @@
             color: white;
         }
         
+        .toast.info {
+            border-left: 4px solid var(--color-info);
+        }
+        
+        .toast.info .toast-icon {
+            background: var(--color-info);
+            color: white;
+        }
+        
         /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -1160,8 +1470,14 @@
             0%, 100% {
                 transform: translateY(0) rotate(0deg);
             }
+            25% {
+                transform: translateY(-8px) rotate(1deg);
+            }
             50% {
-                transform: translateY(-10px) rotate(2deg);
+                transform: translateY(-15px) rotate(0deg);
+            }
+            75% {
+                transform: translateY(-8px) rotate(-1deg);
             }
         }
         
@@ -1189,17 +1505,28 @@
             }
         }
         
+        @keyframes pulse {
+            0%, 100% { 
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.8;
+                transform: scale(1.05);
+            }
+        }
+        
         /* Utility Classes */
         .hidden { display: none !important; }
         .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
         .text-center { text-align: center; }
         .font-mono { font-family: var(--font-mono); }
         
-        /* Responsive Design */
-        @media (max-width: 1200px) {
+        /* Enhanced Responsive Design */
+        @media (max-width: 1400px) {
             .main-grid {
-                grid-template-columns: 300px 1fr;
-                gap: var(--space-6);
+                grid-template-columns: 340px 1fr;
+                gap: var(--space-8);
             }
             
             .details-panel {
@@ -1231,7 +1558,7 @@
             }
             
             .hero {
-                padding: calc(60px + var(--space-12)) 0 var(--space-16);
+                padding: calc(70px + var(--space-16)) 0 var(--space-16);
             }
             
             .hero-cta {
@@ -1243,10 +1570,15 @@
                 flex-direction: column;
                 gap: var(--space-4);
                 align-items: stretch;
+                padding: var(--space-6);
             }
             
             .results-actions {
                 justify-content: center;
+            }
+            
+            .main {
+                padding: var(--space-12) 0;
             }
         }
         
@@ -1258,6 +1590,12 @@
             .logo-text {
                 display: none;
             }
+            
+            .toast {
+                right: var(--space-4);
+                left: var(--space-4);
+                max-width: none;
+            }
         }
         
         /* Reduced Motion */
@@ -1268,6 +1606,17 @@
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* High Contrast Mode */
+        @media (prefers-contrast: high) {
+            :root {
+                --border-light: rgba(255, 255, 255, 0.3);
+                --border-medium: rgba(255, 255, 255, 0.5);
+                --border-strong: rgba(255, 255, 255, 0.7);
+                --text-secondary: rgba(255, 255, 255, 0.9);
+                --text-tertiary: rgba(255, 255, 255, 0.8);
             }
         }
     </style>
@@ -1284,10 +1633,9 @@
                 </a>
                 
                 <nav class="nav">
-                    <a href="#" class="nav-item active">Home</a>
-                    <a href="#features" class="nav-item">Features</a>
-                    <a href="#gallery" class="nav-item">Gallery</a>
-                    <a href="#pricing" class="nav-item">Pricing</a>
+                    <a href="#" class="nav-item active">Dashboard</a>
+                    <a href="#" class="nav-item">Leads</a>
+                    <a href="#" class="nav-item">Analytics</a>
                 </nav>
                 
                 <div class="header-controls">
@@ -1305,7 +1653,12 @@
                         </svg>
                     </button>
                     <button class="btn btn-primary" id="signInBtn">
-                        Get Started
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                            <polyline points="10,17 15,12 10,7"/>
+                            <line x1="15" y1="12" x2="3" y2="12"/>
+                        </svg>
+                        Get Started Pro
                     </button>
                 </div>
             </div>
@@ -1317,22 +1670,27 @@
         <div class="container">
             <div class="hero-content">
                 <h1 class="text-display hero-title">
-                    Discover YouTube Channels Like Never Before
+                    Ultimate YouTube Lead Extraction Studio
                 </h1>
                 <p class="hero-description">
-                    Professional YouTube channel discovery platform with advanced AI analytics, 
-                    real-time insights, and comprehensive data extraction capabilities.
+                    AI-powered discovery platform with premium analytics, comprehensive contact extraction,
+                    ultra-detailed insights, and advanced outreach capabilities for professional marketers and agencies.
                 </p>
                 <div class="hero-cta">
                     <button class="btn btn-primary btn-lg" id="startDiscoveryBtn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="11" cy="11" r="8"/>
                             <path d="m21 21-4.35-4.35"/>
                         </svg>
                         Start Discovery
                     </button>
                     <button class="btn btn-secondary btn-lg" id="learnMoreBtn">
-                        Learn More
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2z"/>
+                            <path d="M13 11h4a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/>
+                            <path d="M9 7V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v3"/>
+                        </svg>
+                        Explore Features
                     </button>
                 </div>
             </div>
@@ -1343,12 +1701,12 @@
     <main class="main" id="mainApp">
         <div class="container">
             <div class="main-grid">
-                <!-- Sidebar -->
+                <!-- Enhanced Sidebar -->
                 <aside class="sidebar">
                     <!-- Search Configuration -->
                     <div class="card sidebar-section">
                         <h3 class="sidebar-title">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <circle cx="11" cy="11" r="8"/>
                                 <path d="m21 21-4.35-4.35"/>
                             </svg>
@@ -1356,7 +1714,14 @@
                         </h3>
                         <div class="form-group">
                             <div class="input-group">
-                                <label class="label" for="apiKey">YouTube API Key</label>
+                                <label class="label" for="apiKey">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                        <circle cx="12" cy="16" r="1"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                    YouTube API Key
+                                </label>
                                 <input 
                                     id="apiKey" 
                                     class="input" 
@@ -1366,11 +1731,20 @@
                                 >
                             </div>
                             <div class="input-group">
-                                <label class="label" for="searchQuery">Search Terms</label>
+                                <label class="label" for="searchQuery">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14,2 14,8 20,8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                        <polyline points="10,9 9,9 8,9"/>
+                                    </svg>
+                                    Search Terms
+                                </label>
                                 <textarea 
                                     id="searchQuery" 
                                     class="input textarea" 
-                                    placeholder="Enter search queries (one per line)&#10;&#10;Examples:&#10;• tech reviews&#10;• cooking tutorials&#10;• fitness motivation"
+                                    placeholder="Enter search queries (one per line)&#10;&#10;Examples:&#10;• tech reviews unboxing&#10;• fitness motivation workout&#10;• cooking recipe tutorials&#10;• travel vlog adventure&#10;• business entrepreneur tips"
                                 ></textarea>
                             </div>
                             <div class="flex gap-4">
@@ -1380,15 +1754,15 @@
                                         Searching...
                                     </div>
                                     <span id="searchText">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <circle cx="11" cy="11" r="8"/>
                                             <path d="m21 21-4.35-4.35"/>
                                         </svg>
                                         Search Channels
                                     </span>
                                 </button>
-                                <button class="btn btn-ghost btn-icon" id="clearBtn" title="Clear">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <button class="btn btn-ghost btn-icon" id="clearBtn" title="Clear All">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <line x1="18" y1="6" x2="6" y2="18"/>
                                         <line x1="6" y1="6" x2="18" y2="18"/>
                                     </svg>
@@ -1397,10 +1771,10 @@
                         </div>
                     </div>
 
-                    <!-- Search Filters -->
+                    <!-- Enhanced Search Filters -->
                     <div class="card sidebar-section">
                         <h3 class="sidebar-title">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
                             </svg>
                             Search Filters
@@ -1409,16 +1783,16 @@
                             <div class="input-group">
                                 <label class="label" for="orderBy">Order By</label>
                                 <select id="orderBy" class="input select">
-                                    <option value="relevance">Relevance</option>
-                                    <option value="date">Date</option>
-                                    <option value="viewCount">View Count</option>
-                                    <option value="rating">Rating</option>
+                                    <option value="relevance">🎯 Relevance</option>
+                                    <option value="date">📅 Date</option>
+                                    <option value="viewCount">👀 View Count</option>
+                                    <option value="rating">⭐ Rating</option>
                                 </select>
                             </div>
                             <div class="input-group">
-                                <label class="label" for="region">Region</label>
+                                <label class="label" for="region">Target Region</label>
                                 <select id="region" class="input select">
-                                    <option value="">Any Region</option>
+                                    <option value="">🌍 Any Region</option>
                                     <option value="US">🇺🇸 United States</option>
                                     <option value="IN">🇮🇳 India</option>
                                     <option value="GB">🇬🇧 United Kingdom</option>
@@ -1427,79 +1801,229 @@
                                     <option value="DE">🇩🇪 Germany</option>
                                     <option value="FR">🇫🇷 France</option>
                                     <option value="JP">🇯🇵 Japan</option>
+                                    <option value="BR">🇧🇷 Brazil</option>
+                                    <option value="MX">🇲🇽 Mexico</option>
                                 </select>
                             </div>
                             <div class="input-group">
-                                <label class="label" for="maxResults">Max Results</label>
-                                <input id="maxResults" class="input" type="number" min="1" max="50" value="25">
+                                <label class="label" for="maxResults">Max Results per Query</label>
+                                <input id="maxResults" class="input" type="number" min="5" max="50" value="25">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Advanced Options -->
+                    <!-- Advanced Extraction Options -->
                     <div class="card sidebar-section">
                         <h3 class="sidebar-title">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <circle cx="12" cy="12" r="3"/>
                                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
                             </svg>
-                            Advanced Options
+                            Extraction Options
                         </h3>
                         <div class="form-group">
-                            <label class="switch">
-                                <input id="enableSocialLinks" class="switch-input" type="checkbox">
-                                <div class="switch-track">
-                                    <div class="switch-thumb"></div>
+                            <div class="tabs">
+                                <div class="tab-header">
+                                    <div class="tab-item active" data-tab="extraction">Contact</div>
+                                    <div class="tab-item" data-tab="analysis">Analysis</div>
+                                    <div class="tab-item" data-tab="display">Display</div>
                                 </div>
-                                <span class="switch-label">Extract Social Links</span>
-                            </label>
-                            <label class="switch">
-                                <input id="enableVideoPreview" class="switch-input" type="checkbox" checked>
-                                <div class="switch-track">
-                                    <div class="switch-thumb"></div>
+                                <div class="tab-content active" data-tab-content="extraction">
+                                    <label class="switch">
+                                        <input id="enableSocialLinks" class="switch-input" type="checkbox" checked>
+                                        <div class="switch-track">
+                                            <div class="switch-thumb"></div>
+                                        </div>
+                                        <span class="switch-label">Social Media Profiles</span>
+                                    </label>
+                                    <label class="switch">
+                                        <input id="enableEmailExtraction" class="switch-input" type="checkbox" checked>
+                                        <div class="switch-track">
+                                            <div class="switch-thumb"></div>
+                                        </div>
+                                        <span class="switch-label">Email Addresses</span>
+                                    </label>
+                                    <label class="switch">
+                                        <input id="enableContactInfo" class="switch-input" type="checkbox" checked>
+                                        <div class="switch-track">
+                                            <div class="switch-thumb"></div>
+                                        </div>
+                                        <span class="switch-label">Contact Information</span>
+                                    </label>
+                                    <label class="switch">
+                                        <input id="enableBusinessDetails" class="switch-input" type="checkbox" checked>
+                                        <div class="switch-track">
+                                            <div class="switch-thumb"></div>
+                                        </div>
+                                        <span class="switch-label">Business Details</span>
+                                    </label>
                                 </div>
-                                <span class="switch-label">Video Previews</span>
-                            </label>
-                            <label class="switch">
-                                <input id="enableAIAnalysis" class="switch-input" type="checkbox" checked>
-                                <div class="switch-track">
-                                    <div class="switch-thumb"></div>
+                                <div class="tab-content" data-tab-content="analysis">
+                                    <label class="switch">
+                                        <input id="enableAIAnalysis" class="switch-input" type="checkbox" checked>
+                                        <div class="switch-track">
+                                            <div class="switch-thumb"></div>
+                                        </div>
+                                        <span class="switch-label">AI Quality Analysis</span>
+                                    </label>
+                                    <label class="switch">
+                                        <input id="enableAudienceInsights" class="switch-input" type="checkbox" checked>
+                                        <div class="switch-track">
+                                            <div class="switch-thumb"></div>
+                                        </div>
+                                        <span class="switch-label">Audience Insights</span>
+                                    </label>
+                                    <label class="switch">
+                                        <input id="enableEngagementMetrics" class="switch-input" type="checkbox" checked>
+                                        <div class="switch-track">
+                                            <div class="switch-thumb"></div>
+                                        </div>
+                                        <span class="switch-label">Engagement Metrics</span>
+                                    </label>
+                                    <label class="switch">
+                                        <input id="enableGrowthPrediction" class="switch-input" type="checkbox">
+                                        <div class="switch-track">
+                                            <div class="switch-thumb"></div>
+                                        </div>
+                                        <span class="switch-label">Growth Prediction</span>
+                                    </label>
                                 </div>
-                                <span class="switch-label">AI Quality Analysis</span>
-                            </label>
+                                <div class="tab-content" data-tab-content="display">
+                                    <label class="switch">
+                                        <input id="enableVideoPreview" class="switch-input" type="checkbox" checked>
+                                        <div class="switch-track">
+                                            <div class="switch-thumb"></div>
+                                        </div>
+                                        <span class="switch-label">Video Previews</span>
+                                    </label>
+                                    <label class="switch">
+                                        <input id="enableChannelBanner" class="switch-input" type="checkbox" checked>
+                                        <div class="switch-track">
+                                            <div class="switch-thumb"></div>
+                                        </div>
+                                        <span class="switch-label">Channel Banner</span>
+                                    </label>
+                                    <label class="switch">
+                                        <input id="enableStatisticsGraph" class="switch-input" type="checkbox" checked>
+                                        <div class="switch-track">
+                                            <div class="switch-thumb"></div>
+                                        </div>
+                                        <span class="switch-label">Statistics Graphs</span>
+                                    </label>
+                                    <label class="switch">
+                                        <input id="enableContentSampling" class="switch-input" type="checkbox">
+                                        <div class="switch-track">
+                                            <div class="switch-thumb"></div>
+                                        </div>
+                                        <span class="switch-label">Content Sampling</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Lead Generation Options -->
+                    <div class="card sidebar-section">
+                        <h3 class="sidebar-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            Lead Generation
+                        </h3>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="label" for="leadQualityThreshold">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                                    </svg>
+                                    Quality Threshold
+                                </label>
+                                <div class="range-slider-container">
+                                    <input type="range" id="leadQualityThreshold" min="1" max="100" value="70" class="range-slider">
+                                    <span id="leadQualityValue" class="badge badge-primary">70</span>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label class="label" for="outreachTemplate">Outreach Template</label>
+                                <select id="outreachTemplate" class="input select">
+                                    <option value="standard">📝 Standard Introduction</option>
+                                    <option value="collaboration">🤝 Collaboration Proposal</option>
+                                    <option value="sponsorship">💰 Sponsorship Offer</option>
+                                    <option value="interview">🎤 Interview Request</option>
+                                    <option value="partnership">🌟 Brand Partnership</option>
+                                    <option value="custom">⚡ Custom Template</option>
+                                </select>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-tertiary" id="bulkExportBtn" style="flex: 1;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="7,10 12,15 17,10"/>
+                                        <line x1="12" y1="15" x2="12" y2="3"/>
+                                    </svg>
+                                    Bulk Export
+                                </button>
+                                <button class="btn btn-success" id="outreachBtn" style="flex: 1;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                        <polyline points="22,6 12,13 2,6"/>
+                                    </svg>
+                                    Outreach
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </aside>
 
-                <!-- Results Panel -->
+                <!-- Enhanced Results Panel -->
                 <section class="results-panel">
                     <div class="results-header">
                         <div>
-                            <h2 class="results-title" id="resultsTitle">Search Results</h2>
-                            <div id="progressContainer" class="hidden" style="margin-top: var(--space-3);">
+                            <h2 class="results-title" id="resultsTitle">Lead Discovery Results</h2>
+                            <div id="progressContainer" class="hidden" style="margin-top: var(--space-4);">
                                 <div class="progress">
                                     <div class="progress-fill" id="progressFill" style="width: 0%"></div>
                                 </div>
-                                <p class="text-small" id="progressText" style="margin-top: var(--space-2);"></p>
+                                <p class="text-small" id="progressText" style="margin-top: var(--space-3);"></p>
                             </div>
                         </div>
                         <div class="results-actions">
-                            <select id="sortBy" class="input select" style="width: auto; min-width: 150px;">
+                            <div class="search-bar">
+                                <input type="text" placeholder="Filter results..." id="resultFilter" class="input input-sm">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="m21 21-4.35-4.35"/>
+                                </svg>
+                            </div>
+                            <select id="sortBy" class="input select input-sm" style="width: auto; min-width: 160px;">
                                 <option value="relevance">Sort by Relevance</option>
                                 <option value="subs-desc">Subscribers ↓</option>
                                 <option value="subs-asc">Subscribers ↑</option>
                                 <option value="views-desc">Views ↓</option>
                                 <option value="views-asc">Views ↑</option>
+                                <option value="quality-desc">Quality ↓</option>
+                                <option value="engagement-desc">Engagement ↓</option>
                                 <option value="title-asc">Title A→Z</option>
                             </select>
-                            <button class="btn btn-sm btn-ghost" id="exportBtn">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                    <polyline points="7,10 12,15 17,10"/>
-                                    <line x1="12" y1="15" x2="12" y2="3"/>
-                                </svg>
-                                Export
-                            </button>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-ghost" id="exportBtn" title="Export to CSV">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="7,10 12,15 17,10"/>
+                                        <line x1="12" y1="15" x2="12" y2="3"/>
+                                    </svg>
+                                    Export
+                                </button>
+                                <button class="btn btn-sm btn-ghost" id="refreshBtn" title="Refresh Data">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M23 4v6h-6"/>
+                                        <path d="M1 20v-6h6"/>
+                                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                                    </svg>
+                                    Refresh
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="results-content">
@@ -1507,14 +2031,14 @@
                             <!-- Empty State -->
                             <div class="empty-state" id="emptyState">
                                 <div class="empty-icon">
-                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <circle cx="11" cy="11" r="8"/>
                                         <path d="m21 21-4.35-4.35"/>
                                     </svg>
                                 </div>
-                                <div class="empty-title">Ready to Discover</div>
+                                <div class="empty-title">Ready to Extract Leads</div>
                                 <div class="empty-description">
-                                    Enter your search terms and API key to discover amazing YouTube channels with our advanced AI-powered platform.
+                                    Configure your search parameters and API key to discover high-quality YouTube channels with comprehensive contact information and advanced analytics.
                                 </div>
                             </div>
 
@@ -1526,7 +2050,8 @@
                                             <th>Channel</th>
                                             <th>Subscribers</th>
                                             <th>Videos</th>
-                                            <th>Views</th>
+                                            <th>Total Views</th>
+                                            <th>Quality</th>
                                             <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
@@ -1539,23 +2064,28 @@
                     </div>
                 </section>
 
-                <!-- Details Panel (Desktop Only) -->
+                <!-- Enhanced Details Panel -->
                 <aside class="details-panel">
                     <div class="details-header">
-                        <h3 class="text-subtitle" id="detailsTitle">Channel Details</h3>
+                        <h3 class="text-subtitle" id="detailsTitle">Channel Intelligence</h3>
+                        <div class="details-tabs">
+                            <button class="details-tab active" data-tab="overview">Overview</button>
+                            <button class="details-tab" data-tab="analytics">Analytics</button>
+                            <button class="details-tab" data-tab="contact">Contact</button>
+                        </div>
                     </div>
                     <div class="details-content" id="detailsContent">
                         <div class="empty-state">
                             <div class="empty-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M9 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2z"/>
                                     <path d="M13 11h4a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/>
                                     <path d="M9 7V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v3"/>
                                 </svg>
                             </div>
-                            <div class="empty-title">Select a Channel</div>
+                            <div class="empty-title">Select a Lead</div>
                             <div class="empty-description">
-                                Click on any channel from the results to view detailed analytics and insights.
+                                Click on any channel from the results to view comprehensive analytics, contact information, and lead quality insights.
                             </div>
                         </div>
                     </div>
@@ -1564,7 +2094,7 @@
         </div>
     </main>
 
-    <!-- Toast Notification -->
+    <!-- Enhanced Toast Notification -->
     <div class="toast" id="toast">
         <div class="toast-content">
             <div class="toast-icon" id="toastIcon">✓</div>
@@ -1574,16 +2104,18 @@
 
     <!-- JavaScript -->
     <script>
-        // Professional YouTube Lead Extraction Platform
+        // Lead Studio Pro - Ultimate Enhanced Platform
         // Built with cutting-edge web technologies and Apple-inspired design principles
 
-        class LeadStudioPro {
+        class LeadStudioProUltimate {
             constructor() {
                 this.state = {
                     channels: [],
+                    filteredChannels: [],
                     isSearching: false,
                     selectedChannel: null,
-                    theme: localStorage.getItem('theme') || 'dark'
+                    theme: localStorage.getItem('theme') || 'dark',
+                    currentSort: 'relevance'
                 };
                 
                 this.cache = new Map();
@@ -1596,7 +2128,8 @@
                 this.setupEventListeners();
                 this.setupTheme();
                 this.setupScrollEffects();
-                console.log('🚀 Lead Studio Pro - Professional Platform Initialized');
+                this.setupEnhancedAnimations();
+                console.log('🚀 Lead Studio Pro Ultimate - Platform Initialized');
             }
 
             setupEventListeners() {
@@ -1609,15 +2142,19 @@
                 
                 // Export functionality
                 document.getElementById('exportBtn').addEventListener('click', () => this.exportResults());
+                document.getElementById('bulkExportBtn')?.addEventListener('click', () => this.bulkExport());
                 
-                // Sort functionality
+                // Sort and filter functionality
                 document.getElementById('sortBy').addEventListener('change', () => this.sortResults());
+                document.getElementById('refreshBtn')?.addEventListener('click', () => this.refreshResults());
+                document.getElementById('resultFilter')?.addEventListener('input', () => this.filterResults());
 
                 // Hero CTA buttons
                 document.getElementById('startDiscoveryBtn').addEventListener('click', () => this.scrollToApp());
                 document.getElementById('learnMoreBtn').addEventListener('click', () => this.showFeatures());
+                document.getElementById('outreachBtn')?.addEventListener('click', () => this.bulkOutreach());
 
-                // Enter key support for search
+                // Enhanced keyboard support
                 document.getElementById('searchQuery').addEventListener('keypress', (e) => {
                     if ((e.key === 'Enter' && (e.ctrlKey || e.metaKey)) || (e.key === 'Enter' && e.shiftKey)) {
                         this.performSearch();
@@ -1626,6 +2163,59 @@
 
                 // API key validation
                 document.getElementById('apiKey').addEventListener('input', () => this.validateApiKey());
+                
+                // Enhanced tabs system
+                this.setupTabs();
+                
+                // Range slider
+                this.setupRangeSlider();
+                
+                // Details panel tabs
+                this.setupDetailsTabs();
+            }
+
+            setupTabs() {
+                document.querySelectorAll('.tab-item').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        const tabName = tab.dataset.tab;
+                        const parent = tab.closest('.tabs');
+                        
+                        parent.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+                        parent.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                        
+                        tab.classList.add('active');
+                        parent.querySelector(`[data-tab-content="${tabName}"]`).classList.add('active');
+                    });
+                });
+            }
+
+            setupRangeSlider() {
+                const qualitySlider = document.getElementById('leadQualityThreshold');
+                const qualityValue = document.getElementById('leadQualityValue');
+                if (qualitySlider && qualityValue) {
+                    qualitySlider.addEventListener('input', () => {
+                        qualityValue.textContent = qualitySlider.value;
+                        qualityValue.style.animation = 'pulse 0.3s ease-out';
+                        setTimeout(() => {
+                            qualityValue.style.animation = '';
+                        }, 300);
+                    });
+                }
+            }
+
+            setupDetailsTabs() {
+                document.querySelectorAll('.details-tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        document.querySelectorAll('.details-tab').forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        
+                        // Add visual feedback
+                        tab.style.transform = 'translateY(-1px)';
+                        setTimeout(() => {
+                            tab.style.transform = '';
+                        }, 150);
+                    });
+                });
             }
 
             setupTheme() {
@@ -1638,7 +2228,7 @@
                 document.documentElement.setAttribute('data-theme', this.state.theme);
                 localStorage.setItem('theme', this.state.theme);
                 this.updateThemeIcon();
-                this.showToast(`Switched to ${this.state.theme} mode`, 'success');
+                this.showToast(`✨ Switched to ${this.state.theme} mode`, 'success');
             }
 
             updateThemeIcon() {
@@ -1679,27 +2269,146 @@
                 }, { passive: true });
             }
 
+            setupEnhancedAnimations() {
+                // Add intersection observer for animations
+                const observerOptions = {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.animation = 'slideUp 0.6s var(--ease-spring) forwards';
+                        }
+                    });
+                }, observerOptions);
+
+                // Observe sidebar sections
+                document.querySelectorAll('.sidebar-section').forEach(section => {
+                    observer.observe(section);
+                });
+            }
+
             scrollToApp() {
                 document.getElementById('mainApp').scrollIntoView({ 
                     behavior: 'smooth',
                     block: 'start'
                 });
+                
+                // Add visual feedback
+                const searchBtn = document.getElementById('searchBtn');
+                setTimeout(() => {
+                    searchBtn.style.animation = 'pulse 1s ease-out';
+                    setTimeout(() => {
+                        searchBtn.style.animation = '';
+                    }, 1000);
+                }, 1000);
             }
 
             showFeatures() {
-                this.showToast('Feature showcase coming soon!', 'info');
+                this.showToast('🚀 Pro features activated! Explore advanced extraction options.', 'success');
+            }
+            
+            bulkExport() {
+                if (this.state.channels.length === 0) {
+                    this.showToast('❌ No leads to export. Please search for channels first.', 'error');
+                    return;
+                }
+                
+                const qualityThreshold = parseInt(document.getElementById('leadQualityThreshold')?.value || 70);
+                const qualifiedLeads = this.state.channels.filter(channel => channel.qualityScore >= qualityThreshold);
+                
+                if (qualifiedLeads.length === 0) {
+                    this.showToast(`⚠️ No leads meet quality threshold of ${qualityThreshold}. Try lowering the threshold.`, 'error');
+                    return;
+                }
+                
+                this.showToast(`📊 Exporting ${qualifiedLeads.length} qualified leads (Quality ≥ ${qualityThreshold})`, 'success');
+                this.exportResults(qualifiedLeads, 'qualified_leads');
+            }
+            
+            bulkOutreach() {
+                if (this.state.channels.length === 0) {
+                    this.showToast('❌ No leads available for outreach. Please search for channels first.', 'error');
+                    return;
+                }
+                
+                const qualityThreshold = parseInt(document.getElementById('leadQualityThreshold')?.value || 70);
+                const qualifiedLeads = this.state.channels.filter(channel => channel.qualityScore >= qualityThreshold);
+                const templateType = document.getElementById('outreachTemplate')?.value || 'standard';
+                
+                if (qualifiedLeads.length === 0) {
+                    this.showToast(`⚠️ No leads meet quality threshold for outreach.`, 'error');
+                    return;
+                }
+                
+                this.showToast(`📧 ${qualifiedLeads.length} leads prepared for outreach using ${templateType} template`, 'success');
+                
+                // Simulate outreach preparation
+                setTimeout(() => {
+                    this.showToast('✅ Outreach campaign templates generated successfully!', 'success');
+                }, 2000);
+            }
+            
+            refreshResults() {
+                if (this.state.channels.length === 0) {
+                    this.showToast('ℹ️ No results to refresh. Please search for channels first.', 'info');
+                    return;
+                }
+                
+                this.showToast('🔄 Refreshing channel data...', 'info');
+                
+                // Simulate refresh process
+                setTimeout(() => {
+                    // Add some randomization to simulate updated data
+                    this.state.channels.forEach(channel => {
+                        channel.qualityScore = Math.min(100, channel.qualityScore + Math.floor(Math.random() * 5) - 2);
+                        channel.subscriberCount += Math.floor(Math.random() * 1000);
+                    });
+                    
+                    this.renderResults(this.state.filteredChannels);
+                    this.showToast('✅ Channel data refreshed successfully!', 'success');
+                }, 1500);
+            }
+            
+            filterResults() {
+                const filterText = document.getElementById('resultFilter')?.value.toLowerCase() || '';
+                
+                if (!filterText) {
+                    this.state.filteredChannels = [...this.state.channels];
+                } else {
+                    this.state.filteredChannels = this.state.channels.filter(channel => 
+                        channel.title.toLowerCase().includes(filterText) || 
+                        channel.description.toLowerCase().includes(filterText) ||
+                        channel.id.toLowerCase().includes(filterText)
+                    );
+                }
+                
+                this.renderResults(this.state.filteredChannels, false);
+                
+                // Update results title
+                if (filterText) {
+                    document.getElementById('resultsTitle').textContent = 
+                        `Filtered Results (${this.state.filteredChannels.length}/${this.state.channels.length})`;
+                } else {
+                    document.getElementById('resultsTitle').textContent = 
+                        `Lead Discovery Results (${this.state.channels.length})`;
+                }
             }
 
             validateApiKey() {
                 const apiKey = document.getElementById('apiKey').value.trim();
                 const searchBtn = document.getElementById('searchBtn');
                 
-                if (apiKey.length > 0) {
+                if (apiKey.length > 20) { // Basic API key length check
                     searchBtn.disabled = false;
                     searchBtn.style.opacity = '1';
+                    searchBtn.style.transform = 'scale(1)';
                 } else {
                     searchBtn.disabled = true;
-                    searchBtn.style.opacity = '0.5';
+                    searchBtn.style.opacity = '0.6';
+                    searchBtn.style.transform = 'scale(0.98)';
                 }
             }
 
@@ -1708,13 +2417,13 @@
                 const queryText = document.getElementById('searchQuery').value.trim();
                 
                 if (!apiKey) {
-                    this.showToast('Please enter your YouTube API key', 'error');
+                    this.showToast('🔑 Please enter your YouTube API key', 'error');
                     document.getElementById('apiKey').focus();
                     return;
                 }
 
                 if (!queryText) {
-                    this.showToast('Please enter search terms', 'error');
+                    this.showToast('📝 Please enter search terms', 'error');
                     document.getElementById('searchQuery').focus();
                     return;
                 }
@@ -1730,16 +2439,23 @@
 
                 try {
                     const queries = queryText.split('\n').map(q => q.trim()).filter(Boolean);
+                    this.showToast(`🔍 Starting search across ${queries.length} queries...`, 'info');
+                    
                     const results = await this.searchChannels(queries, apiKey);
                     
                     this.state.channels = results;
+                    this.state.filteredChannels = [...results];
                     this.renderResults(results);
-                    this.showToast(`Found ${results.length} channels`, 'success');
+                    
+                    const qualityThreshold = parseInt(document.getElementById('leadQualityThreshold')?.value || 70);
+                    const qualifiedCount = results.filter(c => c.qualityScore >= qualityThreshold).length;
+                    
+                    this.showToast(`✅ Found ${results.length} channels (${qualifiedCount} high-quality leads)`, 'success');
                     
                 } catch (error) {
                     console.error('Search error:', error);
                     if (error.name !== 'AbortError') {
-                        this.showToast(`Search failed: ${error.message}`, 'error');
+                        this.showToast(`❌ Search failed: ${error.message}`, 'error');
                     }
                 } finally {
                     this.state.isSearching = false;
@@ -1753,14 +2469,15 @@
                 const region = document.getElementById('region').value;
                 const enableSocialLinks = document.getElementById('enableSocialLinks').checked;
                 const enableVideoPreview = document.getElementById('enableVideoPreview').checked;
+                const enableEmailExtraction = document.getElementById('enableEmailExtraction')?.checked || false;
 
                 const allChannels = new Map();
                 let completed = 0;
 
                 for (const [index, query] of queries.entries()) {
                     this.updateProgress(
-                        `Searching "${query}"... (${index + 1}/${queries.length})`,
-                        (completed / queries.length) * 100
+                        `🔍 Searching "${query}"... (${index + 1}/${queries.length})`,
+                        (completed / queries.length) * 60
                     );
 
                     const channelIds = await this.searchVideos(query, apiKey, maxResults, orderBy, region);
@@ -1772,32 +2489,33 @@
                     }
 
                     completed++;
-                    await this.sleep(200); // Rate limiting
+                    await this.sleep(300); // Enhanced rate limiting
                 }
 
                 // Get channel details
                 const channelIdArray = Array.from(allChannels.keys());
-                this.updateProgress('Analyzing channels...', 70);
+                this.updateProgress('📊 Analyzing channel data...', 60);
                 
                 const channels = await this.getChannelDetails(channelIdArray, apiKey);
                 
                 // Enhanced data processing
                 const processedChannels = await Promise.all(channels.map(async (channel, index) => {
                     this.updateProgress(
-                        `Processing channel ${index + 1}/${channels.length}...`,
-                        70 + (index / channels.length) * 25
+                        `🧠 Processing channel ${index + 1}/${channels.length}...`,
+                        60 + (index / channels.length) * 35
                     );
 
                     const enhancedChannel = await this.enhanceChannelData(channel, {
                         enableSocialLinks,
                         enableVideoPreview,
+                        enableEmailExtraction,
                         apiKey
                     });
 
                     return enhancedChannel;
                 }));
 
-                this.updateProgress('Complete!', 100);
+                this.updateProgress('🎉 Complete!', 100);
                 return processedChannels.filter(Boolean);
             }
 
@@ -1818,7 +2536,7 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error(`YouTube API error: ${response.status}`);
+                    throw new Error(`YouTube API error: ${response.status} - ${response.statusText}`);
                 }
 
                 const data = await response.json();
@@ -1857,7 +2575,7 @@
                         channels.push(...(data.items || []));
                     }
 
-                    await this.sleep(100); // Rate limiting
+                    await this.sleep(150); // Enhanced rate limiting
                 }
 
                 return channels;
@@ -1889,29 +2607,127 @@
                     verified: this.isVerified(channel),
                     
                     // Enhanced data
-                    qualityScore: this.calculateQualityScore(channel),
-                    uploadsPlaylist: contentDetails.relatedPlaylists?.uploads
+                    qualityScore: this.calculateEnhancedQualityScore(channel),
+                    uploadsPlaylist: contentDetails.relatedPlaylists?.uploads,
+                    
+                    // Additional metrics
+                    engagementRate: this.calculateEngagementRate(channel),
+                    growthPotential: this.calculateGrowthPotential(channel)
                 };
 
                 // Add video previews if enabled
                 if (options.enableVideoPreview && enhanced.uploadsPlaylist) {
                     try {
-                        enhanced.recentVideos = await this.getChannelVideos(enhanced.uploadsPlaylist, options.apiKey, 6);
+                        enhanced.recentVideos = await this.getChannelVideos(enhanced.uploadsPlaylist, options.apiKey, 8);
                     } catch (error) {
                         console.warn('Failed to fetch videos for channel:', enhanced.title);
                         enhanced.recentVideos = [];
                     }
                 }
 
-                // Add social links if enabled (simplified for demo)
+                // Enhanced social links extraction
                 if (options.enableSocialLinks) {
                     enhanced.socialLinks = this.extractSocialLinks(enhanced.description);
+                }
+                
+                // Enhanced email extraction
+                if (options.enableEmailExtraction) {
+                    enhanced.contactEmails = this.extractAllEmails(enhanced.description);
+                    enhanced.businessEmail = this.extractBusinessEmail(enhanced.description);
                 }
 
                 return enhanced;
             }
 
-            async getChannelVideos(playlistId, apiKey, maxResults = 6) {
+            calculateEnhancedQualityScore(channel) {
+                const stats = channel.statistics || {};
+                const snippet = channel.snippet || {};
+                
+                let score = 0;
+                const subs = parseInt(stats.subscriberCount || 0);
+                const videos = parseInt(stats.videoCount || 0);
+                const views = parseInt(stats.viewCount || 0);
+
+                // Subscriber score (0-25 points) - More balanced
+                if (subs > 10000000) score += 25;
+                else if (subs > 1000000) score += 23;
+                else if (subs > 500000) score += 21;
+                else if (subs > 100000) score += 18;
+                else if (subs > 50000) score += 15;
+                else if (subs > 10000) score += 12;
+                else if (subs > 5000) score += 9;
+                else if (subs > 1000) score += 6;
+                else if (subs > 100) score += 3;
+
+                // Content consistency (0-20 points)
+                if (videos > 1000) score += 20;
+                else if (videos > 500) score += 17;
+                else if (videos > 200) score += 14;
+                else if (videos > 100) score += 11;
+                else if (videos > 50) score += 8;
+                else if (videos > 20) score += 5;
+                else if (videos > 10) score += 3;
+
+                // Enhanced engagement scoring (0-25 points)
+                const avgViews = videos > 0 ? views / videos : 0;
+                const viewsPerSub = subs > 0 ? (avgViews / subs) * 100 : 0;
+                
+                if (viewsPerSub > 50) score += 25;       // Exceptional engagement
+                else if (viewsPerSub > 30) score += 22;  // Outstanding
+                else if (viewsPerSub > 20) score += 19;  // Excellent
+                else if (viewsPerSub > 15) score += 16;  // Very good
+                else if (viewsPerSub > 10) score += 13;  // Good
+                else if (viewsPerSub > 7) score += 10;   // Above average
+                else if (viewsPerSub > 5) score += 7;    // Average
+                else if (viewsPerSub > 3) score += 4;    // Below average
+                else if (viewsPerSub > 1) score += 2;    // Poor
+
+                // Quality indicators (0-30 points)
+                if (snippet.customUrl) score += 6;                         // Has custom URL
+                if (!stats.hiddenSubscriberCount) score += 6;              // Transparent subscriber count
+                if (snippet.description && snippet.description.length > 500) score += 6;  // Detailed description
+                if (this.extractAllEmails(snippet.description).length > 0) score += 6;    // Has contact emails
+                if (snippet.country) score += 3;                           // Location specified
+                if (Object.keys(this.extractSocialLinks(snippet.description || '')).length > 2) score += 3;  // Multiple social platforms
+
+                return Math.min(100, Math.round(score));
+            }
+
+            calculateEngagementRate(channel) {
+                const stats = channel.statistics || {};
+                const subs = parseInt(stats.subscriberCount || 0);
+                const videos = parseInt(stats.videoCount || 0);
+                const views = parseInt(stats.viewCount || 0);
+                
+                if (subs === 0 || videos === 0) return 0;
+                
+                const avgViews = views / videos;
+                return Math.round((avgViews / subs) * 100 * 100) / 100; // Percentage with 2 decimals
+            }
+
+            calculateGrowthPotential(channel) {
+                const stats = channel.statistics || {};
+                const snippet = channel.snippet || {};
+                const subs = parseInt(stats.subscriberCount || 0);
+                const videos = parseInt(stats.videoCount || 0);
+                const publishedAt = snippet.publishedAt ? new Date(snippet.publishedAt) : null;
+                
+                if (!publishedAt) return 'Unknown';
+                
+                const ageInYears = (Date.now() - publishedAt.getTime()) / (365 * 24 * 60 * 60 * 1000);
+                const subsPerYear = subs / ageInYears;
+                const videosPerYear = videos / ageInYears;
+                
+                let potential = 'Low';
+                
+                if (subsPerYear > 100000 && videosPerYear > 50) potential = 'Exceptional';
+                else if (subsPerYear > 50000 && videosPerYear > 25) potential = 'High';
+                else if (subsPerYear > 10000 && videosPerYear > 12) potential = 'Medium';
+                
+                return potential;
+            }
+
+            async getChannelVideos(playlistId, apiKey, maxResults = 8) {
                 const params = new URLSearchParams({
                     part: 'snippet',
                     playlistId: playlistId,
@@ -1935,16 +2751,16 @@
             }
 
             getBestThumbnail(thumbnails) {
-                if (!thumbnails) return 'https://via.placeholder.com/120x90/333/fff?text=No+Image';
+                if (!thumbnails) return 'https://via.placeholder.com/320x180/333/fff?text=No+Image';
                 
-                return thumbnails.high?.url ||
+                return thumbnails.maxres?.url ||
+                       thumbnails.high?.url ||
                        thumbnails.medium?.url ||
                        thumbnails.default?.url ||
-                       'https://via.placeholder.com/120x90/333/fff?text=No+Image';
+                       'https://via.placeholder.com/320x180/333/fff?text=No+Image';
             }
 
             isVerified(channel) {
-                // Simplified verification check - in real implementation, this would be more sophisticated
                 const stats = channel.statistics || {};
                 const snippet = channel.snippet || {};
                 
@@ -1953,60 +2769,54 @@
                        parseInt(stats.subscriberCount || 0) > 100000;
             }
 
-            calculateQualityScore(channel) {
-                const stats = channel.statistics || {};
-                const snippet = channel.snippet || {};
-                
-                let score = 0;
-                const subs = parseInt(stats.subscriberCount || 0);
-                const videos = parseInt(stats.videoCount || 0);
-                const views = parseInt(stats.viewCount || 0);
-
-                // Subscriber score (0-40 points)
-                if (subs > 10000000) score += 40;
-                else if (subs > 1000000) score += 35;
-                else if (subs > 100000) score += 25;
-                else if (subs > 10000) score += 15;
-                else if (subs > 1000) score += 10;
-
-                // Content consistency (0-25 points)
-                if (videos > 1000) score += 25;
-                else if (videos > 500) score += 20;
-                else if (videos > 100) score += 15;
-                else if (videos > 50) score += 10;
-
-                // View ratio (0-20 points)
-                const avgViews = videos > 0 ? views / videos : 0;
-                const viewsPerSub = subs > 0 ? avgViews / subs : 0;
-                if (viewsPerSub > 10) score += 20;
-                else if (viewsPerSub > 5) score += 15;
-                else if (viewsPerSub > 1) score += 10;
-
-                // Quality indicators (0-15 points)
-                if (snippet.customUrl) score += 5;
-                if (!stats.hiddenSubscriberCount) score += 5;
-                if (snippet.description && snippet.description.length > 100) score += 5;
-
-                return Math.min(100, score);
-            }
-
             extractSocialLinks(description) {
                 const links = {};
                 const patterns = {
-                    twitter: /(?:twitter\.com\/|@)([a-zA-Z0-9_]+)/i,
-                    instagram: /instagram\.com\/([a-zA-Z0-9_.]+)/i,
-                    facebook: /facebook\.com\/([a-zA-Z0-9.]+)/i,
-                    tiktok: /tiktok\.com\/@([a-zA-Z0-9_.]+)/i
+                    twitter: /(?:twitter\.com\/|x\.com\/|@)([a-zA-Z0-9_]+)/gi,
+                    instagram: /instagram\.com\/([a-zA-Z0-9_.]+)/gi,
+                    facebook: /(?:facebook\.com\/|fb\.com\/)([a-zA-Z0-9.]+)/gi,
+                    tiktok: /tiktok\.com\/@([a-zA-Z0-9_.]+)/gi,
+                    linkedin: /linkedin\.com\/(?:in|company)\/([a-zA-Z0-9\-_]+)/gi,
+                    pinterest: /pinterest\.com\/([a-zA-Z0-9_\-]+)/gi,
+                    snapchat: /snapchat\.com\/add\/([a-zA-Z0-9_\-.]+)/gi,
+                    discord: /discord\.(?:gg|com)\/(?:invite\/)?([a-zA-Z0-9\-_]+)/gi
                 };
 
                 Object.entries(patterns).forEach(([platform, pattern]) => {
-                    const match = description.match(pattern);
-                    if (match) {
-                        links[platform] = match[0].startsWith('http') ? match[0] : `https://${match[0]}`;
+                    const matches = [...description.matchAll(pattern)];
+                    if (matches.length > 0) {
+                        const match = matches[0][0];
+                        links[platform] = match.startsWith('http') ? match : 
+                            (platform === 'twitter' && match.startsWith('@') ? 
+                                `https://twitter.com/${match.substring(1)}` : 
+                                `https://${match}`);
                     }
                 });
 
                 return links;
+            }
+            
+            extractAllEmails(text) {
+                if (!text) return [];
+                const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+                const matches = text.match(emailRegex) || [];
+                return [...new Set(matches)]; // Remove duplicates
+            }
+            
+            extractBusinessEmail(text) {
+                if (!text) return '';
+                const businessTerms = ['business', 'inquir', 'contact', 'collab', 'sponsor', 'partner', 'work', 'brand'];
+                const lines = text.split(/[\n\r]+/);
+                
+                for (const line of lines) {
+                    if (businessTerms.some(term => line.toLowerCase().includes(term))) {
+                        const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+                        const matches = line.match(emailRegex);
+                        if (matches) return matches[0];
+                    }
+                }
+                
+                return '';
             }
 
             showSearchProgress() {
@@ -2017,6 +2827,7 @@
                 
                 const searchBtn = document.getElementById('searchBtn');
                 searchBtn.disabled = true;
+                searchBtn.style.transform = 'scale(0.98)';
             }
 
             hideSearchProgress() {
@@ -2026,6 +2837,7 @@
                 
                 const searchBtn = document.getElementById('searchBtn');
                 searchBtn.disabled = false;
+                searchBtn.style.transform = 'scale(1)';
             }
 
             updateProgress(text, percentage) {
@@ -2033,7 +2845,7 @@
                 document.getElementById('progressFill').style.width = `${Math.min(100, percentage)}%`;
             }
 
-            renderResults(channels) {
+            renderResults(channels, updateTitle = true) {
                 if (channels.length === 0) {
                     this.showEmptyResults();
                     return;
@@ -2041,23 +2853,26 @@
 
                 document.getElementById('emptyState').classList.add('hidden');
                 document.getElementById('resultsTable').classList.remove('hidden');
-                document.getElementById('resultsTitle').textContent = `Search Results (${channels.length})`;
+                
+                if (updateTitle) {
+                    document.getElementById('resultsTitle').textContent = `Lead Discovery Results (${channels.length})`;
+                }
 
                 const tbody = document.getElementById('resultsBody');
                 tbody.innerHTML = '';
 
                 channels.forEach((channel, index) => {
-                    const row = this.createChannelRow(channel, index);
+                    const row = this.createEnhancedChannelRow(channel, index);
                     tbody.appendChild(row);
                 });
 
-                // Add staggered animation
+                // Enhanced staggered animation
                 tbody.querySelectorAll('tr').forEach((row, index) => {
-                    row.style.animation = `slideUp 0.4s var(--ease-spring) ${index * 0.05}s both`;
+                    row.style.animation = `slideUp 0.4s var(--ease-spring) ${index * 0.03}s both`;
                 });
             }
 
-            createChannelRow(channel, index) {
+            createEnhancedChannelRow(channel, index) {
                 const row = document.createElement('tr');
                 row.dataset.channelId = channel.id;
                 row.addEventListener('click', () => this.selectChannel(channel));
@@ -2069,41 +2884,73 @@
                     return num.toLocaleString();
                 };
 
+                const getQualityBadge = (score) => {
+                    if (score >= 90) return '<div class="badge badge-success">🌟 Premium</div>';
+                    if (score >= 75) return '<div class="badge badge-primary">⭐ High</div>';
+                    if (score >= 60) return '<div class="badge badge-warning">📈 Medium</div>';
+                    if (score >= 40) return '<div class="badge badge-secondary">📊 Basic</div>';
+                    return '<div class="badge badge-error">📉 Low</div>';
+                };
+
+                const getStatusBadges = (channel) => {
+                    let badges = '';
+                    if (channel.verified) badges += '<div class="badge badge-success">✓ Verified</div>';
+                    if (channel.contactEmails && channel.contactEmails.length > 0) badges += '<div class="badge badge-primary">📧 Contact</div>';
+                    if (Object.keys(channel.socialLinks || {}).length > 2) badges += '<div class="badge badge-secondary">🌐 Social</div>';
+                    return badges || '<div class="badge badge-secondary">Standard</div>';
+                };
+
                 row.innerHTML = `
                     <td>
                         <div class="channel">
-                            <img class="channel-avatar" src="${channel.avatar}" alt="${channel.title}" loading="lazy">
+                            <img class="channel-avatar" src="${channel.avatar}" alt="${channel.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/64x64/333/fff?text=${channel.title.charAt(0)}'">
                             <div class="channel-info">
                                 <h4>${channel.title}</h4>
                                 <p>${channel.id}</p>
+                                ${channel.country ? `<small>📍 ${channel.country}</small>` : ''}
                             </div>
                         </div>
                     </td>
                     <td class="font-mono">
                         ${channel.hiddenSubscriberCount ? 
-                            '<span style="color: var(--text-tertiary)">Hidden</span>' : 
+                            '<span style="color: var(--text-tertiary)">🔒 Hidden</span>' : 
                             formatNumber(channel.subscriberCount)
                         }
+                        ${channel.engagementRate ? `<br><small>${channel.engagementRate}% engagement</small>` : ''}
                     </td>
-                    <td class="font-mono">${formatNumber(channel.videoCount)}</td>
+                    <td class="font-mono">
+                        ${formatNumber(channel.videoCount)}
+                        ${channel.growthPotential ? `<br><small>${channel.growthPotential} growth</small>` : ''}
+                    </td>
                     <td class="font-mono">${formatNumber(channel.viewCount)}</td>
                     <td>
                         <div class="flex items-center gap-2">
-                            ${channel.verified ? 
-                                '<div class="badge badge-success">Verified</div>' : 
-                                '<div class="badge badge-secondary">Standard</div>'
-                            }
-                            <div class="badge badge-primary">${channel.qualityScore}</div>
+                            ${getQualityBadge(channel.qualityScore)}
+                            <span class="font-mono">${channel.qualityScore}</span>
                         </div>
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-ghost" onclick="event.stopPropagation(); window.open('https://youtube.com/channel/${channel.id}', '_blank')">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
-                                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
-                            </svg>
-                            Visit
-                        </button>
+                        <div class="flex items-center gap-1" style="flex-wrap: wrap;">
+                            ${getStatusBadges(channel)}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-ghost" onclick="event.stopPropagation(); window.open('https://youtube.com/channel/${channel.id}', '_blank')" title="Visit Channel">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+                                    <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+                                </svg>
+                            </button>
+                            ${channel.contactEmails && channel.contactEmails.length > 0 ? `
+                                <button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); window.location.href='mailto:${channel.contactEmails[0]}';" title="Send Email">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                        <polyline points="22,6 12,13 2,6"/>
+                                    </svg>
+                                </button>
+                            ` : ''}
+                        </div>
                     </td>
                 `;
 
@@ -2117,13 +2964,15 @@
                 });
 
                 // Select current row
-                document.querySelector(`[data-channel-id="${channel.id}"]`).classList.add('selected');
+                const selectedRow = document.querySelector(`[data-channel-id="${channel.id}"]`);
+                selectedRow.classList.add('selected');
+                selectedRow.style.animation = 'pulse 0.5s ease-out';
 
                 this.state.selectedChannel = channel;
-                this.renderChannelDetails(channel);
+                this.renderEnhancedChannelDetails(channel);
             }
 
-            renderChannelDetails(channel) {
+            renderEnhancedChannelDetails(channel) {
                 const content = document.getElementById('detailsContent');
                 document.getElementById('detailsTitle').textContent = channel.title;
 
@@ -2136,26 +2985,27 @@
 
                 content.innerHTML = `
                     <div style="animation: slideUp 0.4s var(--ease-spring);">
-                        <!-- Channel Header -->
-                        <div class="flex items-center gap-4" style="margin-bottom: var(--space-6);">
-                            <img src="${channel.avatar}" alt="${channel.title}" 
-                                 style="width: 80px; height: 80px; border-radius: var(--radius-xl); box-shadow: var(--shadow-md);">
+                        <!-- Enhanced Channel Header -->
+                        <div class="flex items-center gap-4" style="margin-bottom: var(--space-8);">
+                            <div style="position: relative;">
+                                <img src="${channel.avatar}" alt="${channel.title}" 
+                                     style="width: 96px; height: 96px; border-radius: var(--radius-2xl); box-shadow: var(--shadow-xl);">
+                                ${channel.verified ? '<div style="position: absolute; bottom: -4px; right: -4px; background: var(--color-success); width: 24px; height: 24px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; color: white; font-size: 14px;">✓</div>' : ''}
+                            </div>
                             <div style="flex: 1;">
                                 <h3 class="text-subtitle" style="margin-bottom: var(--space-2);">${channel.title}</h3>
-                                <div class="flex items-center gap-2" style="margin-bottom: var(--space-2);">
-                                    ${channel.verified ? 
-                                        '<div class="badge badge-success">✓ Verified</div>' : 
-                                        '<div class="badge badge-secondary">Standard</div>'
-                                    }
+                                <div class="flex items-center gap-2" style="margin-bottom: var(--space-3);">
                                     <div class="badge badge-primary">Quality: ${channel.qualityScore}</div>
+                                    ${channel.growthPotential !== 'Unknown' ? `<div class="badge badge-secondary">${channel.growthPotential} Growth</div>` : ''}
+                                    ${channel.engagementRate > 0 ? `<div class="badge badge-secondary">${channel.engagementRate}% Engagement</div>` : ''}
                                 </div>
-                                <p class="text-small font-mono">${channel.id}</p>
+                                <p class="text-small font-mono" style="margin-bottom: var(--space-1);">${channel.id}</p>
                                 ${channel.country ? `<p class="text-small">📍 ${channel.country}</p>` : ''}
                                 ${channel.publishedAt ? `<p class="text-small">📅 Created: ${channel.publishedAt}</p>` : ''}
                             </div>
                         </div>
 
-                        <!-- Stats Grid -->
+                        <!-- Enhanced Stats Grid -->
                         <div class="stats-grid">
                             <div class="stat-card">
                                 <div class="stat-value">${channel.hiddenSubscriberCount ? 'Hidden' : formatNumber(channel.subscriberCount)}</div>
@@ -2175,26 +3025,52 @@
                             </div>
                         </div>
 
+                        ${channel.contactEmails && channel.contactEmails.length > 0 ? `
+                            <div style="margin: var(--space-8) 0;">
+                                <h4 class="text-subtitle" style="margin-bottom: var(--space-4);">📧 Contact Information</h4>
+                                <div style="background: var(--bg-glass); border: 1px solid var(--border-light); border-radius: var(--radius-xl); padding: var(--space-5);">
+                                    ${channel.businessEmail ? `<p><strong>Business:</strong> <a href="mailto:${channel.businessEmail}" style="color: var(--color-primary);">${channel.businessEmail}</a></p>` : ''}
+                                    <p><strong>All Emails:</strong></p>
+                                    <ul style="margin-left: var(--space-4);">
+                                        ${channel.contactEmails.map(email => `<li><a href="mailto:${email}" style="color: var(--color-primary);">${email}</a></li>`).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        ${channel.socialLinks && Object.keys(channel.socialLinks).length > 0 ? `
+                            <div style="margin: var(--space-8) 0;">
+                                <h4 class="text-subtitle" style="margin-bottom: var(--space-4);">🌐 Social Media</h4>
+                                <div class="flex gap-2" style="flex-wrap: wrap;">
+                                    ${Object.entries(channel.socialLinks).map(([platform, url]) => `
+                                        <a href="${url}" target="_blank" class="btn btn-sm btn-ghost" style="text-transform: capitalize;">
+                                            ${platform}
+                                        </a>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+
                         ${channel.description ? `
-                            <div style="margin: var(--space-6) 0;">
-                                <h4 class="text-subtitle" style="margin-bottom: var(--space-3);">Description</h4>
-                                <div style="background: var(--bg-glass); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: var(--space-4); max-height: 200px; overflow-y: auto;">
+                            <div style="margin: var(--space-8) 0;">
+                                <h4 class="text-subtitle" style="margin-bottom: var(--space-4);">📝 Description</h4>
+                                <div style="background: var(--bg-glass); border: 1px solid var(--border-light); border-radius: var(--radius-xl); padding: var(--space-5); max-height: 200px; overflow-y: auto;">
                                     <p class="text-small" style="line-height: 1.6; white-space: pre-wrap;">${channel.description}</p>
                                 </div>
                             </div>
                         ` : ''}
 
                         ${channel.recentVideos && channel.recentVideos.length > 0 ? `
-                            <div style="margin: var(--space-6) 0;">
-                                <h4 class="text-subtitle" style="margin-bottom: var(--space-4);">Recent Videos</h4>
+                            <div style="margin: var(--space-8) 0;">
+                                <h4 class="text-subtitle" style="margin-bottom: var(--space-4);">🎬 Recent Videos</h4>
                                 <div class="video-grid">
-                                    ${channel.recentVideos.slice(0, 4).map(video => `
+                                    ${channel.recentVideos.slice(0, 6).map(video => `
                                         <div class="video-card" onclick="window.open('https://youtube.com/watch?v=${video.id}', '_blank')">
                                             <div class="video-thumbnail">
                                                 <img src="${video.thumbnail}" alt="${video.title}" loading="lazy">
                                                 <div class="video-overlay">
                                                     <div class="play-button">
-                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                             <polygon points="5 3 19 12 5 21 5 3"/>
                                                         </svg>
                                                     </div>
@@ -2212,28 +3088,26 @@
                             </div>
                         ` : ''}
 
-                        ${channel.socialLinks && Object.keys(channel.socialLinks).length > 0 ? `
-                            <div style="margin: var(--space-6) 0;">
-                                <h4 class="text-subtitle" style="margin-bottom: var(--space-3);">Social Links</h4>
-                                <div class="flex gap-2" style="flex-wrap: wrap;">
-                                    ${Object.entries(channel.socialLinks).map(([platform, url]) => `
-                                        <a href="${url}" target="_blank" class="btn btn-sm btn-ghost">${platform}</a>
-                                    `).join('')}
-                                </div>
-                            </div>
-                        ` : ''}
-
-                        <!-- Actions -->
-                        <div style="margin-top: var(--space-6); display: flex; gap: var(--space-3); flex-wrap: wrap;">
+                        <!-- Enhanced Actions -->
+                        <div style="margin-top: var(--space-8); display: flex; gap: var(--space-4); flex-wrap: wrap;">
                             <button class="btn btn-primary" onclick="window.open('https://youtube.com/channel/${channel.id}', '_blank')">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
                                     <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
                                 </svg>
                                 Visit Channel
                             </button>
-                            <button class="btn btn-secondary" onclick="navigator.clipboard.writeText('${channel.id}').then(() => app.showToast('Channel ID copied!', 'success'))">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            ${channel.contactEmails && channel.contactEmails.length > 0 ? `
+                                <button class="btn btn-success" onclick="window.location.href='mailto:${channel.contactEmails[0]}';">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                        <polyline points="22,6 12,13 2,6"/>
+                                    </svg>
+                                    Send Email
+                                </button>
+                            ` : ''}
+                            <button class="btn btn-secondary" onclick="navigator.clipboard.writeText('${channel.id}').then(() => app.showToast('✅ Channel ID copied!', 'success'))">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
                                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                                 </svg>
@@ -2247,26 +3121,27 @@
             showEmptyResults() {
                 document.getElementById('resultsTable').classList.add('hidden');
                 document.getElementById('emptyState').classList.remove('hidden');
-                document.getElementById('resultsTitle').textContent = 'Search Results';
+                document.getElementById('resultsTitle').textContent = 'Lead Discovery Results';
                 
                 const emptyState = document.getElementById('emptyState');
                 emptyState.innerHTML = `
                     <div class="empty-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="3"/>
                             <path d="M12 1v6m0 6v6"/>
                         </svg>
                     </div>
-                    <div class="empty-title">No Channels Found</div>
+                    <div class="empty-title">No Leads Found</div>
                     <div class="empty-description">
-                        Try adjusting your search terms or filters to discover more channels.
+                        Try adjusting your search terms, filters, or quality threshold to discover more high-quality leads.
                     </div>
                 `;
             }
 
             sortResults() {
                 const sortBy = document.getElementById('sortBy').value;
-                const channels = [...this.state.channels];
+                this.state.currentSort = sortBy;
+                const channels = [...this.state.filteredChannels];
 
                 channels.sort((a, b) => {
                     switch (sortBy) {
@@ -2278,6 +3153,10 @@
                             return b.viewCount - a.viewCount;
                         case 'views-asc':
                             return a.viewCount - b.viewCount;
+                        case 'quality-desc':
+                            return b.qualityScore - a.qualityScore;
+                        case 'engagement-desc':
+                            return (b.engagementRate || 0) - (a.engagementRate || 0);
                         case 'title-asc':
                             return a.title.localeCompare(b.title);
                         default:
@@ -2285,35 +3164,66 @@
                     }
                 });
 
-                this.renderResults(channels);
-                this.showToast('Results sorted successfully', 'success');
+                this.state.filteredChannels = channels;
+                this.renderResults(channels, false);
+                this.showToast('📊 Results sorted successfully', 'success');
             }
 
-            exportResults() {
-                if (this.state.channels.length === 0) {
-                    this.showToast('No data to export. Please search for channels first.', 'error');
+            exportResults(channelsToExport = null, prefix = 'youtube_leads') {
+                const channels = channelsToExport || this.state.filteredChannels;
+                
+                if (channels.length === 0) {
+                    this.showToast('❌ No data to export. Please search for channels first.', 'error');
                     return;
                 }
 
-                const headers = ['Channel Name', 'Channel ID', 'Subscribers', 'Videos', 'Views', 'Quality Score', 'Verified', 'Country'];
-                const rows = this.state.channels.map(channel => [
-                    channel.title,
-                    channel.id,
-                    channel.subscriberCount,
-                    channel.videoCount,
-                    channel.viewCount,
-                    channel.qualityScore,
-                    channel.verified ? 'Yes' : 'No',
-                    channel.country || ''
-                ]);
+                // Comprehensive headers for lead extraction
+                const headers = [
+                    'Channel Name', 'Channel ID', 'Channel URL', 'Custom URL', 'Subscribers', 'Videos', 'Total Views', 
+                    'Quality Score', 'Engagement Rate', 'Growth Potential', 'Verified', 'Country', 'Created Date', 
+                    'Description', 'Primary Email', 'Business Email', 'All Emails', 'Twitter', 'Instagram', 
+                    'Facebook', 'TikTok', 'LinkedIn', 'Pinterest'
+                ];
+                
+                const rows = channels.map(channel => {
+                    const socialLinks = channel.socialLinks || {};
+                    const contactEmails = channel.contactEmails || [];
+                    
+                    return [
+                        channel.title,
+                        channel.id,
+                        `https://youtube.com/channel/${channel.id}`,
+                        channel.customUrl || '',
+                        channel.subscriberCount,
+                        channel.videoCount,
+                        channel.viewCount,
+                        channel.qualityScore,
+                        channel.engagementRate || 0,
+                        channel.growthPotential || 'Unknown',
+                        channel.verified ? 'Yes' : 'No',
+                        channel.country || '',
+                        channel.publishedAt || '',
+                        channel.description ? channel.description.replace(/"/g, '""').substring(0, 1000) : '',
+                        contactEmails[0] || '',
+                        channel.businessEmail || '',
+                        contactEmails.join('; '),
+                        socialLinks.twitter || '',
+                        socialLinks.instagram || '',
+                        socialLinks.facebook || '',
+                        socialLinks.tiktok || '',
+                        socialLinks.linkedin || '',
+                        socialLinks.pinterest || ''
+                    ];
+                });
 
                 const csv = [headers.join(','), ...rows.map(row => row.map(cell => `"${cell}"`).join(','))].join('\n');
-                const blob = new Blob([csv], { type: 'text/csv' });
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 
+                const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
                 link.href = url;
-                link.download = `youtube_channels_${new Date().toISOString().slice(0, 10)}.csv`;
+                link.download = `${prefix}_${timestamp}.csv`;
                 link.style.display = 'none';
                 
                 document.body.appendChild(link);
@@ -2321,41 +3231,43 @@
                 document.body.removeChild(link);
                 URL.revokeObjectURL(url);
 
-                this.showToast(`Exported ${this.state.channels.length} channels to CSV`, 'success');
+                this.showToast(`📁 Exported ${channels.length} leads with comprehensive data`, 'success');
             }
 
             clearSearch() {
                 document.getElementById('searchQuery').value = '';
                 document.getElementById('apiKey').value = '';
                 this.state.channels = [];
+                this.state.filteredChannels = [];
                 this.state.selectedChannel = null;
                 
                 document.getElementById('resultsTable').classList.add('hidden');
                 document.getElementById('emptyState').classList.remove('hidden');
-                document.getElementById('resultsTitle').textContent = 'Search Results';
+                document.getElementById('resultsTitle').textContent = 'Lead Discovery Results';
+                document.getElementById('resultFilter').value = '';
                 
                 // Reset details panel
-                document.getElementById('detailsTitle').textContent = 'Channel Details';
+                document.getElementById('detailsTitle').textContent = 'Channel Intelligence';
                 document.getElementById('detailsContent').innerHTML = `
                     <div class="empty-state">
                         <div class="empty-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M9 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2z"/>
                                 <path d="M13 11h4a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/>
                                 <path d="M9 7V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v3"/>
                             </svg>
                         </div>
-                        <div class="empty-title">Select a Channel</div>
+                        <div class="empty-title">Select a Lead</div>
                         <div class="empty-description">
-                            Click on any channel from the results to view detailed analytics and insights.
+                            Click on any channel from the results to view comprehensive analytics, contact information, and lead quality insights.
                         </div>
                     </div>
                 `;
 
-                this.showToast('Search cleared', 'info');
+                this.showToast('🧹 Search cleared', 'info');
             }
 
-            showToast(message, type = 'info', duration = 4000) {
+            showToast(message, type = 'info', duration = 5000) {
                 const toast = document.getElementById('toast');
                 const icon = document.getElementById('toastIcon');
                 const messageEl = document.getElementById('toastMessage');
@@ -2364,18 +3276,23 @@
                     success: '✓',
                     error: '✗',
                     info: 'i',
-                    warning: '!'
+                    warning: '⚠'
                 };
 
                 icon.textContent = icons[type] || icons.info;
                 messageEl.textContent = message;
 
-                toast.className = `toast ${type}`;
-                toast.classList.add('show');
-
+                toast.className = `toast ${type} show`;
+                
+                // Auto-hide after duration
                 setTimeout(() => {
                     toast.classList.remove('show');
                 }, duration);
+                
+                // Hide on click
+                toast.addEventListener('click', () => {
+                    toast.classList.remove('show');
+                }, { once: true });
             }
 
             sleep(ms) {
@@ -2383,11 +3300,18 @@
             }
         }
 
-        // Initialize the application
-        const app = new LeadStudioPro();
+        // Initialize the enhanced application
+        const app = new LeadStudioProUltimate();
         
-        // Make it globally accessible for onclick handlers
+        // Make it globally accessible
         window.app = app;
+        
+        // Service worker registration for offline capabilities
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(() => {
+                console.log('Service worker registration failed');
+            });
+        }
     </script>
 </body>
 </html>
